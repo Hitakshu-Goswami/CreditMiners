@@ -233,10 +233,10 @@ The project documentation is organized as follows:
 **Team Name:** CreditMiners
 
 Developed for the TETRATHON Hackathon.
-Ansh Patel
-HitakshuGiri Goswami
-Jeet Patel
-Dhruv Katkar
+- Ansh Patel
+- HitakshuGiri Goswami
+- Jeet Patel
+- Dhruv Katkar
 
 ---
 
