@@ -232,7 +232,11 @@ The project documentation is organized as follows:
 
 **Team Name:** CreditMiners
 
-Developed for the FinTech Hackathon.
+Developed for the TETRATHON Hackathon.
+Ansh Patel
+HitakshuGiri Goswami
+Jeet Patel
+Dhruv Katkar
 
 ---
 
