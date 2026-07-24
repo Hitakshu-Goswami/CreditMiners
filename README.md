@@ -308,17 +308,20 @@ The platform is designed to minimize bias while providing users with meaningful 
 
 # System Architecture
 
-CreditMiners follows a modular, service-oriented architecture designed for scalability, maintainability, and separation of concerns. Each layer of the application has a clearly defined responsibility, enabling independent development, testing, and deployment.
+CreditMiners follows a **modular, layered, service-oriented architecture** designed to provide scalability, maintainability, security, and clear separation of concerns. Each layer has a well-defined responsibility, allowing different parts of the system to evolve independently while ensuring seamless communication through standardized interfaces.
 
-The system consists of five primary layers:
+The architecture separates user interaction, business logic, AI processing, data access, and external integrations into dedicated layers. This approach minimizes coupling, improves code maintainability, and enables the platform to scale efficiently as new features and financial services are introduced.
+
+The system consists of six primary layers:
 
 1. Presentation Layer
 2. Application Layer
-3. AI & Analytics Layer
-4. Data Layer
-5. External Services Layer
+3. AI & Intelligence Layer
+4. Data Access Layer
+5. Database Layer
+6. External Services Layer
 
-The following diagram illustrates the high-level architecture.
+The following diagram illustrates the high-level architecture of the CreditMiners platform.
 
 ```mermaid
 flowchart TD
@@ -328,176 +331,505 @@ flowchart TD
     User --> Frontend
 
     subgraph Client["Presentation Layer"]
-        Frontend[React Application]
+
+        Frontend["React + Vite Frontend"]
+
     end
 
     Frontend --> API
 
     subgraph Backend["Application Layer"]
-        API[Express REST API]
 
-        Auth[Authentication Service]
+        API["Express REST API"]
 
-        Credit[Credit Assessment Service]
+        Auth["Authentication Service"]
 
-        Insights[Financial Insights Service]
+        Financial["Financial Profile Service"]
 
-        Invest[Investment Recommendation Service]
+        Transaction["Transaction Service"]
 
-        Notification[Notification Service]
+        Credit["Credit Assessment Service"]
+
+        Investment["Investment Recommendation Service"]
+
+        Notification["Notification Service"]
+
     end
 
     API --> Auth
+    API --> Financial
+    API --> Transaction
     API --> Credit
-    API --> Insights
-    API --> Invest
+    API --> Investment
     API --> Notification
 
     Credit --> AI
+    Investment --> AI
 
-    Insights --> AI
+    subgraph Intelligence["AI & Intelligence Layer"]
 
-    Invest --> AI
+        AI["Explainable AI Engine"]
 
-    subgraph Intelligence["AI & Analytics Layer"]
+        ML["Prediction Models"]
 
-        AI[Explainable AI Engine]
-
-        ML[Prediction Models]
-
-        Rules[Business Rules Engine]
+        Rules["Business Rules Engine"]
 
     end
 
-    AI --> Database
+    API --> Prisma
+    AI --> Prisma
+    ML --> Prisma
+    Rules --> Prisma
 
-    ML --> Database
+    subgraph DataAccess["Data Access Layer"]
 
-    Rules --> Database
+        Prisma["Prisma ORM"]
 
-    subgraph Storage["Data Layer"]
+    end
 
-        Database[(MongoDB)]
+    Prisma --> Database
+
+    subgraph DatabaseLayer["Database Layer"]
+
+        Database[("Supabase PostgreSQL")]
 
     end
 
     Database --> Payments
-
     Database --> Banking
-
     Database --> Email
 
     subgraph External["External Services"]
 
-        Payments[Razorpay]
+        Payments["Razorpay"]
 
-        Banking[Open Banking APIs]
+        Banking["Open Banking APIs"]
 
-        Email[Email / SMS Service]
+        Email["Email / SMS Services"]
 
     end
 ```
 
 ---
 
-## Architectural Principles
+# Layer Responsibilities
 
-The architecture has been designed around the following engineering principles.
+## 1. Presentation Layer
 
-### Separation of Concerns
+The Presentation Layer provides the user interface through a responsive React application built with Vite. It is responsible for rendering dashboards, collecting financial information, displaying AI-generated insights, and interacting with backend APIs.
 
-Each module is responsible for a single business capability. Business logic, AI processing, authentication, and data persistence remain isolated, reducing coupling between components.
+Responsibilities include:
 
----
-
-### Scalability
-
-The backend services are designed so they can be independently scaled as application traffic grows. Compute-intensive AI operations remain isolated from the core API layer.
-
----
-
-### Maintainability
-
-The project follows a modular folder structure, allowing new services and features to be integrated without affecting existing functionality.
+- User authentication
+- Dashboard visualization
+- Financial data entry
+- Transaction management
+- Credit score visualization
+- Investment recommendation display
+- Notification management
 
 ---
 
-### Security
+## 2. Application Layer
 
-Sensitive financial data is processed only through authenticated APIs. User information remains encrypted during transmission and storage, while authentication and authorization are handled independently of business logic.
+The Application Layer acts as the core of the system and contains the business logic. It exposes REST APIs that validate requests, enforce business rules, coordinate AI processing, and communicate with the database through Prisma ORM.
+
+Major services include:
+
+- Authentication Service
+- Financial Profile Service
+- Transaction Service
+- Credit Assessment Service
+- Investment Recommendation Service
+- Notification Service
+
+Each service operates independently, making the backend modular, testable, and easy to extend.
 
 ---
 
-### Explainability
+## 3. AI & Intelligence Layer
 
-Unlike conventional AI systems, every financial recommendation generated by CreditMiners is accompanied by an explanation that identifies the primary contributing factors behind the prediction.
+The AI Layer is responsible for transforming financial data into actionable insights.
+
+It performs:
+
+- Financial health analysis
+- Credit score prediction
+- Investment recommendation generation
+- Explainable AI processing
+- Rule-based validation
+- Confidence score calculation
+
+Unlike traditional black-box AI systems, every prediction generated by CreditMiners is accompanied by an explanation that identifies the key financial factors contributing to the result.
 
 ---
 
-## Data Flow
+## 4. Data Access Layer
 
-The application follows the following request lifecycle.
+The Data Access Layer is implemented using **Prisma ORM**, which acts as the single interface between the backend services and the PostgreSQL database.
+
+Responsibilities include:
+
+- Type-safe database queries
+- CRUD operations
+- Schema migrations
+- Transaction management
+- Query optimization
+- Data validation
+- Connection management
+
+Using Prisma simplifies development while reducing runtime errors and ensuring consistency across the application.
+
+---
+
+## 5. Database Layer
+
+The Database Layer is powered by **Supabase PostgreSQL**, providing a secure, scalable, and ACID-compliant relational database.
+
+Primary responsibilities include:
+
+- User data storage
+- Financial profile management
+- Transaction history
+- AI assessment storage
+- Investment recommendation storage
+- Notification management
+- Audit logging
+- Referential integrity through foreign keys
+
+The relational database structure ensures data consistency and supports efficient analytical queries required by the AI engine.
+
+---
+
+## 6. External Services Layer
+
+The External Services Layer integrates third-party platforms that extend the functionality of CreditMiners.
+
+Current integrations include:
+
+- Razorpay for payment processing
+- Open Banking APIs for future financial integrations
+- Email and SMS services for user notifications
+
+The modular integration strategy enables additional financial services to be incorporated without affecting the application's core architecture.
+
+---
+
+# Architectural Principles
+
+The architecture of CreditMiners has been designed around modern software engineering principles to ensure long-term maintainability, scalability, security, and extensibility.
+
+---
+
+## Separation of Concerns
+
+Each layer of the application has a clearly defined responsibility.
+
+- The frontend focuses on user experience and presentation.
+- The backend manages business logic and API orchestration.
+- The AI layer performs intelligent financial analysis.
+- Prisma handles database communication.
+- PostgreSQL stores persistent application data.
+- External integrations remain isolated from core business logic.
+
+This separation reduces coupling and simplifies future development.
+
+---
+
+## Modular Design
+
+Every major business capability is implemented as an independent service.
+
+Examples include:
+
+- Authentication Service
+- Financial Profile Service
+- Transaction Service
+- Credit Assessment Service
+- Investment Recommendation Service
+- Notification Service
+
+New services can be introduced without modifying existing modules, making the system highly extensible.
+
+---
+
+## Scalability
+
+The platform is designed to scale both vertically and horizontally.
+
+Scalability strategies include:
+
+- Stateless REST APIs
+- Independent AI processing
+- Efficient database indexing
+- Optimized SQL queries
+- Connection pooling
+- Pagination for large datasets
+- Modular service architecture
+- Managed PostgreSQL infrastructure through Supabase
+
+This enables the platform to support increasing numbers of users while maintaining consistent performance.
+
+---
+
+## Security
+
+Security is integrated into every layer of the architecture.
+
+Key security measures include:
+
+- JWT-based authentication
+- Password hashing using bcrypt
+- HTTPS communication
+- Input validation
+- Role-based authorization (future enhancement)
+- Prisma parameterized queries
+- SQL injection protection
+- UUID-based identifiers
+- Audit logging
+- Secure environment variable management
+
+These practices ensure the confidentiality and integrity of user financial data.
+
+---
+
+## Explainable AI
+
+Unlike traditional black-box AI systems, CreditMiners emphasizes transparency.
+
+Every AI-generated prediction is accompanied by:
+
+- Financial Health Score
+- Credit Score
+- Confidence Score
+- Key contributing financial factors
+- Personalized recommendations
+- Actionable improvement suggestions
+
+This approach builds user trust and enables informed financial decision-making.
+
+---
+
+# Request Lifecycle
+
+The following workflow illustrates how a request moves through the application.
 
 ```text
 User
 
-   │
+│
 
-   ▼
+▼
 
 React Frontend
 
-   │
+│
 
-   ▼
+▼
 
-REST API
+Express REST API
 
-   │
+│
 
-   ▼
+▼
+
+Authentication & Validation
+
+│
+
+▼
 
 Business Services
 
-   │
+│
 
-   ▼
+▼
 
-AI Decision Engine
+AI Engine (when required)
 
-   │
+│
 
-   ▼
+▼
 
-Database + External APIs
+Prisma ORM
 
-   │
+│
 
-   ▼
+▼
 
-Explainable Response
+Supabase PostgreSQL
 
-   │
+│
 
-   ▼
+▼
+
+Business Logic Response
+
+│
+
+▼
 
 Frontend Dashboard
 ```
 
 ---
 
-## Design Goals
+# Data Flow
 
-The architecture is designed to achieve the following objectives.
+The platform follows a structured data processing pipeline.
 
-- Modular service-oriented design
-- Independent AI processing layer
-- Low coupling between modules
-- High maintainability
-- Secure financial data handling
+```text
+User Registration
+
+↓
+
+Authentication
+
+↓
+
+Financial Profile Creation
+
+↓
+
+Transaction Recording
+
+↓
+
+Data Validation
+
+↓
+
+Business Logic Processing
+
+↓
+
+AI Feature Engineering
+
+↓
+
+Credit Assessment
+
+↓
+
+Investment Recommendation
+
+↓
+
+Database Storage
+
+↓
+
+Dashboard Visualization
+```
+
+Every stage performs validation before passing data to the next layer, ensuring consistency and reliability.
+
+---
+
+# Error Handling Strategy
+
+The backend follows a centralized error handling approach.
+
+Major categories include:
+
+- Authentication Errors
+- Authorization Errors
+- Validation Errors
+- Database Errors
+- AI Processing Errors
+- External Service Errors
+- Internal Server Errors
+
+All errors return standardized API responses to simplify frontend integration and debugging.
+
+---
+
+# Logging & Monitoring
+
+The application records important system events to improve observability and debugging.
+
+Logging includes:
+
+- User authentication events
+- Financial profile updates
+- Transaction creation
+- AI assessment generation
+- Investment recommendation generation
+- Failed API requests
+- Database exceptions
+- External API failures
+
+Audit logs provide traceability while supporting future compliance requirements.
+
+---
+
+# Future Scalability
+
+The architecture is designed to support future enhancements with minimal structural changes.
+
+Potential improvements include:
+
+- Microservices architecture
+- Dedicated AI inference service
+- Real-time notifications
+- Banking API integrations
+- Multi-factor authentication
+- Multi-language support
+- Containerized deployment using Docker
+- Kubernetes orchestration
+- Redis caching
+- Background job processing
+- Event-driven messaging
+- GraphQL API support
+
+These enhancements can be incorporated without major modifications to the existing architecture.
+
+---
+
+# Design Goals
+
+The system architecture has been designed to achieve the following objectives:
+
+- Modular service-oriented architecture
+- Clear separation of responsibilities
+- Production-ready backend structure
+- Type-safe database access through Prisma ORM
+- Secure financial data management
 - Explainable AI integration
-- Production-ready deployment architecture
-- Future extensibility for additional financial services
+- Scalable PostgreSQL infrastructure
+- High maintainability and extensibility
+- Efficient API communication
+- Reliable third-party service integration
+
+---
+
+# Architectural Benefits
+
+The selected architecture provides several advantages for both development and production environments.
+
+### Maintainability
+
+A modular codebase enables faster feature development, simplified debugging, and easier long-term maintenance.
+
+### Reliability
+
+Strong database constraints, Prisma ORM, and structured business logic ensure consistent and reliable application behavior.
+
+### Performance
+
+Efficient indexing, optimized SQL queries, connection pooling, and scalable service layers help maintain responsive performance.
+
+### Security
+
+Modern authentication mechanisms, encrypted credentials, secure API communication, and audit logging protect sensitive financial information.
+
+### Extensibility
+
+New AI models, financial products, external APIs, and business services can be integrated with minimal impact on the existing system.
+
+### Production Readiness
+
+The combination of React, Express, Prisma, Supabase PostgreSQL, and an independent AI layer provides a robust architecture suitable for hackathons, portfolio projects, startup MVPs, and future production deployments.
 
 <!-- ========================================================================= -->
 <!-- SECTION 08 : TECHNOLOGY STACK -->
@@ -517,7 +849,7 @@ CreditMiners is built using a modern, modular technology stack selected for scal
 | Styling | Tailwind CSS | Responsive UI Development |
 | Backend | Node.js | Server Runtime |
 | Framework | Express.js | REST API Development |
-| Database | MongoDB | Data Persistence |
+| Database | Supabase (PostgreSQL) | Data Persistence |
 | AI / ML | Python | Model Development & Inference |
 | AI Libraries | Scikit-learn, Pandas, NumPy | Data Analysis & Prediction |
 | Authentication | JWT | Secure User Authentication |
@@ -600,16 +932,18 @@ The AI layer powers financial assessment, explainable predictions, and personali
 
 ## Database
 
-MongoDB provides flexible document-based storage suitable for user profiles, financial records, and AI-generated insights.
+## Database
 
-| Collection | Purpose |
-| :--------- | :------ |
-| Users | User information |
-| Transactions | Financial activity |
-| CreditReports | Credit assessments |
-| FinancialScores | Financial health scores |
-| Investments | Investment recommendations |
-| Notifications | User notifications |
+CreditMiners uses **Supabase (PostgreSQL)** as its primary relational database to securely manage financial data, user information, and AI-generated insights. PostgreSQL provides ACID-compliant transactions, strong relational integrity, powerful SQL querying capabilities, and seamless integration with Prisma ORM, making it well-suited for a scalable fintech platform.
+
+| Table | Purpose |
+| :---- | :------ |
+| Users | Stores user account and authentication information |
+| Financial_Profiles | Stores user financial details and financial health metrics |
+| Transactions | Records user income, expenses, and financial activity |
+| Credit_Assessments | Stores AI-generated credit evaluations and explainability reports |
+| Investment_Recommendations | Stores personalized investment suggestions generated by the AI engine |
+| Notifications | Stores application notifications and alerts for users |
 
 ---
 
@@ -645,7 +979,7 @@ Security is treated as a first-class concern due to the sensitive nature of fina
 | :-------- | :------- |
 | Frontend | Vercel |
 | Backend | Render |
-| Database | MongoDB Atlas |
+| Database | Supabase Prisma |
 | AI Services | Python Service |
 | Source Code | GitHub |
 
@@ -657,7 +991,7 @@ The selected technology stack offers several advantages for a financial intellig
 
 - Component-based architecture for easier maintenance.
 - Scalable backend capable of handling increasing workloads.
-- Flexible NoSQL database suitable for evolving financial data.
+- Flexible Postgres database suitable for evolving financial data.
 - Mature AI ecosystem with extensive machine learning support.
 - Secure authentication and authorization mechanisms.
 - Cloud-ready deployment architecture.
@@ -672,7 +1006,6 @@ The architecture has been designed to support future upgrades without significan
 
 Potential enhancements include:
 
-- PostgreSQL for relational financial data
 - Redis for caching and session management
 - Docker containerization
 - Kubernetes orchestration
@@ -687,12 +1020,26 @@ Potential enhancements include:
 
 # Project Structure
 
-The project follows a modular directory structure that separates frontend, backend, artificial intelligence, and supporting resources into independent components. This organization improves maintainability, scalability, and collaboration while ensuring a clear separation of concerns.
+CreditMiners follows a modular and layered project structure designed to promote scalability, maintainability, and collaborative development. The repository separates frontend, backend, AI, documentation, datasets, testing, and project management resources into dedicated modules, enabling each team member to work independently while maintaining a well-organized codebase.
+
+The structure has been designed to support both rapid hackathon development and future production-scale growth.
 
 ```text
-CreditMiners
+CreditMiners/
 │
-├── client/                    # Frontend application
+├── .project/                     # Internal project documentation
+│   ├── API.md
+│   ├── ARCHITECTURE.md
+│   ├── CONTEXT.md
+│   ├── CONTRIBUTING.md
+│   ├── DECISIONS.md
+│   ├── README.md
+│   ├── REQUIREMENTS.md
+│   ├── STANDARDS.md
+│   ├── TASKS.md
+│   └── UI_UX.md
+│
+├── frontend/                     # React + Vite frontend
 │   ├── public/
 │   └── src/
 │       ├── assets/
@@ -708,132 +1055,186 @@ CreditMiners
 │       ├── App.jsx
 │       └── main.jsx
 │
-├── server/                    # Backend application
+├── backend/                      # Express backend
+│   ├── prisma/
+│   │   ├── schema.prisma
+│   │   └── migrations/
+│   │
 │   ├── config/
 │   ├── controllers/
 │   ├── middleware/
-│   ├── models/
 │   ├── routes/
 │   ├── services/
-│   ├── utils/
 │   ├── validators/
+│   ├── utils/
 │   ├── app.js
 │   └── server.js
 │
-├── ai/                        # AI and ML modules
+├── ml/                           # AI & Machine Learning
 │   ├── datasets/
-│   ├── models/
 │   ├── preprocessing/
+│   ├── models/
 │   ├── training/
 │   ├── inference/
 │   └── explainability/
 │
-├── docs/                      # Documentation
+├── data/                         # Sample datasets & database seeds
 │
-├── assets/                    # Images & branding
+├── docs/                         # Technical documentation
 │
-├── scripts/                   # Automation scripts
+├── presentation/                 # Pitch deck & demo assets
 │
-├── .env.example
-├── package.json
-├── README.md
-└── LICENSE
+├── tests/                        # Unit & integration tests
+│
+├── .gitignore
+├── AGENTS.md
+├── LICENSE
+└── README.md
 ```
 
 ---
 
-## Directory Overview
+# Directory Overview
 
-### `client/`
+## `.project/`
 
-Contains the complete React frontend responsible for rendering the user interface and interacting with backend APIs.
+Contains internal project documentation used by the development team throughout the software development lifecycle.
 
-**Responsibilities**
+Responsibilities include:
 
-- Authentication screens
+- API planning
+- Architecture documentation
+- Development standards
+- UI/UX guidelines
+- Project requirements
+- Design decisions
+- Task management
+- Contributor guidelines
+
+Unlike the public `docs/` directory, this folder is intended primarily for internal collaboration and project organization.
+
+---
+
+## `frontend/`
+
+Contains the complete React + Vite frontend responsible for rendering the user interface and communicating with backend services.
+
+Responsibilities include:
+
+- User authentication
 - Dashboard
-- Financial analytics
+- Financial profile management
 - Credit score visualization
 - Investment recommendations
 - Responsive layouts
+- API integration
 - State management
 
 ---
 
-### `server/`
+## `backend/`
 
-Implements the REST API and core business logic of the application.
+Implements the REST API, business logic, authentication, and database communication.
 
-**Responsibilities**
+Responsibilities include:
 
-- API endpoints
-- Authentication
+- REST API
+- JWT Authentication
 - Authorization
 - Financial calculations
-- Credit assessment
 - AI integration
-- Database communication
+- Request validation
 - Error handling
+- Database communication via Prisma ORM
+
+The backend uses **Prisma ORM** to provide type-safe interaction with the **Supabase PostgreSQL** database.
 
 ---
 
-### `ai/`
+## `backend/prisma/`
 
-Contains machine learning models, preprocessing logic, and explainability modules.
+Contains the database schema and migration history.
 
-**Responsibilities**
+Responsibilities include:
+
+- Prisma schema definition
+- Database migrations
+- PostgreSQL model management
+- Type-safe database generation
+
+This folder acts as the single source of truth for the application's database schema.
+
+---
+
+## `ml/`
+
+Contains the AI and Machine Learning modules responsible for financial intelligence.
+
+Responsibilities include:
 
 - Data preprocessing
-- Model training
-- Prediction engine
 - Feature engineering
+- Model training
+- Credit score prediction
+- Investment recommendation generation
 - Explainable AI
-- Recommendation generation
 
 ---
 
-### `docs/`
+## `data/`
 
-Stores project documentation and supporting technical resources.
+Stores datasets and database seed files used for development, testing, and AI model training.
+
+Examples include:
+
+- Sample financial datasets
+- CSV files
+- Database seed data
+- Test datasets
+
+---
+
+## `docs/`
+
+Contains public technical documentation that complements the project.
 
 Examples include:
 
 - Architecture diagrams
 - API documentation
 - ER diagrams
-- Design decisions
+- Deployment guides
 - Technical reports
 
 ---
 
-### `assets/`
+## `presentation/`
 
-Contains static resources used throughout the project.
+Stores presentation assets prepared for demonstrations, hackathons, investor meetings, and project showcases.
 
-Examples:
+Examples include:
 
-- Logos
-- Icons
-- Presentation images
-- Screenshots
-- Illustrations
-
----
-
-### `scripts/`
-
-Contains utility scripts used during development.
-
-Examples:
-
-- Database seeding
-- Dataset preparation
-- Model retraining
-- Deployment automation
+- Pitch deck
+- Demo screenshots
+- Demo videos
+- Presentation PDFs
 
 ---
 
-## Frontend Structure
+## `tests/`
+
+Contains automated tests for validating application functionality.
+
+Examples include:
+
+- Unit tests
+- Integration tests
+- API tests
+- AI validation tests
+
+---
+
+# Frontend Structure
 
 ```text
 src/
@@ -852,11 +1253,9 @@ src/
 └── main.jsx
 ```
 
-### Component Responsibilities
-
 | Directory | Purpose |
 | :-------- | :------ |
-| assets | Images, fonts, icons |
+| assets | Images, icons, fonts |
 | components | Reusable UI components |
 | context | Global state management |
 | hooks | Custom React hooks |
@@ -865,46 +1264,45 @@ src/
 | routes | Route configuration |
 | services | API communication |
 | styles | Global styling |
-| utils | Helper functions |
+| utils | Utility functions |
 
 ---
 
-## Backend Structure
+# Backend Structure
 
 ```text
-server/
+backend/
+│
+├── prisma/
 │
 ├── config/
 ├── controllers/
 ├── middleware/
-├── models/
 ├── routes/
 ├── services/
-├── utils/
 ├── validators/
+├── utils/
 ├── app.js
 └── server.js
 ```
 
-### Component Responsibilities
-
 | Directory | Purpose |
 | :-------- | :------ |
+| prisma | Prisma schema & migrations |
 | config | Application configuration |
 | controllers | Request handlers |
-| middleware | Authentication & validation |
-| models | Database schemas |
+| middleware | Authentication & middleware |
 | routes | REST endpoints |
 | services | Business logic |
-| utils | Helper utilities |
 | validators | Request validation |
+| utils | Utility helpers |
 
 ---
 
-## AI Module Structure
+# AI Module Structure
 
 ```text
-ai/
+ml/
 │
 ├── datasets/
 ├── preprocessing/
@@ -914,59 +1312,78 @@ ai/
 └── explainability/
 ```
 
-### Module Responsibilities
-
 | Directory | Purpose |
 | :-------- | :------ |
-| datasets | Training data |
-| preprocessing | Data cleaning |
-| models | Saved ML models |
-| training | Training scripts |
+| datasets | Training datasets |
+| preprocessing | Data cleaning & transformation |
+| models | Trained AI models |
+| training | Model training scripts |
 | inference | Prediction engine |
-| explainability | XAI algorithms |
+| explainability | Explainable AI logic |
 
 ---
 
-## Architectural Benefits
+# Architectural Benefits
 
 The selected project structure provides several engineering advantages.
 
-- Modular code organization
-- High maintainability
-- Clear separation of responsibilities
+- Modular project organization
+- Clear separation of concerns
+- Independent frontend, backend, and AI development
+- Type-safe PostgreSQL integration through Prisma ORM
+- Improved maintainability
 - Easier onboarding for contributors
-- Independent development of frontend, backend, and AI modules
-- Improved scalability
-- Simplified testing and debugging
-- Production-ready organization suitable for long-term development
-
+- Better collaboration during hackathons
+- Scalable architecture for future production deployment
+- Well-organized documentation and project planning
+- Production-ready repository structure
 <!-- ========================================================================= -->
 <!-- SECTION 10 : DATABASE DESIGN -->
 <!-- ========================================================================= -->
 
 # Database Design
 
-CreditMiners uses a document-oriented database architecture powered by **MongoDB**. The schema is designed to efficiently store user profiles, financial activities, AI-generated insights, investment recommendations, and system metadata while supporting scalability and flexibility.
+CreditMiners uses **Supabase (PostgreSQL)** as its primary relational database, with **Prisma ORM** serving as the data access layer. The database is designed using normalized relational principles to ensure data integrity, consistency, scalability, and efficient querying for AI-powered financial analysis.
 
-The data model follows a normalized logical design at the application level while leveraging MongoDB's document model for performance and ease of development.
+Unlike document-oriented databases, PostgreSQL provides strong transactional guarantees (ACID compliance), foreign key constraints, indexing capabilities, and advanced analytical querying, making it an ideal choice for handling sensitive financial data and explainable AI outputs.
 
----
-
-## Database Overview
-
-| Collection | Purpose |
-| :--------- | :------ |
-| Users | Stores user profile and authentication details |
-| FinancialProfiles | Stores financial indicators and aggregated metrics |
-| Transactions | Stores user financial transaction history |
-| CreditAssessments | Stores AI-generated credit analysis |
-| InvestmentRecommendations | Stores personalized investment suggestions |
-| Notifications | Stores user notifications and alerts |
-| AuditLogs | Stores system activity and audit events |
+Prisma ORM enables type-safe database interactions, simplified schema management, automated migrations, and a clean developer experience while maintaining compatibility with PostgreSQL's advanced features.
 
 ---
 
-## Entity Relationship Overview
+# Database Architecture
+
+The database architecture is designed around clearly separated business entities. Each table represents a specific domain within the platform while maintaining strong relationships through foreign keys.
+
+Key design principles include:
+
+- Normalized relational schema
+- ACID-compliant transactions
+- UUID-based primary keys
+- Foreign key constraints for data integrity
+- Optimized indexing strategy
+- Minimal data redundancy
+- AI-friendly structured data
+- Future scalability for fintech integrations
+- Prisma-compatible schema design
+
+---
+
+# Database Overview
+
+| Table | Purpose |
+| :---- | :------ |
+| `users` | Stores user accounts, authentication details, and profile information |
+| `financial_profiles` | Stores financial metrics used by the AI engine |
+| `transactions` | Stores user income, expenses, savings, and financial activities |
+| `credit_assessments` | Stores AI-generated financial health reports and explainability results |
+| `investment_recommendations` | Stores personalized investment suggestions generated by AI |
+| `notifications` | Stores application notifications and alerts |
+| `audit_logs` | Stores system events, security logs, and audit records |
+
+---
+
+# Entity Relationship Overview
 
 ```mermaid
 erDiagram
@@ -976,213 +1393,422 @@ erDiagram
     USERS ||--o{ CREDIT_ASSESSMENTS : receives
     USERS ||--o{ INVESTMENT_RECOMMENDATIONS : receives
     USERS ||--o{ NOTIFICATIONS : receives
+    USERS ||--o{ AUDIT_LOGS : generates
 
     USERS {
-        ObjectId _id
-        string fullName
-        string email
-        string passwordHash
-        string phone
-        datetime createdAt
+        UUID id PK
+        VARCHAR full_name
+        VARCHAR email
+        VARCHAR password_hash
+        VARCHAR phone
+        TIMESTAMP created_at
+        TIMESTAMP updated_at
     }
 
     FINANCIAL_PROFILES {
-        ObjectId _id
-        ObjectId userId
-        number monthlyIncome
-        number monthlyExpenses
-        number savings
-        number financialHealthScore
+        UUID id PK
+        UUID user_id FK
+        DECIMAL monthly_income
+        DECIMAL monthly_expenses
+        DECIMAL monthly_savings
+        DECIMAL investment_capacity
+        DECIMAL financial_health_score
+        TIMESTAMP updated_at
     }
 
     TRANSACTIONS {
-        ObjectId _id
-        ObjectId userId
-        string category
-        number amount
-        string transactionType
-        datetime timestamp
+        UUID id PK
+        UUID user_id FK
+        DECIMAL amount
+        VARCHAR category
+        ENUM transaction_type
+        VARCHAR merchant
+        ENUM payment_method
+        TIMESTAMP transaction_date
     }
 
     CREDIT_ASSESSMENTS {
-        ObjectId _id
-        ObjectId userId
-        number creditScore
-        string explanation
-        number confidence
-        datetime generatedAt
+        UUID id PK
+        UUID user_id FK
+        DECIMAL financial_health_score
+        DECIMAL credit_score
+        DECIMAL confidence_score
+        TEXT explanation
+        JSON recommendations
+        TIMESTAMP generated_at
     }
 
     INVESTMENT_RECOMMENDATIONS {
-        ObjectId _id
-        ObjectId userId
-        string recommendation
-        string riskLevel
-        number expectedReturn
+        UUID id PK
+        UUID user_id FK
+        ENUM investment_type
+        ENUM risk_level
+        TEXT recommendation
+        DECIMAL expected_return
+        TIMESTAMP generated_at
     }
 
     NOTIFICATIONS {
-        ObjectId _id
-        ObjectId userId
-        string title
-        string message
-        boolean isRead
+        UUID id PK
+        UUID user_id FK
+        VARCHAR title
+        TEXT message
+        ENUM notification_type
+        BOOLEAN is_read
+        TIMESTAMP created_at
+    }
+
+    AUDIT_LOGS {
+        UUID id PK
+        UUID user_id FK
+        VARCHAR action
+        VARCHAR entity
+        VARCHAR ip_address
+        TIMESTAMP created_at
     }
 ```
 
 ---
 
-# Collection Specifications
+# Database Relationships
 
-## Users
+The CreditMiners database follows a relational architecture centered around the **users** table. Every financial record, AI assessment, recommendation, notification, and audit event belongs to a registered user through foreign key relationships.
 
-Stores user account information and authentication metadata.
+Relationship summary:
 
-| Field | Type | Description |
-| :---- | :--- | :---------- |
-| _id | ObjectId | Primary identifier |
-| fullName | String | User's full name |
-| email | String | Registered email address |
-| passwordHash | String | Encrypted password |
-| phone | String | Mobile number |
-| profileImage | String | Profile picture URL |
-| createdAt | Date | Account creation timestamp |
-| updatedAt | Date | Last profile update |
+- One User → One Financial Profile
+- One User → Many Transactions
+- One User → Many Credit Assessments
+- One User → Many Investment Recommendations
+- One User → Many Notifications
+- One User → Many Audit Logs
+
+This structure ensures referential integrity, simplifies reporting, improves analytical queries, and enables efficient AI model training using structured financial data.
 
 ---
 
-## FinancialProfiles
-
-Stores summarized financial information used by AI models.
-
-| Field | Type | Description |
-| :---- | :--- | :---------- |
-| userId | ObjectId | User reference |
-| monthlyIncome | Number | Monthly income |
-| monthlyExpenses | Number | Monthly expenses |
-| monthlySavings | Number | Monthly savings |
-| investmentCapacity | Number | Estimated investment capacity |
-| financialHealthScore | Number | Overall health score |
-| updatedAt | Date | Last calculation timestamp |
+# Table Specifications
 
 ---
 
-## Transactions
+## 1. users
 
-Maintains the complete financial activity history.
+Stores user account information, authentication credentials, and profile details.
 
-| Field | Type | Description |
-| :---- | :--- | :---------- |
-| userId | ObjectId | User reference |
-| amount | Number | Transaction amount |
-| category | String | Expense category |
-| transactionType | String | Credit or Debit |
-| merchant | String | Merchant name |
-| paymentMethod | String | UPI, Card, Cash, etc. |
-| transactionDate | Date | Transaction timestamp |
-
----
-
-## CreditAssessments
-
-Stores explainable AI-generated financial assessments.
-
-| Field | Type | Description |
-| :---- | :--- | :---------- |
-| userId | ObjectId | User reference |
-| financialHealthScore | Number | Calculated score |
-| creditScore | Number | AI-generated credit score |
-| confidence | Number | Prediction confidence |
-| explanation | String | Explainability summary |
-| recommendations | Array | Improvement suggestions |
-| generatedAt | Date | Assessment timestamp |
+| Column | Data Type | Constraints | Description |
+| :------ | :-------- | :---------- | :---------- |
+| id | UUID | Primary Key, Default `gen_random_uuid()` | Unique user identifier |
+| full_name | VARCHAR(100) | NOT NULL | User's full name |
+| email | VARCHAR(255) | UNIQUE, NOT NULL | Registered email address |
+| password_hash | TEXT | NOT NULL | Encrypted password |
+| phone | VARCHAR(20) | UNIQUE | Mobile number |
+| profile_image | TEXT | NULL | Profile image URL |
+| is_verified | BOOLEAN | DEFAULT FALSE | Email verification status |
+| created_at | TIMESTAMP | DEFAULT NOW() | Account creation time |
+| updated_at | TIMESTAMP | DEFAULT NOW() | Last profile update |
 
 ---
 
-## InvestmentRecommendations
+## 2. financial_profiles
 
-Stores AI-generated investment suggestions.
+Stores financial information required for AI analysis and financial health scoring.
 
-| Field | Type | Description |
-| :---- | :--- | :---------- |
-| userId | ObjectId | User reference |
-| investmentType | String | SIP, Mutual Fund, etc. |
-| recommendation | String | Suggested investment |
-| riskLevel | String | Low, Medium, High |
-| expectedReturn | Number | Estimated return |
-| generatedAt | Date | Recommendation timestamp |
+| Column | Data Type | Constraints | Description |
+| :------ | :-------- | :---------- | :---------- |
+| id | UUID | Primary Key | Unique financial profile |
+| user_id | UUID | Foreign Key → users.id, UNIQUE | Associated user |
+| monthly_income | DECIMAL(12,2) | NOT NULL | Monthly income |
+| monthly_expenses | DECIMAL(12,2) | NOT NULL | Monthly expenses |
+| monthly_savings | DECIMAL(12,2) | NOT NULL | Monthly savings |
+| investment_capacity | DECIMAL(12,2) | NOT NULL | Estimated investment capacity |
+| financial_health_score | DECIMAL(5,2) | DEFAULT 0 | AI-generated health score |
+| updated_at | TIMESTAMP | DEFAULT NOW() | Last update |
 
 ---
 
-## Notifications
+## 3. transactions
 
-Stores user notifications generated by the platform.
+Stores complete financial transaction history for each user.
 
-| Field | Type | Description |
-| :---- | :--- | :---------- |
-| userId | ObjectId | User reference |
-| title | String | Notification title |
-| message | String | Notification content |
-| type | String | Information, Warning, Success |
-| isRead | Boolean | Read status |
-| createdAt | Date | Creation timestamp |
+| Column | Data Type | Constraints | Description |
+| :------ | :-------- | :---------- | :---------- |
+| id | UUID | Primary Key | Transaction identifier |
+| user_id | UUID | Foreign Key → users.id | Owner |
+| amount | DECIMAL(12,2) | NOT NULL | Transaction amount |
+| category | VARCHAR(100) | NOT NULL | Expense or income category |
+| transaction_type | ENUM | NOT NULL | Income / Expense |
+| merchant | VARCHAR(150) | NULL | Merchant or source |
+| payment_method | ENUM | NOT NULL | UPI, Card, Cash, Net Banking |
+| description | TEXT | NULL | Optional notes |
+| transaction_date | TIMESTAMP | NOT NULL | Transaction timestamp |
+| created_at | TIMESTAMP | DEFAULT NOW() | Record creation |
+
+---
+
+## 4. credit_assessments
+
+Stores AI-generated financial analysis and explainability reports.
+
+| Column | Data Type | Constraints | Description |
+| :------ | :-------- | :---------- | :---------- |
+| id | UUID | Primary Key | Assessment identifier |
+| user_id | UUID | Foreign Key → users.id | Associated user |
+| financial_health_score | DECIMAL(5,2) | NOT NULL | Overall financial score |
+| credit_score | INTEGER | NOT NULL | AI-generated credit score |
+| confidence_score | DECIMAL(5,2) | NOT NULL | Model confidence |
+| explanation | TEXT | NOT NULL | Explainable AI summary |
+| recommendations | JSONB | NOT NULL | Improvement suggestions |
+| model_version | VARCHAR(30) | NOT NULL | AI model version |
+| generated_at | TIMESTAMP | DEFAULT NOW() | Generation timestamp |
+
+---
+
+## 5. investment_recommendations
+
+Stores personalized investment recommendations generated by the AI engine.
+
+| Column | Data Type | Constraints | Description |
+| :------ | :-------- | :---------- | :---------- |
+| id | UUID | Primary Key | Recommendation identifier |
+| user_id | UUID | Foreign Key → users.id | Associated user |
+| investment_type | ENUM | NOT NULL | SIP, Mutual Fund, FD, ETF, Stocks |
+| recommendation | TEXT | NOT NULL | AI recommendation |
+| risk_level | ENUM | NOT NULL | Low, Medium, High |
+| expected_return | DECIMAL(5,2) | NULL | Estimated annual return (%) |
+| investment_amount | DECIMAL(12,2) | NULL | Suggested investment amount |
+| generated_at | TIMESTAMP | DEFAULT NOW() | Recommendation time |
+
+---
+
+## 6. notifications
+
+Stores all user notifications generated by the application.
+
+| Column | Data Type | Constraints | Description |
+| :------ | :-------- | :---------- | :---------- |
+| id | UUID | Primary Key | Notification identifier |
+| user_id | UUID | Foreign Key → users.id | Associated user |
+| title | VARCHAR(150) | NOT NULL | Notification title |
+| message | TEXT | NOT NULL | Notification content |
+| notification_type | ENUM | NOT NULL | Success, Warning, Info, Error |
+| is_read | BOOLEAN | DEFAULT FALSE | Read status |
+| created_at | TIMESTAMP | DEFAULT NOW() | Notification time |
+
+---
+
+## 7. audit_logs
+
+Maintains system activity for security, compliance, and debugging.
+
+| Column | Data Type | Constraints | Description |
+| :------ | :-------- | :---------- | :---------- |
+| id | UUID | Primary Key | Log identifier |
+| user_id | UUID | Foreign Key → users.id | Related user |
+| action | VARCHAR(100) | NOT NULL | Performed action |
+| entity | VARCHAR(100) | NOT NULL | Target entity |
+| ip_address | INET | NULL | Client IP address |
+| user_agent | TEXT | NULL | Browser/device information |
+| created_at | TIMESTAMP | DEFAULT NOW() | Event timestamp |
+
+---
+# PostgreSQL Enums
+
+To improve data consistency and eliminate invalid values, PostgreSQL enumerated types are used for frequently repeated categorical fields.
+
+| Enum | Allowed Values |
+| :--- | :------------- |
+| `transaction_type` | INCOME, EXPENSE |
+| `payment_method` | UPI, CARD, CASH, NET_BANKING, WALLET |
+| `risk_level` | LOW, MEDIUM, HIGH |
+| `investment_type` | SIP, MUTUAL_FUND, STOCKS, ETF, FIXED_DEPOSIT, GOLD |
+| `notification_type` | INFO, SUCCESS, WARNING, ERROR |
 
 ---
 
 # Relationships
 
-| Parent | Child | Relationship |
-| :----- | :---- | :----------- |
-| Users | FinancialProfiles | One-to-One |
-| Users | Transactions | One-to-Many |
-| Users | CreditAssessments | One-to-Many |
-| Users | InvestmentRecommendations | One-to-Many |
-| Users | Notifications | One-to-Many |
+The database follows a normalized relational architecture centered around the **users** table.
+
+| Parent Table | Child Table | Relationship |
+| :----------- | :---------- | :----------- |
+| users | financial_profiles | One-to-One |
+| users | transactions | One-to-Many |
+| users | credit_assessments | One-to-Many |
+| users | investment_recommendations | One-to-Many |
+| users | notifications | One-to-Many |
+| users | audit_logs | One-to-Many |
+
+All foreign key relationships use **ON DELETE CASCADE**, ensuring that associated records are automatically removed when a user account is deleted.
 
 ---
 
 # Indexing Strategy
 
-To improve query performance, the following indexes are recommended.
+To improve query performance and scalability, the following indexes are recommended.
 
-| Collection | Indexed Fields |
-| :--------- | :------------- |
-| Users | email |
-| FinancialProfiles | userId |
-| Transactions | userId, transactionDate |
-| CreditAssessments | userId, generatedAt |
-| InvestmentRecommendations | userId |
-| Notifications | userId, isRead |
+| Table | Indexed Columns |
+| :---- | :-------------- |
+| users | email |
+| financial_profiles | user_id |
+| transactions | user_id, transaction_date |
+| credit_assessments | user_id, generated_at |
+| investment_recommendations | user_id, generated_at |
+| notifications | user_id, is_read |
+| audit_logs | user_id, created_at |
+
+These indexes optimize:
+
+- User authentication
+- Dashboard loading
+- Transaction history retrieval
+- AI assessment lookup
+- Investment recommendation retrieval
+- Notification queries
+- Audit reporting
+
+---
+
+# Database Constraints
+
+The schema enforces multiple database-level constraints to maintain consistency and integrity.
+
+### Primary Keys
+
+Every table uses a UUID primary key.
+
+### Foreign Keys
+
+All child tables reference the `users` table through the `user_id` foreign key.
+
+### Unique Constraints
+
+- email
+- phone
+- financial_profiles.user_id
+
+### NOT NULL Constraints
+
+Applied to all mandatory business-critical fields.
+
+### Check Constraints
+
+Recommended validations include:
+
+- monthly_income >= 0
+- monthly_expenses >= 0
+- monthly_savings >= 0
+- investment_capacity >= 0
+- financial_health_score BETWEEN 0 AND 100
+- credit_score BETWEEN 300 AND 900
+- confidence_score BETWEEN 0 AND 100
+- expected_return >= 0
 
 ---
 
 # Validation Rules
 
-Each collection follows application-level validation to ensure data consistency.
+Application-level validation complements database constraints.
 
-- Required fields are validated before persistence.
-- Email addresses must be unique.
-- Passwords are stored only after hashing.
-- Financial values cannot be negative.
-- Every assessment references a valid user.
-- AI-generated records include timestamps for traceability.
-- User identifiers are validated before database operations.
+The backend validates:
+
+- Required request fields
+- Email format
+- Password strength
+- Phone number format
+- Duplicate user registration
+- Financial values
+- UUID validity
+- Enum values
+- AI response structure
+
+Prisma schema validation ensures that only correctly typed data reaches the database.
+
+---
+
+# Security Considerations
+
+The database has been designed with security as a core principle.
+
+Implemented security measures include:
+
+- Password hashing using bcrypt
+- JWT-based authentication
+- Parameterized database queries through Prisma
+- UUID-based primary keys
+- Foreign key constraints
+- Input validation
+- SQL injection protection
+- Audit logging
+- Timestamp tracking
+
+Future enhancements may include:
+
+- Row-Level Security (RLS)
+- Database encryption at rest
+- Column-level encryption for sensitive financial data
+- Automated backups
+- Read replicas
+- Activity monitoring
+
+---
+
+# Performance & Scalability
+
+The database is designed to support future growth while maintaining performance.
+
+Scalability strategies include:
+
+- Proper normalization
+- Efficient indexing
+- Optimized foreign key relationships
+- Pagination for transaction history
+- Aggregate SQL queries for dashboard analytics
+- Connection pooling
+- Prisma query optimization
+- Horizontal backend scaling
+- Managed PostgreSQL infrastructure through Supabase
+
+This architecture supports thousands of concurrent users while maintaining reliable query performance.
+
+---
+
+# Prisma Integration
+
+Prisma ORM acts as the application's data access layer.
+
+Key advantages include:
+
+- Type-safe database queries
+- Automatic schema migrations
+- Generated TypeScript client
+- Strong compile-time validation
+- Simplified CRUD operations
+- Database portability
+- Improved developer productivity
+- Clean repository architecture
+
+The database schema defined in `schema.prisma` serves as the single source of truth for all application models.
 
 ---
 
 # Design Considerations
 
-The database has been designed with the following goals:
+The CreditMiners database has been designed to meet the requirements of a modern AI-powered fintech platform.
 
-- Efficient document retrieval
-- Clear separation of business entities
-- Minimal data duplication
-- Support for explainable AI outputs
-- Scalable transaction storage
-- Easy integration with future financial services
+Primary design goals include:
+
+- Normalized relational schema
+- ACID-compliant financial transactions
+- Strong referential integrity
+- Minimal data redundancy
+- Optimized analytical queries
+- Explainable AI data storage
 - Production-ready indexing strategy
-- Maintainable and extensible schema design
+- Secure handling of financial information
+- Easy integration with future banking APIs
+- Scalable architecture for future feature expansion
 
+By combining **Supabase**, **PostgreSQL**, and **Prisma ORM**, the database provides a secure, maintainable, and highly scalable foundation capable of supporting AI-driven financial analytics, personalized investment recommendations, and future fintech integrations.
 
 <!-- ========================================================================= -->
 <!-- SECTION 11 : APPLICATION WORKFLOW -->
@@ -1420,32 +2046,32 @@ The dashboard serves as the primary interface for continuous financial monitorin
 
 ```text
 Register
-      â
-      â¼
+      │
+      ▼
 Login
-      â
-      â¼
+      │
+      ▼
 Complete Financial Profile
-      â
-      â¼
+      │
+      ▼
 Financial Data Collection
-      â
-      â¼
+      │
+      ▼
 Data Validation
-      â
-      â¼
+      │
+      ▼
 Feature Engineering
-      â
-      â¼
+      │
+      ▼
 Explainable AI Analysis
-      â
-      â¼
+      │
+      ▼
 Financial Health Score
-      â
-      â¼
+      │
+      ▼
 Investment Recommendation
-      â
-      â¼
+      │
+      ▼
 Interactive Dashboard
 ```
 
@@ -1719,18 +2345,34 @@ The AI pipeline has been engineered with the following objectives:
 - Secure processing
 - Privacy-aware inference
 - Continuous improvement
-
 <!-- ========================================================================= -->
 <!-- SECTION 13 : API DOCUMENTATION -->
 <!-- ========================================================================= -->
 
 # API Documentation
 
-CreditMiners exposes a RESTful API that enables secure communication between the client application, backend services, AI engine, and external integrations. The API follows REST principles, uses JSON for data exchange, and employs JWT-based authentication for protected resources.
+CreditMiners exposes a secure, RESTful API that enables communication between the frontend application, backend services, AI engine, PostgreSQL database, and external integrations. The API follows REST architectural principles, exchanges data using JSON, and secures protected resources through JWT-based authentication.
+
+The backend is built using **Express.js**, while **Prisma ORM** provides type-safe database access to **Supabase PostgreSQL**. Every request is validated before processing, ensuring secure and reliable interactions across the platform.
 
 ---
 
-## Base URL
+# API Overview
+
+| Property | Value |
+| :------- | :---- |
+| Architecture | RESTful API |
+| Protocol | HTTPS |
+| Data Format | JSON |
+| Authentication | JWT Bearer Token |
+| Database | Supabase PostgreSQL |
+| ORM | Prisma ORM |
+| API Version | v1 |
+| Content-Type | application/json |
+
+---
+
+# Base URL
 
 ```text
 Development
@@ -1742,39 +2384,109 @@ https://api.creditminers.com/api/v1
 
 ---
 
+# Request Headers
+
+All API requests must include the appropriate HTTP headers.
+
+### Public Endpoints
+
+```http
+Content-Type: application/json
+Accept: application/json
+```
+
+### Protected Endpoints
+
+```http
+Authorization: Bearer <access_token>
+Content-Type: application/json
+Accept: application/json
+```
+
+---
+
 # Authentication
 
-Protected endpoints require a valid JWT access token.
+Protected endpoints require a valid JWT access token issued after successful authentication.
+
+The authentication middleware verifies every incoming token before allowing access to protected resources. If the token is valid, the authenticated user's identity becomes available throughout the request lifecycle.
+
+Requests without a valid or unexpired token receive an HTTP **401 Unauthorized** response.
+
+Example:
 
 ```http
 Authorization: Bearer <access_token>
 ```
 
-Requests without a valid token will receive an HTTP **401 Unauthorized** response.
+---
+
+# Database Access
+
+All database operations are performed through **Prisma ORM**, which provides:
+
+- Type-safe database queries
+- Automatic SQL parameterization
+- Transaction management
+- Database migrations
+- Secure communication with Supabase PostgreSQL
+
+Direct SQL queries are never exposed to application services.
 
 ---
 
-# API Response Format
+# Standard API Response Format
 
-### Success Response
+Every endpoint returns a consistent response structure.
+
+## Success Response
 
 ```json
 {
     "success": true,
     "message": "Request processed successfully.",
-    "data": {}
+    "data": {},
+    "timestamp": "2026-07-24T10:30:00Z"
 }
 ```
 
 ---
 
-### Error Response
+## Error Response
 
 ```json
 {
     "success": false,
     "message": "Validation failed.",
-    "errors": []
+    "errors": [
+        {
+            "field": "email",
+            "message": "Email already exists."
+        }
+    ],
+    "timestamp": "2026-07-24T10:30:00Z"
+}
+```
+
+---
+
+# System Endpoints
+
+## Health Check
+
+```http
+GET /health
+```
+
+Returns the current API status.
+
+### Example Response
+
+```json
+{
+    "status": "healthy",
+    "database": "connected",
+    "version": "v1"
 }
 ```
 
@@ -1807,6 +2519,16 @@ Creates a new user account.
 201 Created
 ```
 
+```json
+{
+    "success": true,
+    "message": "User registered successfully.",
+    "data": {
+        "userId": "uuid"
+    }
+}
+```
+
 ---
 
 ## Login
@@ -1815,9 +2537,9 @@ Creates a new user account.
 POST /auth/login
 ```
 
-Authenticates a user and returns an access token.
+Authenticates a user and returns a JWT access token.
 
-### Request
+### Request Body
 
 ```json
 {
@@ -1830,8 +2552,12 @@ Authenticates a user and returns an access token.
 
 ```json
 {
-    "accessToken": "...",
-    "user": {}
+    "success": true,
+    "message": "Login successful.",
+    "data": {
+        "accessToken": "...",
+        "user": {}
+    }
 }
 ```
 
@@ -1843,33 +2569,131 @@ Authenticates a user and returns an access token.
 POST /auth/logout
 ```
 
-Invalidates the current user session.
+Invalidates the current authenticated session.
+
+### Success Response
+
+```http
+204 No Content
+```
+
+---
+
+## Refresh Access Token
+
+```http
+POST /auth/refresh-token
+```
+
+Generates a new access token using a valid refresh token.
+
+---
+
+## Change Password
+
+```http
+PATCH /auth/change-password
+```
+
+Allows an authenticated user to securely update their password.
+
+### Request Body
+
+```json
+{
+    "currentPassword": "OldPassword123",
+    "newPassword": "NewPassword123"
+}
+```
+
+### Success Response
+
+```http
+200 OK
+```
+
+```json
+{
+    "success": true,
+    "message": "Password updated successfully."
+}
+```
 
 ---
 
 # User Endpoints
 
-## Get Profile
+## Get User Profile
 
 ```http
 GET /users/profile
 ```
 
-Returns the authenticated user's profile.
+Returns the authenticated user's profile information.
+
+### Success Response
+
+```json
+{
+    "success": true,
+    "message": "Profile retrieved successfully.",
+    "data": {
+        "id": "uuid",
+        "fullName": "John Doe",
+        "email": "john@example.com",
+        "phone": "9876543210",
+        "profileImage": "https://...",
+        "isVerified": true,
+        "createdAt": "2026-07-24T10:30:00Z"
+    }
+}
+```
 
 ---
 
-## Update Profile
+## Update User Profile
 
 ```http
 PUT /users/profile
 ```
 
-Updates user profile information.
+Updates the authenticated user's profile.
+
+### Example Request
+
+```json
+{
+    "fullName": "John Doe",
+    "phone": "9876543210",
+    "profileImage": "https://..."
+}
+```
+
+### Success Response
+
+```http
+200 OK
+```
 
 ---
 
-# Financial Profile
+## Delete User Account
+
+```http
+DELETE /users/profile
+```
+
+Deletes the authenticated user's account and all associated data.
+
+### Success Response
+
+```http
+204 No Content
+```
+
+---
+
+# Financial Profile Endpoints
 
 ## Create Financial Profile
 
@@ -1877,7 +2701,7 @@ Updates user profile information.
 POST /financial-profile
 ```
 
-Creates or updates the user's financial information.
+Creates a financial profile for the authenticated user.
 
 ### Example Request
 
@@ -1885,9 +2709,14 @@ Creates or updates the user's financial information.
 {
     "monthlyIncome": 60000,
     "monthlyExpenses": 28000,
-    "monthlySavings": 12000,
-    "existingInvestments": 50000
+    "investmentCapacity": 12000
 }
+```
+
+### Success Response
+
+```http
+201 Created
 ```
 
 ---
@@ -1902,7 +2731,132 @@ Returns the user's financial profile.
 
 ---
 
-# Credit Assessment
+## Update Financial Profile
+
+```http
+PUT /financial-profile
+```
+
+Updates the existing financial profile.
+
+### Example Request
+
+```json
+{
+    "monthlyIncome": 65000,
+    "monthlyExpenses": 30000,
+    "investmentCapacity": 15000
+}
+```
+
+---
+
+## Delete Financial Profile
+
+```http
+DELETE /financial-profile
+```
+
+Deletes the financial profile associated with the authenticated user.
+
+---
+
+# Transaction Endpoints
+
+The Transaction API manages user financial transactions used for analytics, financial health scoring, and AI-driven recommendations.
+
+---
+
+## Create Transaction
+
+```http
+POST /transactions
+```
+
+Creates a new financial transaction.
+
+### Example Request
+
+```json
+{
+    "amount": 2500,
+    "category": "Food",
+    "transactionType": "Expense",
+    "merchant": "Zomato",
+    "paymentMethod": "UPI",
+    "description": "Dinner",
+    "transactionDate": "2026-07-24"
+}
+```
+
+### Success Response
+
+```http
+201 Created
+```
+
+---
+
+## Get All Transactions
+
+```http
+GET /transactions
+```
+
+Returns all transactions belonging to the authenticated user.
+
+Supports pagination, filtering, and sorting.
+
+### Query Parameters
+
+| Parameter | Description |
+| :-------- | :---------- |
+| page | Page number |
+| limit | Number of records |
+| sort | Sort field |
+| order | asc / desc |
+| category | Filter by category |
+| transactionType | Income or Expense |
+
+Example
+
+```http
+GET /transactions?page=1&limit=20&sort=transactionDate&order=desc
+```
+
+---
+
+## Get Transaction
+
+```http
+GET /transactions/{id}
+```
+
+Returns details of a specific transaction.
+
+---
+
+## Update Transaction
+
+```http
+PUT /transactions/{id}
+```
+
+Updates an existing transaction.
+
+---
+
+## Delete Transaction
+
+```http
+DELETE /transactions/{id}
+```
+
+Deletes the selected transaction.
+
+---
+
+# Credit Assessment Endpoints
 
 ## Generate Credit Assessment
 
@@ -1910,16 +2864,20 @@ Returns the user's financial profile.
 POST /credit-assessment/generate
 ```
 
-Runs the Explainable AI pipeline and generates a financial assessment.
+Runs the Explainable AI engine to analyze the user's financial data and generate a credit assessment.
 
 ### Response
 
 ```json
 {
-    "financialHealthScore": 86,
-    "creditScore": 782,
-    "confidence": 0.94,
-    "riskLevel": "Low"
+    "success": true,
+    "message": "Credit assessment generated successfully.",
+    "data": {
+        "financialHealthScore": 86,
+        "creditScore": 782,
+        "confidenceScore": 0.94,
+        "riskLevel": "Low"
+    }
 }
 ```
 
@@ -1931,64 +2889,77 @@ Runs the Explainable AI pipeline and generates a financial assessment.
 GET /credit-assessment/history
 ```
 
-Returns all previous assessments for the authenticated user.
+Returns all previous AI-generated assessments for the authenticated user.
+
+Supports pagination.
 
 ---
 
-# Investment Recommendations
+# Investment Recommendation Endpoints
 
-## Generate Recommendation
+## Generate Investment Recommendation
 
 ```http
 POST /investment/recommend
 ```
 
-Generates personalized investment suggestions.
+Generates personalized investment recommendations based on the user's financial profile, spending behavior, and AI predictions.
 
 ### Response
 
 ```json
 {
-    "riskLevel": "Moderate",
-    "recommendedInvestment": "Equity Mutual Fund",
-    "expectedReturn": "12%"
+    "success": true,
+    "message": "Investment recommendations generated successfully.",
+    "data": {
+        "riskLevel": "Moderate",
+        "recommendedInvestment": "Equity Mutual Fund",
+        "expectedReturn": "12%",
+        "investmentAmount": 10000
+    }
 }
 ```
 
 ---
 
-## Recommendation History
+## Get Recommendation History
 
 ```http
 GET /investment/history
 ```
 
-Returns previous investment recommendations.
+Returns all previous investment recommendations.
+
+Supports pagination.
 
 ---
 
-# Dashboard
+# Dashboard Endpoints
 
 ## Dashboard Summary
 
 ```http
-GET /dashboard
+GET /dashboard/summary
 ```
 
-Returns all information required by the frontend dashboard.
+Returns all information required to render the application dashboard.
 
-Response includes:
+The response may include:
 
+- User profile
 - Financial Health Score
-- Credit Intelligence
+- Credit Score
 - Spending Analytics
+- Income vs Expense Summary
 - Savings Overview
-- Investment Suggestions
+- Investment Recommendations
 - AI Insights
+- Recent Transactions
+- Notifications
 
 ---
 
-# Notifications
+# Notification Endpoints
 
 ## Get Notifications
 
@@ -1998,6 +2969,8 @@ GET /notifications
 
 Returns all notifications for the authenticated user.
 
+Supports pagination.
+
 ---
 
 ## Mark Notification as Read
@@ -2006,14 +2979,36 @@ Returns all notifications for the authenticated user.
 PATCH /notifications/{id}
 ```
 
-Updates notification status.
+Marks a notification as read.
+
+---
+
+## Mark All Notifications as Read
+
+```http
+PATCH /notifications/read-all
+```
+
+Marks all notifications as read.
+
+---
+
+## Delete Notification
+
+```http
+DELETE /notifications/{id}
+```
+
+Deletes a notification from the user's account.
 
 ---
 
 # HTTP Status Codes
 
-| Code | Meaning |
-| :--- | :------ |
+The CreditMiners API follows standard HTTP status codes to indicate the outcome of each request.
+
+| Status Code | Description |
+| :---------: | :---------- |
 | 200 | OK |
 | 201 | Created |
 | 204 | No Content |
@@ -2022,68 +3017,250 @@ Updates notification status.
 | 403 | Forbidden |
 | 404 | Not Found |
 | 409 | Conflict |
-| 422 | Validation Error |
+| 422 | Unprocessable Entity (Validation Error) |
+| 429 | Too Many Requests |
 | 500 | Internal Server Error |
+| 503 | Service Unavailable |
 
 ---
 
 # API Versioning
 
-The API follows URI-based versioning.
+The API follows URI-based versioning to ensure backward compatibility while allowing future enhancements.
 
 ```text
 /api/v1/
 /api/v2/
 ```
 
-This approach ensures backward compatibility while enabling future enhancements without disrupting existing clients.
+Each major release introduces a new API version without affecting existing client applications.
+
+---
+
+# Pagination
+
+Endpoints that return collections support pagination to improve performance and reduce response payload size.
+
+Supported endpoints include:
+
+- Transactions
+- Notifications
+- Credit Assessment History
+- Investment Recommendation History
+
+### Example
+
+```http
+GET /transactions?page=1&limit=20
+```
+
+### Query Parameters
+
+| Parameter | Description | Default |
+| :-------- | :---------- | :------ |
+| page | Page number | 1 |
+| limit | Number of records per page | 20 |
+
+Example Response
+
+```json
+{
+    "success": true,
+    "data": {
+        "items": [],
+        "pagination": {
+            "page": 1,
+            "limit": 20,
+            "totalRecords": 150,
+            "totalPages": 8
+        }
+    }
+}
+```
+
+---
+
+# Filtering
+
+Several endpoints support filtering to retrieve only the required data.
+
+Example filters include:
+
+```http
+GET /transactions?category=Food
+```
+
+```http
+GET /transactions?transactionType=Expense
+```
+
+```http
+GET /notifications?status=unread
+```
+
+---
+
+# Sorting
+
+Endpoints returning multiple records support sorting.
+
+### Example
+
+```http
+GET /transactions?sort=transactionDate&order=desc
+```
+
+Supported parameters include:
+
+| Parameter | Description |
+| :-------- | :---------- |
+| sort | Field used for sorting |
+| order | asc or desc |
 
 ---
 
 # Validation Rules
 
-All incoming requests undergo server-side validation before processing.
+All incoming requests undergo comprehensive server-side validation before reaching the business logic layer.
 
 Validation includes:
 
 - Required field verification
 - Data type validation
 - Email format validation
+- Phone number validation
 - Password policy enforcement
 - Numeric range validation
+- UUID validation
 - Duplicate resource detection
 - Authentication verification
 - Authorization checks
+
+Additionally, database integrity is enforced through:
+
+- Prisma ORM validation
+- PostgreSQL constraints
+- Foreign key constraints
+- Unique constraints
+- Check constraints
+
+Invalid requests return an HTTP **422 Unprocessable Entity** response.
 
 ---
 
 # Rate Limiting
 
-To ensure service availability and protect against abuse, API requests may be rate-limited.
+To protect the API against abuse and ensure fair resource usage, request rate limiting is applied to selected endpoints.
 
-Typical limits include:
+Rate limiting may be enforced on:
 
 - Authentication endpoints
 - AI prediction endpoints
-- Recommendation generation
-- Public APIs
+- Credit assessment generation
+- Investment recommendation generation
+- Public endpoints
 
-Clients exceeding configured limits should expect an HTTP **429 Too Many Requests** response.
+Clients exceeding configured limits receive:
+
+```http
+429 Too Many Requests
+```
+
+---
+
+# Security
+
+The CreditMiners API incorporates multiple security mechanisms to protect user data and maintain system integrity.
+
+Security measures include:
+
+- JWT-based Authentication
+- Password hashing using bcrypt
+- HTTPS communication
+- Input validation
+- Output sanitization
+- Parameterized SQL queries via Prisma ORM
+- SQL Injection protection
+- CORS configuration
+- Rate limiting
+- Secure environment variable management
+- Authentication middleware
+- Authorization middleware
+- Audit logging
+
+Sensitive information such as passwords and authentication tokens is never exposed through API responses.
 
 ---
 
 # Error Handling
 
-All API errors follow a consistent response structure to simplify frontend integration.
+The API follows a standardized error response format to simplify frontend integration and improve debugging.
+
+Example Error Response
+
+```json
+{
+    "success": false,
+    "message": "Validation failed.",
+    "errors": [
+        {
+            "field": "email",
+            "message": "Email already exists."
+        }
+    ],
+    "timestamp": "2026-07-24T10:30:00Z"
+}
+```
 
 Each error response includes:
 
 - Success status
 - Human-readable message
-- Error details (when applicable)
+- Validation or processing errors
+- Timestamp
 - Appropriate HTTP status code
 
-This standardized format enables predictable error handling across all client applications.
+This standardized structure enables predictable and consistent error handling across all client applications.
+
+---
+
+# API Design Principles
+
+The CreditMiners API has been designed following modern RESTful best practices.
+
+Design principles include:
+
+- Resource-oriented endpoints
+- Stateless request handling
+- Consistent URI naming conventions
+- Standard HTTP methods
+- Predictable response structures
+- Secure authentication and authorization
+- Versioned API architecture
+- Modular endpoint organization
+- Scalable service design
+- Clear separation between business logic and data access
+
+---
+
+# Future API Enhancements
+
+Future releases of the CreditMiners API may introduce additional capabilities, including:
+
+- Open Banking API integration
+- Real-time financial data synchronization
+- Investment portfolio management APIs
+- Loan eligibility assessment APIs
+- AI-powered financial assistant endpoints
+- WebSocket-based real-time notifications
+- Third-party financial institution integrations
+- Advanced analytics endpoints
+- Multi-device session management
+- Role-Based Access Control (RBAC)
+- API key support for enterprise integrations
+- Public developer API documentation
+
+These enhancements are intended to improve scalability, interoperability, and the overall developer experience while maintaining backward compatibility with existing API versions.
 
 <!-- ========================================================================= -->
 <!-- SECTION 14 : AUTHENTICATION & AUTHORIZATION -->
@@ -2091,9 +3268,32 @@ This standardized format enables predictable error handling across all client ap
 
 # Authentication & Authorization
 
-CreditMiners implements a secure authentication and authorization mechanism to protect user identities, financial information, and AI-generated insights. Authentication is based on **JSON Web Tokens (JWT)**, while authorization ensures that users can only access resources they are permitted to use.
+CreditMiners implements a secure, scalable, and stateless authentication and authorization system to protect user identities, financial information, AI-generated insights, and application resources. The authentication framework is built on **JSON Web Tokens (JWT)**, while authorization ensures that authenticated users can access only the resources and operations for which they have permission.
 
-The security model follows stateless authentication principles, making it suitable for scalable cloud-native deployments.
+The backend is implemented using **Express.js**, with authentication middleware protecting all secured API endpoints. User credentials are securely stored in **Supabase PostgreSQL**, while **Prisma ORM** provides type-safe database access. Passwords are hashed using **bcrypt**, ensuring that plaintext passwords are never stored or transmitted.
+
+The authentication architecture follows modern security best practices and is designed for cloud-native deployment, horizontal scalability, and future extensibility.
+
+---
+
+# Authentication Architecture
+
+```mermaid
+flowchart LR
+
+A[User]
+B[React Frontend]
+C[Express API]
+D[Authentication Middleware]
+E[Prisma ORM]
+F[Supabase PostgreSQL]
+
+A --> B
+B --> C
+C --> D
+D --> E
+E --> F
+```
 
 ---
 
@@ -2102,54 +3302,68 @@ The security model follows stateless authentication principles, making it suitab
 ```mermaid
 sequenceDiagram
 
-    participant User
-    participant Client
-    participant API
-    participant Database
+participant User
+participant Client
+participant API
+participant Database
 
-    User->>Client: Enter Credentials
+User->>Client: Enter Credentials
 
-    Client->>API: Login Request
+Client->>API: Login Request
 
-    API->>Database: Verify User
+API->>Database: Retrieve User
 
-    Database-->>API: User Record
+Database-->>API: User Record
 
-    API-->>Client: JWT Access Token
+API->>API: Verify Password (bcrypt)
 
-    Client->>API: Protected Request + JWT
+API-->>Client: JWT Access Token
 
-    API->>API: Validate Token
+Client->>API: Protected Request + JWT
 
-    API-->>Client: Requested Resource
+API->>API: Verify JWT
+
+API-->>Client: Protected Resource
 ```
 
 ---
 
 # Authentication Lifecycle
 
-The authentication process consists of the following stages:
+The authentication process follows the sequence below:
 
 1. User registration
-2. Credential verification
-3. Password validation
-4. JWT generation
-5. Token verification
-6. Authorization
-7. Access to protected resources
+2. Account validation
+3. Password hashing
+4. User login
+5. Credential verification
+6. JWT generation
+7. Secure token transmission
+8. Token verification
+9. Authorization
+10. Access to protected resources
 
 ---
 
 # User Registration
 
-During registration, the backend validates all incoming information before creating a new account.
+When a new user registers, the backend validates all incoming information before creating an account.
 
 Validation includes:
 
 - Required field verification
 - Email format validation
+- Phone number validation
 - Password strength validation
-- Duplicate account detection
+- Duplicate email detection
+- Duplicate phone number detection
+
+After successful validation:
+
+- Password is hashed using bcrypt.
+- User information is stored in Supabase PostgreSQL.
+- A unique UUID is generated for the user.
+- The account becomes available for authentication.
 
 Passwords are **never stored in plaintext**.
 
@@ -2157,49 +3371,63 @@ Passwords are **never stored in plaintext**.
 
 # Password Security
 
-User passwords are securely hashed before storage using the **bcrypt** algorithm.
+CreditMiners protects user credentials using the **bcrypt** hashing algorithm.
 
 Security measures include:
 
-- Salt generation
+- Automatic salt generation
 - Adaptive hashing
 - One-way encryption
 - Secure password comparison
+- Protection against rainbow table attacks
 
-Example:
+Authentication workflow:
 
 ```text
 Plain Password
-        â
-        â¼
+        │
+        ▼
 bcrypt Hashing
-        â
-        â¼
+        │
+        ▼
 Hashed Password
-        â
-        â¼
-Stored in Database
+        │
+        ▼
+Stored in PostgreSQL
+```
+
+During login:
+
+```text
+Entered Password
+        │
+        ▼
+bcrypt Compare
+        │
+        ▼
+Authentication Result
 ```
 
 ---
 
 # Login Process
 
-When a user logs in:
+When a user logs into the platform, the following operations occur:
 
 1. Credentials are submitted.
 2. Email is verified.
-3. Password hash is compared.
-4. JWT token is generated.
-5. Token is returned to the client.
-6. Client stores the token securely.
-7. Protected requests include the token.
+3. User record is retrieved.
+4. Password hash is compared using bcrypt.
+5. JWT access token is generated.
+6. Authenticated user information is returned.
+7. Client securely stores the access token.
+8. Future requests include the JWT.
 
 ---
 
 # JWT Authentication
 
-After successful authentication, the server issues a signed JSON Web Token.
+After successful authentication, the server generates a signed JSON Web Token (JWT).
 
 Example Authorization Header
 
@@ -2207,33 +3435,63 @@ Example Authorization Header
 Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
 ```
 
-The token contains authenticated user information required for future requests without exposing sensitive data.
+The JWT allows the server to authenticate future requests without storing session information.
 
-Typical claims include:
+Typical JWT claims include:
 
 | Claim | Description |
 | :---- | :---------- |
-| id | User Identifier |
+| sub | User Identifier (UUID) |
 | email | Registered Email |
 | role | User Role |
-| issuedAt | Token Creation Time |
-| expiresAt | Token Expiration |
+| iat | Issued At |
+| exp | Expiration Time |
+
+Sensitive information such as passwords is never included in the token payload.
+
+---
+
+# Token Verification
+
+Every protected request passes through authentication middleware.
+
+The middleware performs the following checks:
+
+- Authorization header exists
+- Bearer token format is valid
+- JWT signature is verified
+- Token expiration is checked
+- User still exists
+- User account is active
+
+Only validated requests proceed to the business logic layer.
+
+Invalid tokens receive:
+
+```http
+401 Unauthorized
+```
 
 ---
 
 # Authorization
 
-Authentication verifies **who the user is**.
+Authentication answers:
 
-Authorization determines **what the user is allowed to access**.
+> **Who is the user?**
 
-Protected routes validate:
+Authorization answers:
 
-- JWT authenticity
-- Token expiration
-- User existence
-- Resource ownership
-- Permission level
+> **What is the user allowed to access?**
+
+Authorization ensures that authenticated users can only access resources that belong to them or are permitted by their assigned role.
+
+Authorization checks include:
+
+- User identity verification
+- Resource ownership verification
+- Permission validation
+- Route protection
 
 ---
 
@@ -2245,115 +3503,140 @@ Examples of protected endpoints include:
 | :------- | :---------------------- |
 | `/users/profile` | Yes |
 | `/financial-profile` | Yes |
+| `/transactions` | Yes |
 | `/credit-assessment` | Yes |
 | `/investment/recommend` | Yes |
-| `/dashboard` | Yes |
+| `/dashboard/summary` | Yes |
 | `/notifications` | Yes |
 
 Public endpoints include:
 
 - User Registration
 - User Login
+- Health Check
 
 ---
 
-# Authorization Middleware
+# Authentication Middleware
 
-Every protected request passes through an authorization middleware responsible for:
+Every protected request passes through centralized authentication middleware before reaching business services.
 
-- Extracting JWT
-- Verifying signature
-- Checking expiration
-- Validating user existence
-- Attaching authenticated user information to the request
+Responsibilities include:
 
-Only validated requests continue to the business logic layer.
+- Extract JWT
+- Verify token signature
+- Validate expiration
+- Retrieve authenticated user
+- Attach user information to the request
+- Reject unauthorized requests
+
+This centralized approach simplifies security management across the application.
 
 ---
 
 # Session Management
 
-CreditMiners follows a **stateless session architecture**.
+CreditMiners follows a **stateless authentication architecture**.
 
-Advantages include:
+Instead of maintaining server-side sessions, authentication relies on signed JWT access tokens.
 
-- Improved scalability
+Benefits include:
+
+- Horizontal scalability
 - Reduced server memory usage
-- Easier horizontal scaling
-- Cloud-native compatibility
-
-Session information is represented by signed access tokens instead of server-side session storage.
+- Cloud-native deployment
+- Faster request processing
+- Simplified infrastructure
 
 ---
 
 # Token Expiration
 
-Access tokens are issued with a predefined expiration period.
+Access tokens are issued with a configurable expiration period.
 
-Expired tokens require re-authentication or renewal depending on the authentication strategy implemented.
+Expired tokens require either:
+
+- Re-authentication
+- Refresh token exchange (future enhancement)
 
 Benefits include:
 
 - Reduced attack surface
 - Improved account security
 - Better session control
+- Protection against stolen tokens
 
 ---
 
 # Role-Based Access Control (RBAC)
 
-Although the current implementation primarily supports standard users, the architecture allows future expansion using Role-Based Access Control.
+Although the current implementation primarily supports standard users, the system has been designed for future Role-Based Access Control (RBAC).
 
 Potential roles include:
 
 | Role | Responsibilities |
 | :--- | :--------------- |
-| User | Financial analysis and recommendations |
-| Admin | User management and analytics |
-| Moderator | Content and notification management |
+| User | Financial analysis, transactions, recommendations |
+| Admin | User management, analytics, platform monitoring |
+| Moderator | Notification and content management |
 | System | Internal service communication |
+
+RBAC enables controlled access to administrative functionality while maintaining a scalable authorization model.
 
 ---
 
-# Security Best Practices
+# Authentication Best Practices
 
 The authentication system follows modern security recommendations.
 
 Implemented practices include:
 
-- Password hashing using bcrypt
 - JWT-based authentication
+- Password hashing using bcrypt
+- Stateless authentication
 - Protected API routes
-- Environment-based secret management
-- Secure password validation
+- Authentication middleware
 - Authorization middleware
+- Secure password validation
 - Request validation
-- Centralized error handling
+- Environment-based secret management
+- Standardized error responses
 
-Future enhancements may include:
+---
+
+# Future Authentication Enhancements
+
+The architecture supports future security enhancements without significant architectural changes.
+
+Potential improvements include:
 
 - Refresh Tokens
 - Multi-Factor Authentication (MFA)
 - OAuth 2.0
+- OpenID Connect (OIDC)
 - Google Sign-In
 - Apple Sign-In
+- Session Revocation
 - Device Management
 - Login History
-- Session Revocation
+- Suspicious Login Detection
+- Password Reset via Email
 
 ---
 
 # Authentication Design Goals
 
-The authentication system has been designed to provide:
+The authentication and authorization framework has been designed to provide:
 
 - Secure identity verification
 - Stateless authentication
-- Scalable architecture
-- Minimal server overhead
+- Fine-grained authorization
+- Scalable cloud-native architecture
 - Secure API communication
-- Extensible authorization model
-- Production-ready security practices
+- Type-safe database integration through Prisma ORM
+- Minimal server overhead
+- Extensible security architecture
+- Production-ready authentication practices
 
 <!-- ========================================================================= -->
 <!-- SECTION 15 : SECURITY CONSIDERATIONS -->
@@ -2361,9 +3644,11 @@ The authentication system has been designed to provide:
 
 # Security Considerations
 
-Security is a foundational aspect of the CreditMiners platform. Since the application processes sensitive financial information and AI-generated insights, multiple layers of protection are implemented to ensure the confidentiality, integrity, and availability of user data.
+Security is a fundamental pillar of the CreditMiners platform. As the application processes sensitive financial information, user identities, AI-generated assessments, and investment recommendations, multiple layers of security are implemented to ensure the confidentiality, integrity, and availability of application data.
 
-The security architecture follows modern web application security principles and aligns with industry best practices.
+The platform follows a **Defense-in-Depth** security strategy, where security controls are applied across every layer of the system, including the client application, API, authentication, business logic, database, and infrastructure.
+
+CreditMiners is designed following modern web security standards and industry best practices, enabling secure deployment in cloud-native environments while supporting future scalability and regulatory compliance.
 
 ---
 
@@ -2376,10 +3661,11 @@ A[Client]
 B[HTTPS]
 C[Authentication]
 D[Authorization]
-E[Validation]
+E[Input Validation]
 F[Business Logic]
-G[Database]
-H[Audit Logs]
+G[Prisma ORM]
+H[Supabase PostgreSQL]
+I[Audit Logs]
 
 A --> B
 B --> C
@@ -2387,68 +3673,178 @@ C --> D
 D --> E
 E --> F
 F --> G
-F --> H
+G --> H
+F --> I
 ```
 
 ---
 
 # Security Objectives
 
-The platform has been designed to achieve the following objectives:
+The security architecture has been designed to achieve the following objectives:
 
 - Protect user identities
-- Secure financial information
+- Secure sensitive financial information
 - Prevent unauthorized access
-- Maintain data integrity
+- Preserve data integrity
 - Ensure secure communication
 - Support auditability
-- Minimize attack surface
+- Reduce the application attack surface
 - Enable secure future expansion
+- Maintain user privacy
+- Ensure reliable AI-powered financial analysis
+
+---
+
+# Defense-in-Depth Strategy
+
+Rather than relying on a single security mechanism, CreditMiners implements multiple independent layers of protection.
+
+Security layers include:
+
+1. HTTPS communication
+2. JWT authentication
+3. Authorization middleware
+4. Input validation
+5. Business rule validation
+6. Prisma ORM parameterized queries
+7. PostgreSQL constraints
+8. Secure environment configuration
+9. Audit logging
+
+This layered approach significantly reduces the impact of potential vulnerabilities.
 
 ---
 
 # Data Protection
 
-Sensitive information is protected throughout its lifecycle.
+Sensitive information is protected throughout its entire lifecycle.
 
-Security measures include:
+Implemented protections include:
 
-- Password hashing using **bcrypt**
+- Password hashing using bcrypt
 - JWT-based authentication
 - Environment-based secret management
 - Input validation
+- Server-side authorization
 - Secure API communication
-- Principle of least privilege
-- Server-side authorization checks
+- Least privilege access control
+- Database integrity constraints
 
-Sensitive credentials such as API keys, JWT secrets, and database connection strings are never hardcoded into the source code.
+Sensitive credentials such as database passwords, JWT secrets, API keys, and third-party credentials are never hardcoded within the application source code.
 
 ---
 
 # Secure Communication
 
-All communication between the client and server should occur over **HTTPS**.
+All communication between clients and backend services should occur over HTTPS.
 
 Benefits include:
 
-- Data encryption in transit
-- Protection against packet interception
-- Prevention of man-in-the-middle attacks
+- Encryption of data in transit
+- Prevention of packet interception
+- Protection against Man-in-the-Middle (MITM) attacks
 - Secure API communication
+- Protection of authentication tokens
+
+Production deployments should enforce HTTPS for all incoming requests.
+
+---
+
+# Authentication Security
+
+Authentication follows modern token-based security practices.
+
+Implemented protections include:
+
+- JWT Authentication
+- Password hashing using bcrypt
+- Authentication middleware
+- Token verification
+- Secure password comparison
+- Token expiration
+- Protected API routes
+
+Future enhancements may include:
+
+- Refresh Tokens
+- Multi-Factor Authentication (MFA)
+- OAuth 2.0
+- OpenID Connect (OIDC)
+- Device-based session management
+
+---
+
+# Authorization Controls
+
+Every protected resource undergoes authorization before business logic execution.
+
+Authorization checks verify:
+
+- User identity
+- Token validity
+- Resource ownership
+- Assigned permissions
+- Route accessibility
+
+Users can access only the resources associated with their own accounts unless granted elevated permissions.
+
+---
+
+# Password Policy
+
+User passwords should satisfy strong password requirements.
+
+Recommended policy:
+
+- Minimum 8 characters
+- At least one uppercase letter
+- At least one lowercase letter
+- At least one numeric digit
+- At least one special character
+
+Passwords are:
+
+- Never stored in plaintext
+- Never logged
+- Never returned by the API
+
+Only bcrypt hashes are stored within the database.
+
+---
+
+# API Security
+
+All REST API endpoints are designed with security as a core principle.
+
+Implemented controls include:
+
+- Authentication middleware
+- Authorization checks
+- Input validation
+- Request sanitization
+- Consistent error responses
+- Rate limiting
+- Standard HTTP status codes
+- Secure JWT validation
+
+These mechanisms reduce the risk of unauthorized access and API abuse.
 
 ---
 
 # Input Validation
 
-Every incoming request is validated before processing.
+Every incoming request is validated before entering the business logic layer.
 
 Validation includes:
 
-- Required fields
-- Data type verification
-- Length constraints
-- Numeric range checks
+- Required field verification
+- Data type validation
 - Email format validation
+- Phone number validation
+- Password policy validation
+- Numeric range validation
+- UUID validation
 - Invalid character filtering
 - Request schema validation
 
@@ -2456,176 +3852,1609 @@ Validation is performed on the server regardless of any client-side validation.
 
 ---
 
-# Authentication Security
+# SQL Injection Protection
 
-Authentication follows secure token-based practices.
+CreditMiners protects against SQL Injection attacks by using **Prisma ORM**, which automatically generates parameterized SQL queries.
 
-Implemented protections include:
+Additional protections include:
 
-- JWT authentication
-- Password hashing
-- Protected API routes
-- Token verification
-- Authorization middleware
+- Parameterized database operations
+- Server-side validation
+- Input sanitization
+- Strict schema enforcement
 
-Potential future improvements:
-
-- Refresh tokens
-- Multi-Factor Authentication (MFA)
-- OAuth 2.0
-- Device-based session management
+Raw SQL queries should be avoided unless absolutely necessary.
 
 ---
 
-# Authorization Controls
+# Cross-Origin Resource Sharing (CORS)
 
-Access to protected resources is verified before executing business logic.
+The backend should restrict cross-origin requests to trusted client applications.
 
-Authorization checks ensure:
+Recommended practices include:
 
-- User identity is authenticated
-- Token is valid
-- Resource ownership is verified
-- Permission requirements are satisfied
+- Allow only approved origins
+- Restrict HTTP methods
+- Restrict allowed headers
+- Enable secure credentials only when required
 
-No sensitive resource is exposed without authorization.
-
----
-
-# Password Policy
-
-User passwords should comply with a strong password policy.
-
-Recommended requirements:
-
-- Minimum 8 characters
-- Uppercase letter
-- Lowercase letter
-- Numeric digit
-- Special character
-
-Passwords are never stored or transmitted in plaintext.
-
----
-
-# API Security
-
-All API endpoints are designed with security in mind.
-
-Implemented controls include:
-
-- Authentication middleware
-- Authorization checks
-- Request validation
-- Standardized error responses
-- HTTP status code handling
-- Rate limiting support
-
-These controls reduce the risk of unauthorized access and API abuse.
+Proper CORS configuration prevents unauthorized browser-based requests.
 
 ---
 
 # Database Security
 
-The database layer follows secure development practices.
+CreditMiners stores application data in **Supabase PostgreSQL**.
 
-Recommended measures include:
+Database security measures include:
 
 - Authenticated database access
-- Restricted network exposure
-- Indexed queries
-- Input sanitization
-- Secure backups
-- Principle of least privilege for database users
+- Prisma ORM data access layer
+- Foreign key constraints
+- Unique constraints
+- Check constraints
+- Database migrations
+- Automated backups
+- Least privilege database permissions
 
 Only the backend service communicates directly with the database.
+
+Clients never interact with PostgreSQL directly.
 
 ---
 
 # Environment Variables
 
-Sensitive configuration values should be stored in environment variables.
+Sensitive configuration values should be stored securely using environment variables.
 
 Typical examples include:
 
 ```text
 PORT
-MONGODB_URI
+DATABASE_URL
+DIRECT_URL
 JWT_SECRET
 JWT_EXPIRES_IN
 OPENAI_API_KEY
 EMAIL_SERVICE_KEY
 ```
 
-Configuration files containing secrets should never be committed to version control.
+Environment files containing secrets must never be committed to version control.
 
 ---
 
 # Logging & Audit Trails
 
-Application events should be logged to support monitoring and troubleshooting.
+Application events should be logged to support monitoring, troubleshooting, and security auditing.
 
-Examples include:
+Typical events include:
 
-- User authentication events
-- Failed login attempts
-- AI assessment generation
+- User registration
+- Login attempts
+- Failed authentication
 - Profile updates
-- System errors
+- Financial profile changes
+- Transaction creation
+- Credit assessment generation
+- Investment recommendation generation
 - Administrative actions
+- System errors
 
-Sensitive information such as passwords and access tokens should never appear in logs.
+Sensitive information such as passwords, JWT tokens, and secret keys must never appear in application logs.
 
 ---
 
-# OWASP Considerations
+# Rate Limiting
 
-The application is designed with common web security risks in mind.
+To protect against abuse and denial-of-service attacks, selected API endpoints should enforce request rate limiting.
+
+Examples include:
+
+- Authentication endpoints
+- AI prediction endpoints
+- Credit assessment generation
+- Investment recommendation generation
+- Public APIs
+
+Clients exceeding configured thresholds receive an HTTP **429 Too Many Requests** response.
+
+---
+
+# OWASP Security Considerations
+
+The platform has been designed with the OWASP Top 10 security risks in mind.
 
 | Security Risk | Mitigation Strategy |
 | :------------ | :------------------ |
-| Broken Authentication | JWT authentication and bcrypt hashing |
-| Sensitive Data Exposure | HTTPS and secure secret management |
-| Injection Attacks | Input validation and parameterized queries |
+| Broken Authentication | JWT Authentication & bcrypt hashing |
 | Broken Access Control | Authorization middleware |
+| Injection Attacks | Prisma ORM parameterized queries & input validation |
+| Cryptographic Failures | HTTPS & secure secret management |
 | Security Misconfiguration | Environment-based configuration |
-| Cross-Site Scripting (XSS) | Output encoding and frontend sanitization |
-| Cross-Site Request Forgery (CSRF) | Token-based authentication |
-| Rate Abuse | Request rate limiting |
+| Vulnerable Components | Regular dependency updates |
+| Identification & Authentication Failures | Token verification & password policies |
+| Software & Data Integrity Failures | Controlled deployments & dependency management |
+| Security Logging Failures | Audit logging |
+| Server-Side Request Forgery (SSRF) | Request validation and restricted outbound communication |
 
 ---
 
 # Future Security Enhancements
 
-The architecture supports the addition of advanced security capabilities without major structural changes.
+The architecture supports future security improvements without major structural changes.
 
 Potential enhancements include:
 
 - Multi-Factor Authentication (MFA)
-- OAuth 2.0 and OpenID Connect
+- OAuth 2.0
+- OpenID Connect (OIDC)
 - Single Sign-On (SSO)
+- Refresh Tokens
+- Role-Based Access Control (RBAC)
 - Web Application Firewall (WAF)
-- Secrets management services
-- Intrusion detection
-- Automated vulnerability scanning
-- Security event monitoring
-- Device trust verification
-- Encryption of sensitive fields at rest
+- Secrets Management Services
+- Automated Vulnerability Scanning
+- Security Event Monitoring
+- Device Trust Verification
+- Encryption of Sensitive Fields at Rest
+- AI-powered Fraud Detection
 
 ---
 
 # Security Design Principles
 
-The security model is based on the following principles:
+The security architecture is guided by the following principles:
 
-- Defense in depth
-- Least privilege
-- Secure by default
-- Zero trust mindset
-- Fail securely
-- Separation of concerns
-- Continuous monitoring
-- Privacy by design
+- Defense in Depth
+- Least Privilege
+- Secure by Default
+- Zero Trust Architecture
+- Fail Securely
+- Separation of Concerns
+- Privacy by Design
+- Continuous Monitoring
+- Secure Software Development Lifecycle (SSDLC)
 
-These principles guide the development of every component within the CreditMiners platform, ensuring that security remains an integral part of the application's architecture rather than an afterthought.
+These principles ensure that security remains an integral part of every layer of the CreditMiners platform, providing a resilient, scalable, and production-ready foundation for handling sensitive financial data and AI-powered decision support.
+<!-- ========================================================================= -->
+<!-- SECTION 16 : INSTALLATION & SETUP -->
+<!-- ========================================================================= -->
+
+# Installation & Setup
+
+This section provides a comprehensive guide for setting up the CreditMiners project in a local development environment.
+
+CreditMiners follows a modular architecture consisting of multiple independent components that work together to deliver AI-powered financial analysis and investment recommendations.
+
+The project includes:
+
+- Frontend (React + Vite)
+- Backend (Node.js + Express)
+- Database (Supabase PostgreSQL)
+- Prisma ORM
+- AI & Machine Learning Module
+
+Ensure all prerequisites are installed before beginning the setup process.
+
+---
+
+# Prerequisites
+
+The following software should be installed on your system.
+
+| Software | Recommended Version |
+| :------- | :------------------ |
+| Node.js | 18.x or later |
+| npm | 9.x or later |
+| Git | Latest |
+| PostgreSQL | 15.x or later (or Supabase PostgreSQL) |
+| VS Code | Latest |
+
+Verify your installation.
+
+```bash
+node -v
+npm -v
+git --version
+```
+
+---
+
+# Clone the Repository
+
+Clone the repository from GitHub.
+
+```bash
+git clone https://github.com/your-username/CreditMiners.git
+```
+
+Navigate into the project directory.
+
+```bash
+cd CreditMiners
+```
+
+---
+
+# Project Structure
+
+```text
+CreditMiners/
+│
+├── .project/
+├── frontend/
+├── backend/
+├── ml/
+├── data/
+├── docs/
+├── presentation/
+├── tests/
+├── README.md
+└── LICENSE
+```
+
+---
+
+# Install Frontend Dependencies
+
+Navigate to the frontend directory.
+
+```bash
+cd frontend
+```
+
+Install all required packages.
+
+```bash
+npm install
+```
+
+This installs all frontend dependencies listed in the project's `package.json`.
+
+---
+
+# Install Backend Dependencies
+
+Open a new terminal.
+
+Navigate to the backend directory.
+
+```bash
+cd backend
+```
+
+Install backend dependencies.
+
+```bash
+npm install
+```
+
+---
+
+# Install Prisma Dependencies
+
+Prisma is used as the application's Object-Relational Mapper (ORM) for interacting with the Supabase PostgreSQL database.
+
+If not already included, install Prisma packages.
+
+```bash
+npm install prisma @prisma/client
+```
+
+Initialize Prisma.
+
+```bash
+npx prisma init
+```
+
+This creates:
+
+```text
+backend/
+│
+├── prisma/
+│   └── schema.prisma
+└── .env
+```
+
+---
+
+# Configure Environment Variables
+
+Create a `.env` file inside the **backend** directory.
+
+```text
+backend/
+│
+├── .env
+└── package.json
+```
+
+Refer to **Section 17 – Environment Variables** for all required configuration values.
+
+---
+
+# Configure Supabase
+
+Create a Supabase project.
+
+Obtain the PostgreSQL connection string from the Supabase dashboard and configure it inside the `.env` file.
+
+Typical setup includes:
+
+- Create a new Supabase project
+- Copy the PostgreSQL connection URL
+- Configure Prisma connection
+- Store credentials securely
+
+---
+
+# Run Database Migrations
+
+Generate the database schema inside Supabase PostgreSQL.
+
+```bash
+npx prisma migrate dev
+```
+
+Generate the Prisma Client.
+
+```bash
+npx prisma generate
+```
+
+These commands create the required database tables and generate type-safe database access code.
+
+---
+
+# Start the Backend Server
+
+Navigate to the backend directory.
+
+```bash
+cd backend
+```
+
+Start the development server.
+
+```bash
+npm run dev
+```
+
+Example output:
+
+```text
+Server running on http://localhost:5000
+
+Connected to Supabase PostgreSQL
+
+Prisma Client initialized successfully
+```
+
+---
+
+# Start the Frontend Application
+
+Open another terminal.
+
+Navigate to the frontend directory.
+
+```bash
+cd frontend
+```
+
+Run the development server.
+
+```bash
+npm run dev
+```
+
+Example output:
+
+```text
+Local: http://localhost:5173
+```
+
+Open the provided URL in your browser.
+
+---
+
+# Running the Complete Application
+
+Ensure the following services are running simultaneously.
+
+| Service | Default Port |
+| :------ | :----------- |
+| React + Vite Frontend | 5173 |
+| Express Backend | 5000 |
+| Supabase PostgreSQL | Cloud Hosted |
+
+---
+
+# Build for Production
+
+Generate an optimized production build.
+
+Navigate to the frontend directory.
+
+```bash
+cd frontend
+```
+
+Run:
+
+```bash
+npm run build
+```
+
+The production build is generated inside the `dist/` directory.
+
+---
+
+# Backend Production Mode
+
+Navigate to the backend directory.
+
+```bash
+cd backend
+```
+
+Start the production server.
+
+```bash
+npm start
+```
+
+Ensure all production environment variables are configured before deployment.
+
+---
+
+# Verifying the Installation
+
+After completing the setup, verify the following:
+
+- Frontend loads successfully
+- Backend server starts without errors
+- Prisma Client initializes correctly
+- Supabase PostgreSQL connection is successful
+- Database migrations complete successfully
+- User registration works
+- Login authentication succeeds
+- Dashboard loads correctly
+- Financial profile operations work
+- Transaction management functions correctly
+- AI credit assessment endpoints respond successfully
+- Investment recommendation endpoints return expected results
+
+---
+
+# Common Issues
+
+## Node.js Version Mismatch
+
+Verify the installed Node.js version.
+
+```bash
+node -v
+```
+
+Install Node.js 18 or later if required.
+
+---
+
+## Missing Dependencies
+
+Reinstall project dependencies.
+
+```bash
+npm install
+```
+
+---
+
+## Prisma Migration Errors
+
+Ensure:
+
+- Prisma schema is valid
+- DATABASE_URL is configured correctly
+- Supabase project is active
+
+Retry migration.
+
+```bash
+npx prisma migrate dev
+```
+
+---
+
+## Database Connection Error
+
+Verify:
+
+- Supabase project is running
+- DATABASE_URL is correct
+- Database credentials are valid
+- Network access is available
+
+---
+
+## Port Already in Use
+
+If another application is using the configured port, terminate the conflicting process or update the application's port configuration.
+
+---
+
+## Environment Variables Not Loaded
+
+Confirm that:
+
+- `.env` exists inside the backend directory
+- Variable names are correct
+- The backend server has been restarted after changes
+
+---
+
+## Prisma Client Out of Date
+
+Regenerate the Prisma Client.
+
+```bash
+npx prisma generate
+```
+
+---
+
+# Recommended Development Workflow
+
+For an efficient and reproducible development environment, follow the workflow below:
+
+1. Clone the repository.
+2. Install frontend dependencies.
+3. Install backend dependencies.
+4. Configure environment variables.
+5. Configure Supabase.
+6. Run Prisma migrations.
+7. Generate the Prisma Client.
+8. Start the backend server.
+9. Start the frontend application.
+10. Verify database connectivity.
+11. Test authentication.
+12. Test AI-powered financial analysis features.
+
+Following this workflow ensures a consistent setup process for all contributors and supports efficient development throughout the project lifecycle.
+
+<!-- ========================================================================= -->
+<!-- SECTION 17 : ENVIRONMENT VARIABLES -->
+<!-- ========================================================================= -->
+
+# Environment Variables
+
+CreditMiners uses environment variables to securely manage application configuration, database connectivity, authentication secrets, third-party service credentials, and deployment-specific settings.
+
+Separating configuration from application code improves security, simplifies deployment across multiple environments, and follows the principles outlined in the **Twelve-Factor App** methodology.
+
+Sensitive information such as database credentials, JWT secrets, and API keys should never be hardcoded within the application source code.
+
+> **Important:** Never commit your `.env` file or any production credentials to version control. Instead, use the provided `.env.example` file as a template for local development.
+
+---
+
+# Environment Configuration
+
+Create a `.env` file inside the **backend** directory.
+
+```text
+CreditMiners/
+│
+├── frontend/
+├── backend/
+│   ├── .env
+│   ├── package.json
+│   └── prisma/
+├── ml/
+└── README.md
+```
+
+---
+
+# Example `.env`
+
+```env
+# =====================================================
+# APPLICATION
+# =====================================================
+
+NODE_ENV=development
+PORT=5000
+
+# =====================================================
+# DATABASE
+# =====================================================
+
+DATABASE_URL="postgresql://username:password@db.supabase.co:5432/postgres?schema=public"
+DIRECT_URL="postgresql://username:password@db.supabase.co:5432/postgres"
+
+# =====================================================
+# AUTHENTICATION
+# =====================================================
+
+JWT_SECRET=your_super_secret_jwt_key
+JWT_EXPIRES_IN=7d
+
+# =====================================================
+# FRONTEND
+# =====================================================
+
+CLIENT_URL=http://localhost:5173
+
+# =====================================================
+# AI SERVICES
+# =====================================================
+
+OPENAI_API_KEY=your_openai_api_key
+
+# =====================================================
+# EMAIL SERVICE
+# =====================================================
+
+EMAIL_SERVICE_API_KEY=your_email_service_key
+```
+
+---
+
+# Variable Reference
+
+## Application Configuration
+
+| Variable | Description | Example |
+| :------- | :---------- | :------ |
+| `NODE_ENV` | Application runtime environment | `development` |
+| `PORT` | Backend server port | `5000` |
+
+---
+
+## Database Configuration
+
+CreditMiners uses **Supabase PostgreSQL** with **Prisma ORM**.
+
+| Variable | Description |
+| :------- | :---------- |
+| `DATABASE_URL` | Prisma database connection string |
+| `DIRECT_URL` | Direct PostgreSQL connection used for migrations |
+
+Example:
+
+```text
+DATABASE_URL=postgresql://username:password@db.supabase.co:5432/postgres?schema=public
+```
+
+The `DATABASE_URL` variable is used by Prisma Client during application runtime, while `DIRECT_URL` is primarily used for database migrations and administrative operations.
+
+---
+
+## Authentication Configuration
+
+| Variable | Description |
+| :------- | :---------- |
+| `JWT_SECRET` | Secret key used to sign JSON Web Tokens |
+| `JWT_EXPIRES_IN` | JWT access token expiration time |
+
+Recommended expiration values include:
+
+- 1h
+- 12h
+- 24h
+- 7d
+
+The `JWT_SECRET` should be generated using a secure random value and should differ across development, staging, and production environments.
+
+---
+
+## AI Services
+
+If AI-powered financial analysis is enabled, configure the required API credentials.
+
+| Variable | Description |
+| :------- | :---------- |
+| `OPENAI_API_KEY` | API key for AI service integration |
+
+These credentials should be stored securely and rotated periodically to minimize security risks.
+
+---
+
+## Email Service
+
+If email functionality is enabled, configure the provider credentials.
+
+| Variable | Description |
+| :------- | :---------- |
+| `EMAIL_SERVICE_API_KEY` | API key for the email service provider |
+
+This service may be used for:
+
+- Email verification
+- Password reset
+- Account notifications
+- Security alerts
+- Transactional emails
+
+---
+
+## Frontend Configuration
+
+| Variable | Description |
+| :------- | :---------- |
+| `CLIENT_URL` | URL of the frontend application |
+
+Example:
+
+```text
+http://localhost:5173
+```
+
+This value is commonly used for configuring CORS and generating application URLs.
+
+---
+
+# Development vs Production
+
+Different environments should maintain separate configuration values.
+
+| Variable | Development | Production |
+| :------- | :---------- | :--------- |
+| `NODE_ENV` | development | production |
+| `PORT` | 5000 | Configurable |
+| `DATABASE_URL` | Development Database | Supabase PostgreSQL |
+| `CLIENT_URL` | Localhost | Production Domain |
+
+Production credentials should always be isolated from development credentials.
+
+---
+
+# Environment Variable Validation
+
+The backend should validate all required environment variables during startup before accepting requests.
+
+Typical validation includes:
+
+- Required variables exist
+- Values are not empty
+- Database connection string is valid
+- JWT secret is configured
+- API keys are available
+- Supported environment is selected
+
+If validation fails, the application should terminate with a descriptive error message.
+
+---
+
+# Security Recommendations
+
+To protect sensitive configuration values:
+
+- Never commit `.env` files to version control
+- Include `.env` in `.gitignore`
+- Use unique secrets for each environment
+- Rotate API keys regularly
+- Restrict access to production credentials
+- Use managed secret storage services whenever possible
+
+Following these recommendations significantly reduces the risk of credential leakage.
+
+---
+
+# `.gitignore`
+
+Sensitive configuration files should always be excluded from version control.
+
+```gitignore
+# Environment Files
+.env
+.env.local
+.env.development
+.env.production
+
+# Dependencies
+node_modules/
+
+# Build Output
+dist/
+build/
+
+# Prisma
+prisma/migrations/
+
+# Logs
+logs/
+*.log
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+```
+
+---
+
+# Production Secrets Management
+
+Production credentials should never be stored in local `.env` files.
+
+Instead, use the secret management features provided by your hosting platform.
+
+Examples include:
+
+- GitHub Actions Secrets
+- Vercel Environment Variables
+- Railway Variables
+- Render Environment Groups
+- Docker Secrets
+- Kubernetes Secrets
+- Cloud Secret Managers
+
+Using managed secret storage improves deployment security and reduces the risk of accidental credential exposure.
+
+---
+
+# Best Practices
+
+CreditMiners follows the following environment configuration principles:
+
+- Configuration is separated from application code.
+- Secrets are never hardcoded.
+- Database credentials remain private.
+- Each environment maintains independent configuration.
+- Sensitive values are excluded from version control.
+- Startup validation prevents misconfigured deployments.
+- Configuration remains flexible across local development, testing, staging, and production.
+
+Following these practices ensures that CreditMiners remains secure, maintainable, and deployment-ready throughout its software development lifecycle.
+
+<!-- ========================================================================= -->
+<!-- SECTION 19 : DEPLOYMENT -->
+<!-- ========================================================================= -->
+
+# Deployment
+
+CreditMiners is designed for modern cloud-native deployment, enabling the frontend, backend, database, and AI services to be deployed independently for improved scalability, maintainability, and fault isolation.
+
+The architecture follows a decoupled deployment model, allowing each component to scale independently based on application demand while simplifying updates and continuous delivery.
+
+---
+
+# Deployment Architecture
+
+```mermaid
+flowchart LR
+
+User
+
+Frontend["React + Vite (Vercel)"]
+
+Backend["Express API (Render / Railway)"]
+
+Prisma["Prisma ORM"]
+
+Supabase["Supabase PostgreSQL"]
+
+AI["AI Services"]
+
+User --> Frontend
+Frontend --> Backend
+Backend --> Prisma
+Prisma --> Supabase
+Backend --> AI
+```
+
+---
+
+# Deployment Components
+
+CreditMiners consists of the following deployable components.
+
+| Component | Purpose |
+| :-------- | :------ |
+| Frontend | User Interface |
+| Backend API | Business Logic & Authentication |
+| Prisma ORM | Database Access Layer |
+| Supabase PostgreSQL | Relational Database |
+| AI Services | Financial Intelligence & Recommendations |
+
+Each component can be independently updated and scaled without affecting the others.
+
+---
+
+# Recommended Hosting Platforms
+
+| Component | Recommended Platform |
+| :-------- | :------------------- |
+| Frontend | Vercel |
+| Backend API | Railway or Render |
+| Database | Supabase PostgreSQL |
+| AI Services | OpenAI API or Self-Hosted Model |
+| Source Control | GitHub |
+
+This deployment architecture provides excellent developer experience while supporting production-scale workloads.
+
+---
+
+# Deployment Checklist
+
+Before deploying the application, verify the following:
+
+- Production environment variables configured
+- Supabase project created
+- Prisma migrations executed
+- Prisma Client generated
+- HTTPS enabled
+- JWT secret updated
+- AI API credentials configured
+- CORS configured
+- Production frontend build generated
+- Logging enabled
+- Error monitoring configured
+- Database backups enabled
+
+Completing this checklist helps ensure a reliable production deployment.
+
+---
+
+# Frontend Deployment
+
+Navigate to the frontend directory.
+
+```bash
+cd frontend
+```
+
+Generate an optimized production build.
+
+```bash
+npm run build
+```
+
+The compiled application will be generated inside:
+
+```text
+dist/
+```
+
+Deploy the generated build to your preferred frontend hosting provider, such as **Vercel**.
+
+---
+
+# Backend Deployment
+
+Navigate to the backend directory.
+
+```bash
+cd backend
+```
+
+Start the production server.
+
+```bash
+npm start
+```
+
+Ensure the following before deployment:
+
+- Production environment variables configured
+- Prisma Client generated
+- Database accessible
+- HTTPS enforced
+- CORS configured
+- API endpoints verified
+
+---
+
+# Database Deployment
+
+CreditMiners uses **Supabase PostgreSQL** as its production database.
+
+Before deployment:
+
+- Create a Supabase project
+- Configure database credentials
+- Update `DATABASE_URL`
+- Run Prisma migrations
+- Generate Prisma Client
+- Verify database connectivity
+
+Run migrations:
+
+```bash
+npx prisma migrate deploy
+```
+
+Generate Prisma Client:
+
+```bash
+npx prisma generate
+```
+
+These commands synchronize the production database schema with the application.
+
+---
+
+# Environment Configuration
+
+Production deployments should never rely on local `.env` files.
+
+Instead, configure environment variables through the hosting platform.
+
+Required variables typically include:
+
+```text
+NODE_ENV
+PORT
+DATABASE_URL
+DIRECT_URL
+JWT_SECRET
+JWT_EXPIRES_IN
+CLIENT_URL
+OPENAI_API_KEY
+EMAIL_SERVICE_API_KEY
+```
+
+---
+
+# Continuous Integration & Continuous Deployment (CI/CD)
+
+A CI/CD pipeline automates building, testing, and deploying the application.
+
+A typical workflow includes:
+
+1. Push code to GitHub
+2. Run automated tests
+3. Build frontend
+4. Build backend
+5. Execute Prisma migrations
+6. Deploy backend
+7. Deploy frontend
+8. Verify deployment
+
+Automated deployment reduces manual effort and improves release reliability.
+
+---
+
+# Production Considerations
+
+For production environments, the following practices are recommended:
+
+- Enable HTTPS
+- Configure secure CORS policies
+- Use strong JWT secrets
+- Enable API rate limiting
+- Enable centralized logging
+- Monitor application performance
+- Schedule automatic database backups
+- Restrict database network access
+- Rotate secrets periodically
+- Monitor server health
+
+These practices improve system reliability and security.
+
+---
+
+# Monitoring & Logging
+
+Production deployments should include monitoring and logging solutions.
+
+Recommended monitoring includes:
+
+- API response times
+- Server uptime
+- Error rates
+- Database performance
+- Authentication failures
+- AI service availability
+- Resource utilization
+
+Application logs should capture:
+
+- User authentication events
+- API requests
+- Database errors
+- AI processing failures
+- System exceptions
+
+Sensitive information such as passwords, JWT tokens, and API keys should never be logged.
+
+---
+
+# Scalability Considerations
+
+The architecture supports horizontal and vertical scaling.
+
+Potential scaling strategies include:
+
+- Multiple backend instances
+- Load balancing
+- Database connection pooling
+- Read replicas
+- Caching with Redis
+- Background job queues
+- CDN for static assets
+- AI service load distribution
+
+These strategies enable CreditMiners to support increasing numbers of users and transactions.
+
+---
+
+# Deployment Verification
+
+After deployment, verify the following:
+
+- Frontend is accessible
+- Backend API responds successfully
+- Database connection established
+- Prisma Client functioning correctly
+- Authentication works
+- User registration succeeds
+- Login succeeds
+- Financial profile operations work
+- Transaction management functions correctly
+- Credit assessment endpoints respond correctly
+- Investment recommendation endpoints respond correctly
+- Notifications function properly
+
+Successful verification confirms that all application components are operating as expected.
+
+---
+
+# Deployment Workflow
+
+```text
+Clone Repository
+        │
+        ▼
+Configure Environment Variables
+        │
+        ▼
+Run Prisma Migrations
+        │
+        ▼
+Generate Prisma Client
+        │
+        ▼
+Build Frontend
+        │
+        ▼
+Deploy Backend
+        │
+        ▼
+Deploy Frontend
+        │
+        ▼
+Connect Supabase PostgreSQL
+        │
+        ▼
+Verify Production Deployment
+```
+
+---
+
+# Deployment Best Practices
+
+CreditMiners follows the following deployment principles:
+
+- Independent deployment of frontend and backend
+- Infrastructure as configuration
+- Automated database migrations
+- Secure environment management
+- Continuous Integration and Continuous Deployment (CI/CD)
+- HTTPS by default
+- Centralized monitoring and logging
+- Automated backups
+- Zero-downtime deployment where possible
+- Scalable cloud-native architecture
+
+Following these practices ensures that CreditMiners remains reliable, secure, maintainable, and production-ready while supporting future growth and feature expansion.
+
+<!-- ========================================================================= -->
+<!-- SECTION 20 : TESTING -->
+<!-- ========================================================================= -->
+
+# Testing
+
+Testing ensures that CreditMiners remains reliable, secure, and maintainable as new features are introduced.
+
+---
+
+# Testing Strategy
+
+The project follows a multi-layer testing approach.
+
+| Test Type | Purpose |
+| :-------- | :------ |
+| Unit Testing | Individual functions and utilities |
+| Integration Testing | API and database interaction |
+| End-to-End Testing | Complete user workflows |
+| Manual Testing | UI and usability validation |
+
+---
+
+# Areas Covered
+
+Testing includes:
+
+- Authentication
+- Authorization
+- User registration
+- Login
+- Financial profile management
+- AI prediction endpoints
+- Investment recommendations
+- Dashboard APIs
+- Error handling
+- Input validation
+
+---
+
+# Running Tests
+
+Execute all tests.
+
+```bash
+npm test
+```
+
+Run tests with coverage.
+
+```bash
+npm run test:coverage
+```
+
+---
+
+# Example Test Cases
+
+| Module | Test Scenario |
+| :----- | :------------ |
+| Authentication | Valid and invalid login |
+| Registration | Duplicate email validation |
+| Financial Profile | Create and update profile |
+| AI Assessment | Generate financial score |
+| Dashboard | Fetch dashboard data |
+| Notifications | Mark notification as read |
+
+---
+
+# Quality Assurance Checklist
+
+Before every release:
+
+- All tests pass
+- No critical security issues
+- API responses validated
+- Error handling verified
+- Production build succeeds
+- Environment variables verified
+- Documentation updated
+
+---
+
+# Future Improvements
+
+Future testing enhancements may include:
+
+- Automated CI/CD testing
+- Performance benchmarking
+- Load testing
+- Security testing
+- API contract testing
+- Cross-browser testing
+- Accessibility testing
+- AI model evaluation metrics
+
+Maintaining a comprehensive testing strategy helps ensure the long-term reliability and quality of the CreditMiners platform.
+
+<!-- ========================================================================= -->
+<!-- SECTION 21 : PERFORMANCE & SCALABILITY -->
+<!-- ========================================================================= -->
+
+# Performance & Scalability
+
+CreditMiners is designed with scalability in mind, allowing the platform to support an increasing number of users, financial records, and AI inference requests while maintaining responsiveness and reliability.
+
+The architecture follows a modular service-oriented approach, enabling independent scaling of frontend, backend, database, and AI components.
+
+---
+
+# Performance Goals
+
+The application is designed to provide:
+
+- Fast API response times
+- Efficient database queries
+- Low-latency AI inference
+- Minimal frontend load times
+- Reliable concurrent request handling
+- High availability
+
+---
+
+# Scalability Strategy
+
+```mermaid
+flowchart LR
+
+Users --> LoadBalancer
+
+LoadBalancer --> Frontend
+
+Frontend --> Backend1
+Frontend --> Backend2
+Frontend --> Backend3
+
+Backend1 --> MongoDB
+Backend2 --> MongoDB
+Backend3 --> MongoDB
+
+Backend1 --> AI
+Backend2 --> AI
+Backend3 --> AI
+```
+
+---
+
+# Optimization Techniques
+
+The platform incorporates several optimization strategies:
+
+### Backend
+
+- Modular service architecture
+- Asynchronous request handling
+- Database indexing
+- Centralized error handling
+- Request validation
+
+### Frontend
+
+- Component reusability
+- Lazy loading
+- Optimized asset delivery
+- Efficient state management
+
+### Database
+
+- Indexed collections
+- Optimized queries
+- Document-based storage
+- Efficient schema design
+
+---
+
+# Future Enhancements
+
+Potential improvements include:
+
+- Redis caching
+- CDN integration
+- Horizontal auto-scaling
+- Background job queues
+- Microservices architecture
+- Distributed AI inference
+- API response caching
+- Real-time analytics
+
+---
+
+# Design Principles
+
+The platform is designed to remain:
+
+- Scalable
+- Maintainable
+- Reliable
+- Fault tolerant
+- Cloud ready
+- Performance optimized
+
+<!-- ========================================================================= -->
+<!-- SECTION 22 : CONTRIBUTING -->
+<!-- ========================================================================= -->
+
+# Contributing
+
+Contributions are welcome and greatly appreciated. Whether you're fixing bugs, improving documentation, optimizing performance, or introducing new features, your efforts help improve the CreditMiners platform.
+
+---
+
+# Development Workflow
+
+1. Fork the repository.
+2. Create a new feature branch.
+3. Implement your changes.
+4. Test your modifications.
+5. Commit using meaningful commit messages.
+6. Push the branch to your fork.
+7. Open a Pull Request.
+
+---
+
+# Branch Naming
+
+Use descriptive branch names.
+
+Examples:
+
+```text
+feature/financial-dashboard
+feature/ai-recommendation
+fix/login-validation
+fix/api-error-handling
+docs/readme-improvements
+refactor/auth-module
+```
+
+---
+
+# Commit Message Guidelines
+
+Follow clear and descriptive commit messages.
+
+Examples:
+
+```text
+feat: add investment recommendation module
+
+fix: resolve JWT authentication issue
+
+docs: improve installation guide
+
+refactor: optimize AI prediction service
+
+style: improve dashboard responsiveness
+```
+
+---
+
+# Code Style
+
+Please follow these guidelines:
+
+- Write clean, readable code.
+- Keep functions focused and modular.
+- Use meaningful variable names.
+- Add comments only where necessary.
+- Follow consistent formatting.
+- Avoid unnecessary dependencies.
+
+---
+
+# Pull Request Checklist
+
+Before submitting a Pull Request, ensure that:
+
+- Code builds successfully.
+- Tests pass.
+- Documentation is updated.
+- No sensitive information is committed.
+- Commit history is clean.
+- New features are properly documented.
+
+---
+
+# Reporting Issues
+
+When opening an issue, please include:
+
+- Description of the problem
+- Steps to reproduce
+- Expected behavior
+- Actual behavior
+- Environment details
+- Screenshots (if applicable)
+
+Clear issue reports help maintainers resolve problems more efficiently.
+
+---
+
+# Community Standards
+
+Contributors are expected to:
+
+- Be respectful.
+- Provide constructive feedback.
+- Welcome new contributors.
+- Collaborate professionally.
+- Maintain a positive and inclusive environment.
+
+<!-- ========================================================================= -->
+<!-- SECTION 23 : LICENSE -->
+<!-- ========================================================================= -->
+
+# License
+
+This project is licensed under the **MIT License**.
+
+The MIT License permits anyone to:
+
+- Use the software
+- Modify the source code
+- Distribute copies
+- Create derivative works
+- Use the software commercially
+- Include the software in private projects
+
+Provided that the original copyright and license notice are retained.
+
+For the complete license text, refer to the [LICENSE](LICENSE) file included in this repository.
+
+---
+
+## Copyright
+
+```text
+MIT License
+
+Copyright (c) 2026 CreditMiners
+
+Permission is hereby granted, free of charge,
+to any person obtaining a copy of this software
+and associated documentation files...
+```
+
+<!-- ========================================================================= -->
+<!-- SECTION 24 : ACKNOWLEDGEMENTS -->
+<!-- ========================================================================= -->
+
+# Acknowledgements
+
+CreditMiners was developed as a solution to promote financial inclusion through Explainable Artificial Intelligence. This project combines modern web technologies, machine learning concepts, and user-centric design to make financial insights more transparent and accessible.
+
+We extend our gratitude to the open-source community and the organizations whose technologies and resources made this project possible.
+
+---
+
+## Technologies & Frameworks
+
+Special thanks to the creators and maintainers of:
+
+- React
+- Vite
+- Node.js
+- Express.js
+- Supabase
+- Prisma
+- JWT
+- bcrypt
+- Tailwind CSS
+- OpenAI API (if integrated)
+
+---
+
+## Open Source Community
+
+We appreciate the global open-source community for continuously building and maintaining the libraries, frameworks, and tools that empower developers to create impactful applications.
+
+---
+
+## Inspiration
+
+The architecture and engineering practices adopted in this project are inspired by modern SaaS platforms that prioritize:
+
+- Clean architecture
+- Explainable AI
+- Security-first development
+- Scalable system design
+- User-centric experiences
+
+---
+
+## Team
+
+Developed with dedication by the **CreditMiners** team during the hackathon, with the goal of demonstrating how artificial intelligence can improve financial accessibility through transparent, data-driven decision-making.
+
+---
+
+## Final Note
+
+Thank you for exploring CreditMiners.
+
+If you found this project useful or inspiring, consider giving the repository a ⭐ to support its continued development and help others discover it.
+
 
