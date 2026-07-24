@@ -1183,4 +1183,1449 @@ The database has been designed with the following goals:
 - Production-ready indexing strategy
 - Maintainable and extensible schema design
 
-Hii Hitakshu here
+
+<!-- ========================================================================= -->
+<!-- SECTION 11 : APPLICATION WORKFLOW -->
+<!-- ========================================================================= -->
+
+# Application Workflow
+
+CreditMiners follows a structured workflow that transforms raw financial information into meaningful, explainable, and actionable financial intelligence. The workflow is designed to ensure data integrity, secure processing, and transparent AI-driven decision-making.
+
+---
+
+## High-Level Workflow
+
+```mermaid
+flowchart LR
+
+    A[User Registration]
+    B[User Authentication]
+    C[Profile Completion]
+    D[Financial Data Collection]
+    E[Data Validation]
+    F[Feature Engineering]
+    G[AI Credit Assessment]
+    H[Explainability Engine]
+    I[Financial Health Score]
+    J[Investment Recommendation Engine]
+    K[Personalized Dashboard]
+
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+    G --> H
+    H --> I
+    I --> J
+    J --> K
+```
+
+---
+
+# Workflow Description
+
+The application workflow is divided into several logical stages. Each stage performs a specific responsibility before forwarding processed information to the next layer.
+
+---
+
+## 1. User Registration
+
+The workflow begins when a new user creates an account.
+
+Information collected includes:
+
+- Full Name
+- Email Address
+- Mobile Number
+- Password
+
+After successful registration, an authenticated user profile is created.
+
+---
+
+## 2. Authentication
+
+The user logs into the application using secure authentication mechanisms.
+
+Authentication responsibilities include:
+
+- Identity verification
+- Password validation
+- JWT generation
+- Session management
+- Authorization
+
+Only authenticated users can access protected financial services.
+
+---
+
+## 3. Profile Completion
+
+Once authenticated, users complete their financial profile.
+
+Typical information includes:
+
+- Monthly income
+- Monthly expenses
+- Savings
+- Existing investments
+- Financial goals
+- Risk preference
+
+This information becomes the primary input for financial analysis.
+
+---
+
+## 4. Financial Data Collection
+
+The platform gathers financial indicators required for assessment.
+
+Examples include:
+
+- Income stability
+- Expense patterns
+- Savings behaviour
+- Transaction history
+- Investment activity
+- Digital payment usage
+
+The collected information is securely stored for further processing.
+
+---
+
+## 5. Data Validation
+
+Before AI processing begins, all collected information undergoes validation.
+
+Validation includes:
+
+- Required field verification
+- Missing value detection
+- Invalid data filtering
+- Data normalization
+- Duplicate detection
+
+Only validated information is forwarded to the AI engine.
+
+---
+
+## 6. Feature Engineering
+
+Raw financial information is transformed into machine-learning features.
+
+Examples include:
+
+- Savings ratio
+- Expense-to-income ratio
+- Monthly cash flow
+- Spending consistency
+- Investment frequency
+- Financial stability indicators
+
+Feature engineering significantly improves prediction quality.
+
+---
+
+## 7. AI Credit Assessment
+
+The Explainable AI engine processes engineered features to evaluate the user's financial profile.
+
+The model generates:
+
+- Financial Health Score
+- Credit Score
+- Risk Level
+- Confidence Score
+
+Unlike traditional black-box systems, every prediction is accompanied by an explanation.
+
+---
+
+## 8. Explainability Layer
+
+The Explainability Engine identifies the primary factors responsible for each prediction.
+
+Typical outputs include:
+
+- Top positive contributors
+- Top negative contributors
+- Feature importance ranking
+- Confidence level
+- Personalized reasoning
+
+This enables users to understand *why* a particular score was generated.
+
+---
+
+## 9. Financial Intelligence
+
+Using the AI assessment, the platform generates meaningful financial insights.
+
+Examples include:
+
+- Financial strengths
+- Areas requiring improvement
+- Savings recommendations
+- Spending observations
+- Financial behaviour analysis
+
+These insights are continuously updated as new financial information becomes available.
+
+---
+
+## 10. Investment Recommendation Engine
+
+The recommendation engine analyzes:
+
+- Risk tolerance
+- Financial goals
+- Available savings
+- Investment capacity
+- AI predictions
+
+Based on this analysis, personalized investment suggestions are generated.
+
+Recommendations may include:
+
+- SIPs
+- Mutual Funds
+- Emergency fund allocation
+- Diversification suggestions
+- Goal-based investments
+
+---
+
+## 11. Dashboard Generation
+
+Finally, all processed information is presented through an interactive dashboard.
+
+The dashboard includes:
+
+- Financial Health Score
+- Explainable Credit Score
+- Financial Insights
+- AI Recommendations
+- Investment Suggestions
+- Financial Progress
+- Historical Analytics
+
+The dashboard serves as the primary interface for continuous financial monitoring.
+
+---
+
+# End-to-End User Journey
+
+```text
+Register
+      â
+      â¼
+Login
+      â
+      â¼
+Complete Financial Profile
+      â
+      â¼
+Financial Data Collection
+      â
+      â¼
+Data Validation
+      â
+      â¼
+Feature Engineering
+      â
+      â¼
+Explainable AI Analysis
+      â
+      â¼
+Financial Health Score
+      â
+      â¼
+Investment Recommendation
+      â
+      â¼
+Interactive Dashboard
+```
+
+---
+
+# Workflow Characteristics
+
+The CreditMiners workflow has been designed with the following engineering goals:
+
+- Modular processing pipeline
+- Secure handling of financial information
+- Explainable AI predictions
+- Real-time financial insights
+- Scalable service architecture
+- Privacy-first data processing
+- Continuous recommendation generation
+- User-centric financial guidance
+
+<!-- ========================================================================= -->
+<!-- SECTION 12 : AI PIPELINE -->
+<!-- ========================================================================= -->
+
+# AI Pipeline
+
+The Artificial Intelligence pipeline forms the core of the CreditMiners platform. It transforms raw financial information into explainable financial intelligence through a sequence of preprocessing, feature engineering, model inference, and recommendation generation stages.
+
+Unlike conventional credit scoring systems that function as opaque "black boxes," CreditMiners emphasizes **Explainable Artificial Intelligence (XAI)** by ensuring every prediction is transparent, interpretable, and accompanied by actionable insights.
+
+---
+
+## AI Pipeline Overview
+
+```mermaid
+flowchart LR
+
+A[Financial Data]
+B[Data Validation]
+C[Data Preprocessing]
+D[Feature Engineering]
+E[Machine Learning Model]
+F[Explainability Engine]
+G[Financial Health Score]
+H[Recommendation Engine]
+I[Dashboard]
+
+A --> B
+B --> C
+C --> D
+D --> E
+E --> F
+F --> G
+G --> H
+H --> I
+```
+
+---
+
+# Pipeline Stages
+
+## 1. Data Collection
+
+The AI pipeline begins by collecting structured financial information from the application layer.
+
+### Data Sources
+
+- User profile
+- Income details
+- Monthly expenses
+- Savings history
+- Transaction records
+- Financial goals
+- Investment preferences
+
+Only authenticated and validated user data is processed.
+
+---
+
+## 2. Data Validation
+
+Incoming data is validated before entering the machine learning pipeline.
+
+Validation checks include:
+
+- Missing values
+- Invalid numerical ranges
+- Duplicate records
+- Incorrect formats
+- Incomplete financial information
+
+Records failing validation are rejected before model inference.
+
+---
+
+## 3. Data Preprocessing
+
+Raw financial information is standardized to improve model performance.
+
+Typical preprocessing operations include:
+
+- Missing value handling
+- Data normalization
+- Feature scaling
+- Categorical encoding
+- Outlier detection
+- Noise reduction
+
+This stage ensures consistent model inputs.
+
+---
+
+## 4. Feature Engineering
+
+Feature engineering converts raw financial information into meaningful numerical indicators.
+
+Examples include:
+
+| Feature | Description |
+| :------ | :---------- |
+| Savings Ratio | Savings relative to monthly income |
+| Expense Ratio | Expenses relative to income |
+| Cash Flow | Net monthly financial balance |
+| Income Stability | Consistency of monthly earnings |
+| Transaction Frequency | Average monthly activity |
+| Investment Capacity | Estimated investment potential |
+
+These engineered features significantly improve prediction accuracy.
+
+---
+
+## 5. Machine Learning Inference
+
+The processed features are passed to the prediction model.
+
+The model evaluates the user's financial behaviour and generates:
+
+- Financial Health Score
+- Credit Intelligence Score
+- Financial Risk Level
+- Prediction Confidence
+
+The inference layer remains independent from the application logic, allowing future model upgrades without modifying the backend services.
+
+---
+
+## 6. Explainability Engine
+
+Every prediction is processed through an Explainable AI layer before being returned to the application.
+
+The Explainability Engine identifies:
+
+- Most influential features
+- Positive financial indicators
+- Negative financial indicators
+- Confidence level
+- Decision rationale
+
+This enables users to understand the reasoning behind every AI-generated assessment.
+
+---
+
+## 7. Recommendation Engine
+
+Based on AI predictions and explainability results, the recommendation engine generates personalized financial guidance.
+
+Recommendation categories include:
+
+- Savings improvement
+- Spending optimization
+- Credit profile enhancement
+- Investment planning
+- Financial discipline improvements
+- Goal-based financial strategies
+
+Recommendations are adaptive and evolve as the user's financial profile changes.
+
+---
+
+## 8. Dashboard Integration
+
+The final stage delivers AI outputs to the frontend.
+
+Displayed information includes:
+
+- Financial Health Score
+- Credit Intelligence
+- Explainability Summary
+- Personalized Recommendations
+- Investment Suggestions
+- Financial Progress
+
+The dashboard provides users with a continuously updated view of their financial status.
+
+---
+
+# AI Input Features
+
+The model considers multiple financial indicators instead of relying solely on traditional credit history.
+
+| Category | Example Features |
+| :-------- | :--------------- |
+| Income | Monthly Income, Income Stability |
+| Expenses | Essential vs. Discretionary Spending |
+| Savings | Savings Rate, Emergency Fund |
+| Transactions | Payment Frequency, Transaction Consistency |
+| Behaviour | Budget Adherence, Spending Trends |
+| Investments | Existing Portfolio, Investment Activity |
+
+---
+
+# AI Outputs
+
+The platform generates multiple outputs rather than a single numerical score.
+
+| Output | Purpose |
+| :----- | :------ |
+| Financial Health Score | Overall financial wellness |
+| Credit Intelligence Score | Explainable credit assessment |
+| Risk Level | Financial risk estimation |
+| Confidence Score | Prediction reliability |
+| Explainability Report | Decision transparency |
+| Personalized Recommendations | Financial improvement guidance |
+| Investment Suggestions | AI-assisted financial planning |
+
+---
+
+# Explainability Principles
+
+CreditMiners follows the principles of Responsible Artificial Intelligence.
+
+Every prediction should satisfy the following requirements:
+
+- Transparent
+- Explainable
+- Interpretable
+- Fair
+- Consistent
+- Auditable
+- User-centric
+
+The platform prioritizes user trust by ensuring that no AI-generated recommendation is presented without sufficient explanation.
+
+---
+
+# Future Enhancements
+
+The AI pipeline has been designed to support future improvements without requiring architectural changes.
+
+Potential enhancements include:
+
+- Deep Learning models
+- Ensemble learning
+- Real-time prediction services
+- Open Banking integration
+- Federated Learning
+- Personalized AI Financial Assistant
+- Fraud Detection models
+- Continuous model retraining
+- Adaptive recommendation systems
+
+---
+
+# Design Objectives
+
+The AI pipeline has been engineered with the following objectives:
+
+- Modular architecture
+- Explainable predictions
+- High maintainability
+- Scalable deployment
+- Model independence
+- Secure processing
+- Privacy-aware inference
+- Continuous improvement
+
+<!-- ========================================================================= -->
+<!-- SECTION 13 : API DOCUMENTATION -->
+<!-- ========================================================================= -->
+
+# API Documentation
+
+CreditMiners exposes a RESTful API that enables secure communication between the client application, backend services, AI engine, and external integrations. The API follows REST principles, uses JSON for data exchange, and employs JWT-based authentication for protected resources.
+
+---
+
+## Base URL
+
+```text
+Development
+http://localhost:5000/api/v1
+
+Production
+https://api.creditminers.com/api/v1
+```
+
+---
+
+# Authentication
+
+Protected endpoints require a valid JWT access token.
+
+```http
+Authorization: Bearer <access_token>
+```
+
+Requests without a valid token will receive an HTTP **401 Unauthorized** response.
+
+---
+
+# API Response Format
+
+### Success Response
+
+```json
+{
+    "success": true,
+    "message": "Request processed successfully.",
+    "data": {}
+}
+```
+
+---
+
+### Error Response
+
+```json
+{
+    "success": false,
+    "message": "Validation failed.",
+    "errors": []
+}
+```
+
+---
+
+# Authentication Endpoints
+
+## Register User
+
+```http
+POST /auth/register
+```
+
+Creates a new user account.
+
+### Request Body
+
+```json
+{
+    "fullName": "John Doe",
+    "email": "john@example.com",
+    "phone": "9876543210",
+    "password": "StrongPassword123"
+}
+```
+
+### Success Response
+
+```http
+201 Created
+```
+
+---
+
+## Login
+
+```http
+POST /auth/login
+```
+
+Authenticates a user and returns an access token.
+
+### Request
+
+```json
+{
+    "email": "john@example.com",
+    "password": "StrongPassword123"
+}
+```
+
+### Response
+
+```json
+{
+    "accessToken": "...",
+    "user": {}
+}
+```
+
+---
+
+## Logout
+
+```http
+POST /auth/logout
+```
+
+Invalidates the current user session.
+
+---
+
+# User Endpoints
+
+## Get Profile
+
+```http
+GET /users/profile
+```
+
+Returns the authenticated user's profile.
+
+---
+
+## Update Profile
+
+```http
+PUT /users/profile
+```
+
+Updates user profile information.
+
+---
+
+# Financial Profile
+
+## Create Financial Profile
+
+```http
+POST /financial-profile
+```
+
+Creates or updates the user's financial information.
+
+### Example Request
+
+```json
+{
+    "monthlyIncome": 60000,
+    "monthlyExpenses": 28000,
+    "monthlySavings": 12000,
+    "existingInvestments": 50000
+}
+```
+
+---
+
+## Get Financial Profile
+
+```http
+GET /financial-profile
+```
+
+Returns the user's financial profile.
+
+---
+
+# Credit Assessment
+
+## Generate Credit Assessment
+
+```http
+POST /credit-assessment/generate
+```
+
+Runs the Explainable AI pipeline and generates a financial assessment.
+
+### Response
+
+```json
+{
+    "financialHealthScore": 86,
+    "creditScore": 782,
+    "confidence": 0.94,
+    "riskLevel": "Low"
+}
+```
+
+---
+
+## Get Credit Assessment History
+
+```http
+GET /credit-assessment/history
+```
+
+Returns all previous assessments for the authenticated user.
+
+---
+
+# Investment Recommendations
+
+## Generate Recommendation
+
+```http
+POST /investment/recommend
+```
+
+Generates personalized investment suggestions.
+
+### Response
+
+```json
+{
+    "riskLevel": "Moderate",
+    "recommendedInvestment": "Equity Mutual Fund",
+    "expectedReturn": "12%"
+}
+```
+
+---
+
+## Recommendation History
+
+```http
+GET /investment/history
+```
+
+Returns previous investment recommendations.
+
+---
+
+# Dashboard
+
+## Dashboard Summary
+
+```http
+GET /dashboard
+```
+
+Returns all information required by the frontend dashboard.
+
+Response includes:
+
+- Financial Health Score
+- Credit Intelligence
+- Spending Analytics
+- Savings Overview
+- Investment Suggestions
+- AI Insights
+
+---
+
+# Notifications
+
+## Get Notifications
+
+```http
+GET /notifications
+```
+
+Returns all notifications for the authenticated user.
+
+---
+
+## Mark Notification as Read
+
+```http
+PATCH /notifications/{id}
+```
+
+Updates notification status.
+
+---
+
+# HTTP Status Codes
+
+| Code | Meaning |
+| :--- | :------ |
+| 200 | OK |
+| 201 | Created |
+| 204 | No Content |
+| 400 | Bad Request |
+| 401 | Unauthorized |
+| 403 | Forbidden |
+| 404 | Not Found |
+| 409 | Conflict |
+| 422 | Validation Error |
+| 500 | Internal Server Error |
+
+---
+
+# API Versioning
+
+The API follows URI-based versioning.
+
+```text
+/api/v1/
+/api/v2/
+```
+
+This approach ensures backward compatibility while enabling future enhancements without disrupting existing clients.
+
+---
+
+# Validation Rules
+
+All incoming requests undergo server-side validation before processing.
+
+Validation includes:
+
+- Required field verification
+- Data type validation
+- Email format validation
+- Password policy enforcement
+- Numeric range validation
+- Duplicate resource detection
+- Authentication verification
+- Authorization checks
+
+---
+
+# Rate Limiting
+
+To ensure service availability and protect against abuse, API requests may be rate-limited.
+
+Typical limits include:
+
+- Authentication endpoints
+- AI prediction endpoints
+- Recommendation generation
+- Public APIs
+
+Clients exceeding configured limits should expect an HTTP **429 Too Many Requests** response.
+
+---
+
+# Error Handling
+
+All API errors follow a consistent response structure to simplify frontend integration.
+
+Each error response includes:
+
+- Success status
+- Human-readable message
+- Error details (when applicable)
+- Appropriate HTTP status code
+
+This standardized format enables predictable error handling across all client applications.
+
+<!-- ========================================================================= -->
+<!-- SECTION 14 : AUTHENTICATION & AUTHORIZATION -->
+<!-- ========================================================================= -->
+
+# Authentication & Authorization
+
+CreditMiners implements a secure authentication and authorization mechanism to protect user identities, financial information, and AI-generated insights. Authentication is based on **JSON Web Tokens (JWT)**, while authorization ensures that users can only access resources they are permitted to use.
+
+The security model follows stateless authentication principles, making it suitable for scalable cloud-native deployments.
+
+---
+
+# Authentication Flow
+
+```mermaid
+sequenceDiagram
+
+    participant User
+    participant Client
+    participant API
+    participant Database
+
+    User->>Client: Enter Credentials
+
+    Client->>API: Login Request
+
+    API->>Database: Verify User
+
+    Database-->>API: User Record
+
+    API-->>Client: JWT Access Token
+
+    Client->>API: Protected Request + JWT
+
+    API->>API: Validate Token
+
+    API-->>Client: Requested Resource
+```
+
+---
+
+# Authentication Lifecycle
+
+The authentication process consists of the following stages:
+
+1. User registration
+2. Credential verification
+3. Password validation
+4. JWT generation
+5. Token verification
+6. Authorization
+7. Access to protected resources
+
+---
+
+# User Registration
+
+During registration, the backend validates all incoming information before creating a new account.
+
+Validation includes:
+
+- Required field verification
+- Email format validation
+- Password strength validation
+- Duplicate account detection
+
+Passwords are **never stored in plaintext**.
+
+---
+
+# Password Security
+
+User passwords are securely hashed before storage using the **bcrypt** algorithm.
+
+Security measures include:
+
+- Salt generation
+- Adaptive hashing
+- One-way encryption
+- Secure password comparison
+
+Example:
+
+```text
+Plain Password
+        â
+        â¼
+bcrypt Hashing
+        â
+        â¼
+Hashed Password
+        â
+        â¼
+Stored in Database
+```
+
+---
+
+# Login Process
+
+When a user logs in:
+
+1. Credentials are submitted.
+2. Email is verified.
+3. Password hash is compared.
+4. JWT token is generated.
+5. Token is returned to the client.
+6. Client stores the token securely.
+7. Protected requests include the token.
+
+---
+
+# JWT Authentication
+
+After successful authentication, the server issues a signed JSON Web Token.
+
+Example Authorization Header
+
+```http
+Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
+```
+
+The token contains authenticated user information required for future requests without exposing sensitive data.
+
+Typical claims include:
+
+| Claim | Description |
+| :---- | :---------- |
+| id | User Identifier |
+| email | Registered Email |
+| role | User Role |
+| issuedAt | Token Creation Time |
+| expiresAt | Token Expiration |
+
+---
+
+# Authorization
+
+Authentication verifies **who the user is**.
+
+Authorization determines **what the user is allowed to access**.
+
+Protected routes validate:
+
+- JWT authenticity
+- Token expiration
+- User existence
+- Resource ownership
+- Permission level
+
+---
+
+# Protected Routes
+
+Examples of protected endpoints include:
+
+| Endpoint | Authentication Required |
+| :------- | :---------------------- |
+| `/users/profile` | Yes |
+| `/financial-profile` | Yes |
+| `/credit-assessment` | Yes |
+| `/investment/recommend` | Yes |
+| `/dashboard` | Yes |
+| `/notifications` | Yes |
+
+Public endpoints include:
+
+- User Registration
+- User Login
+
+---
+
+# Authorization Middleware
+
+Every protected request passes through an authorization middleware responsible for:
+
+- Extracting JWT
+- Verifying signature
+- Checking expiration
+- Validating user existence
+- Attaching authenticated user information to the request
+
+Only validated requests continue to the business logic layer.
+
+---
+
+# Session Management
+
+CreditMiners follows a **stateless session architecture**.
+
+Advantages include:
+
+- Improved scalability
+- Reduced server memory usage
+- Easier horizontal scaling
+- Cloud-native compatibility
+
+Session information is represented by signed access tokens instead of server-side session storage.
+
+---
+
+# Token Expiration
+
+Access tokens are issued with a predefined expiration period.
+
+Expired tokens require re-authentication or renewal depending on the authentication strategy implemented.
+
+Benefits include:
+
+- Reduced attack surface
+- Improved account security
+- Better session control
+
+---
+
+# Role-Based Access Control (RBAC)
+
+Although the current implementation primarily supports standard users, the architecture allows future expansion using Role-Based Access Control.
+
+Potential roles include:
+
+| Role | Responsibilities |
+| :--- | :--------------- |
+| User | Financial analysis and recommendations |
+| Admin | User management and analytics |
+| Moderator | Content and notification management |
+| System | Internal service communication |
+
+---
+
+# Security Best Practices
+
+The authentication system follows modern security recommendations.
+
+Implemented practices include:
+
+- Password hashing using bcrypt
+- JWT-based authentication
+- Protected API routes
+- Environment-based secret management
+- Secure password validation
+- Authorization middleware
+- Request validation
+- Centralized error handling
+
+Future enhancements may include:
+
+- Refresh Tokens
+- Multi-Factor Authentication (MFA)
+- OAuth 2.0
+- Google Sign-In
+- Apple Sign-In
+- Device Management
+- Login History
+- Session Revocation
+
+---
+
+# Authentication Design Goals
+
+The authentication system has been designed to provide:
+
+- Secure identity verification
+- Stateless authentication
+- Scalable architecture
+- Minimal server overhead
+- Secure API communication
+- Extensible authorization model
+- Production-ready security practices
+
+<!-- ========================================================================= -->
+<!-- SECTION 15 : SECURITY CONSIDERATIONS -->
+<!-- ========================================================================= -->
+
+# Security Considerations
+
+Security is a foundational aspect of the CreditMiners platform. Since the application processes sensitive financial information and AI-generated insights, multiple layers of protection are implemented to ensure the confidentiality, integrity, and availability of user data.
+
+The security architecture follows modern web application security principles and aligns with industry best practices.
+
+---
+
+# Security Architecture
+
+```mermaid
+flowchart LR
+
+A[Client]
+B[HTTPS]
+C[Authentication]
+D[Authorization]
+E[Validation]
+F[Business Logic]
+G[Database]
+H[Audit Logs]
+
+A --> B
+B --> C
+C --> D
+D --> E
+E --> F
+F --> G
+F --> H
+```
+
+---
+
+# Security Objectives
+
+The platform has been designed to achieve the following objectives:
+
+- Protect user identities
+- Secure financial information
+- Prevent unauthorized access
+- Maintain data integrity
+- Ensure secure communication
+- Support auditability
+- Minimize attack surface
+- Enable secure future expansion
+
+---
+
+# Data Protection
+
+Sensitive information is protected throughout its lifecycle.
+
+Security measures include:
+
+- Password hashing using **bcrypt**
+- JWT-based authentication
+- Environment-based secret management
+- Input validation
+- Secure API communication
+- Principle of least privilege
+- Server-side authorization checks
+
+Sensitive credentials such as API keys, JWT secrets, and database connection strings are never hardcoded into the source code.
+
+---
+
+# Secure Communication
+
+All communication between the client and server should occur over **HTTPS**.
+
+Benefits include:
+
+- Data encryption in transit
+- Protection against packet interception
+- Prevention of man-in-the-middle attacks
+- Secure API communication
+
+---
+
+# Input Validation
+
+Every incoming request is validated before processing.
+
+Validation includes:
+
+- Required fields
+- Data type verification
+- Length constraints
+- Numeric range checks
+- Email format validation
+- Invalid character filtering
+- Request schema validation
+
+Validation is performed on the server regardless of any client-side validation.
+
+---
+
+# Authentication Security
+
+Authentication follows secure token-based practices.
+
+Implemented protections include:
+
+- JWT authentication
+- Password hashing
+- Protected API routes
+- Token verification
+- Authorization middleware
+
+Potential future improvements:
+
+- Refresh tokens
+- Multi-Factor Authentication (MFA)
+- OAuth 2.0
+- Device-based session management
+
+---
+
+# Authorization Controls
+
+Access to protected resources is verified before executing business logic.
+
+Authorization checks ensure:
+
+- User identity is authenticated
+- Token is valid
+- Resource ownership is verified
+- Permission requirements are satisfied
+
+No sensitive resource is exposed without authorization.
+
+---
+
+# Password Policy
+
+User passwords should comply with a strong password policy.
+
+Recommended requirements:
+
+- Minimum 8 characters
+- Uppercase letter
+- Lowercase letter
+- Numeric digit
+- Special character
+
+Passwords are never stored or transmitted in plaintext.
+
+---
+
+# API Security
+
+All API endpoints are designed with security in mind.
+
+Implemented controls include:
+
+- Authentication middleware
+- Authorization checks
+- Request validation
+- Standardized error responses
+- HTTP status code handling
+- Rate limiting support
+
+These controls reduce the risk of unauthorized access and API abuse.
+
+---
+
+# Database Security
+
+The database layer follows secure development practices.
+
+Recommended measures include:
+
+- Authenticated database access
+- Restricted network exposure
+- Indexed queries
+- Input sanitization
+- Secure backups
+- Principle of least privilege for database users
+
+Only the backend service communicates directly with the database.
+
+---
+
+# Environment Variables
+
+Sensitive configuration values should be stored in environment variables.
+
+Typical examples include:
+
+```text
+PORT
+MONGODB_URI
+JWT_SECRET
+JWT_EXPIRES_IN
+OPENAI_API_KEY
+EMAIL_SERVICE_KEY
+```
+
+Configuration files containing secrets should never be committed to version control.
+
+---
+
+# Logging & Audit Trails
+
+Application events should be logged to support monitoring and troubleshooting.
+
+Examples include:
+
+- User authentication events
+- Failed login attempts
+- AI assessment generation
+- Profile updates
+- System errors
+- Administrative actions
+
+Sensitive information such as passwords and access tokens should never appear in logs.
+
+---
+
+# OWASP Considerations
+
+The application is designed with common web security risks in mind.
+
+| Security Risk | Mitigation Strategy |
+| :------------ | :------------------ |
+| Broken Authentication | JWT authentication and bcrypt hashing |
+| Sensitive Data Exposure | HTTPS and secure secret management |
+| Injection Attacks | Input validation and parameterized queries |
+| Broken Access Control | Authorization middleware |
+| Security Misconfiguration | Environment-based configuration |
+| Cross-Site Scripting (XSS) | Output encoding and frontend sanitization |
+| Cross-Site Request Forgery (CSRF) | Token-based authentication |
+| Rate Abuse | Request rate limiting |
+
+---
+
+# Future Security Enhancements
+
+The architecture supports the addition of advanced security capabilities without major structural changes.
+
+Potential enhancements include:
+
+- Multi-Factor Authentication (MFA)
+- OAuth 2.0 and OpenID Connect
+- Single Sign-On (SSO)
+- Web Application Firewall (WAF)
+- Secrets management services
+- Intrusion detection
+- Automated vulnerability scanning
+- Security event monitoring
+- Device trust verification
+- Encryption of sensitive fields at rest
+
+---
+
+# Security Design Principles
+
+The security model is based on the following principles:
+
+- Defense in depth
+- Least privilege
+- Secure by default
+- Zero trust mindset
+- Fail securely
+- Separation of concerns
+- Continuous monitoring
+- Privacy by design
+
+These principles guide the development of every component within the CreditMiners platform, ensuring that security remains an integral part of the application's architecture rather than an afterthought.
+
