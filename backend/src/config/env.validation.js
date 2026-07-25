@@ -10,11 +10,17 @@ const env = cleanEnv(process.env, {
     default: 5000,
   }),
 
-  DATABASE_URL: str(),
+  DATABASE_URL: str({
+    default: "postgresql://postgres:postgres@localhost:5432/creditminers",
+  }),
 
-  JWT_ACCESS_SECRET: str(),
+  JWT_ACCESS_SECRET: str({
+    default: "creditminers-demo-access-secret",
+  }),
 
-  JWT_REFRESH_SECRET: str(),
+  JWT_REFRESH_SECRET: str({
+    default: "creditminers-demo-refresh-secret",
+  }),
 
   ACCESS_TOKEN_EXPIRY: str({
     default: "15m",
@@ -30,15 +36,21 @@ const env = cleanEnv(process.env, {
 
   /* ---------------- Mail Configuration ---------------- */
 
-  MAIL_HOST: str(),
+  MAIL_HOST: str({
+    default: "localhost",
+  }),
 
   MAIL_PORT: port({
     default: 587,
   }),
 
-  MAIL_USER: str(),
+  MAIL_USER: str({
+    default: "demo@creditminers.local",
+  }),
 
-  MAIL_PASS: str(),
+  MAIL_PASS: str({
+    default: "demo-password",
+  }),
 
   /* ---------------- Application ---------------- */
 

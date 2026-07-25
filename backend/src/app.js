@@ -7,7 +7,7 @@ const cookieParser = require("cookie-parser");
 const requestLogger = require("./middleware/request.middleware");
 const errorHandler = require("./middleware/error.middleware");
 
-const authRoutes = require("./routes/auth.routes");
+const demoRoutes = require("./routes/demo.routes");
 
 const app = express();
 const { apiLimiter } = require("./middleware/rateLimit.middleware");
@@ -55,7 +55,11 @@ app.get("/api/health", (req, res) => {
 
 /* ---------------- API Routes ---------------- */
 
-app.use("/api/auth", authRoutes);
+app.use("/api/demo", demoRoutes);
+app.use("/api/auth", (req, res, next) => {
+  const authRoutes = require("./routes/auth.routes");
+  return authRoutes(req, res, next);
+});
 
 /* ---------------- 404 Handler ---------------- */
 
