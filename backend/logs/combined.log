@@ -1,0 +1,3 @@
+{"level":"info","message":"\n==========================================\n🚀 CreditMiners Backend Started\n🌍 Environment : development\n📡 Server      : http://localhost:5000\n==========================================\n","timestamp":"2026-07-25 11:25:39"}
+{"level":"info","message":{"duration":"20ms","ip":"::1","method":"GET","status":404,"url":"/"},"timestamp":"2026-07-25 11:25:46"}
+{"level":"info","message":{"duration":"1ms","ip":"::1","method":"GET","status":404,"url":"/favicon.ico"},"timestamp":"2026-07-25 11:25:46"}
