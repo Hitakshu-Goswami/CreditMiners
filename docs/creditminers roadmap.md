@@ -1,426 +1,267 @@
-# Phase 1 — Authentication ✅ (Completed)
+# Phase 2 — User Financial Identity (Highest Priority)
 
-## Backend
-- JWT Authentication
-- Register/Login
-- Refresh Token Rotation
-- Logout
-- Session Management
-- Device Detection
-- Email Verification
-- Forgot Password
-- Reset Password
-- Change Password
-- Account Locking
-- RBAC Middleware
-- Audit Logs
-- Rate Limiting
-- Request Logging
-- Centralized Error Handling
-- Validation
-- Security Middleware
+This is the foundation for both the credit scoring engine and investment advisor.
 
----
+## User Module
 
-# Phase 2 — User Module
+- User profile
+- Profile completion
+- Occupation
+- Education
+- City / State
+- Monthly income
+- Financial goals
+- Consent management
+- Notification preferences
 
-## User Profile
-- Get own profile
-- Update profile
-- Upload profile picture
-- Remove profile picture
-- Change phone number
-- Change email
-- Verify new email
-- Complete onboarding status
+## Financial Profile
 
-## KYC
-- PAN upload
-- Aadhaar upload
-- Selfie verification
-- Bank account verification
-- KYC status
-- KYC rejection reason
-- Admin approval
+- Monthly income
+- Monthly expenses
+- Savings
+- Existing loans
+- Existing investments
+- Dependents
+- Emergency fund
+- Employment type
 
-## Preferences
-- Language
-- Theme
-- Notification settings
-- Privacy settings
+## Digital Behaviour Module (Core Hackathon Requirement)
 
-## Trust & Reputation
-- Credit score
-- Rating
-- Total completed loans
-- Total repayments
-- Default count
-- Verification badges
+Instead of generic transaction history, model the exact alternative signals from the problem statement:
 
-## Admin
-- Get all users
-- Search users
-- Filter users
-- Ban user
-- Suspend user
-- Activate user
-- Delete user
-- Change role
-- Manual KYC approval
-- User analytics
+- Mobile recharge frequency
+- Utility bill payment regularity
+- E-commerce transaction patterns
+- UPI usage
+- Wallet usage
+- Subscription payments
+- Salary consistency
+- Savings consistency
+
+These are the features your ML pipeline will consume.
 
 ---
 
-# Phase 3 — Roles & Permissions
+# Phase 3 — Financial Data Engine
 
-## Backend
-- CRUD Roles
-- CRUD Permissions
-- Assign role
-- Remove role
-- Assign permissions
-- Remove permissions
-- Role hierarchy
-- Permission caching
+Instead of generic CRUD modules, build the data pipeline.
 
----
+## Transactions
 
-# Phase 4 — Credit Listing Module
-
-## Borrower
-- Create loan request
-- Draft request
-- Publish request
-- Edit request
-- Delete request
-- Close request
-
-## Fields
-- Amount
-- Interest
-- Duration
-- Purpose
+- Income
+- Expense
+- Merchant
 - Category
-- Risk level
-- Documents
-- Collateral
-- Images
+- Tags
 
-## Listing Features
-- Pagination
-- Filters
-- Sorting
-- Search
-- Nearby listings
-- Trending listings
-- Recommended listings
+## Bills
 
----
-
-# Phase 5 — Application Module
-
-## Lender
-- Apply to loan
-- Withdraw application
-
-## Borrower
-- Accept application
-- Reject application
-- Counter offer
-
-## Statuses
-- Pending
-- Accepted
-- Rejected
-- Cancelled
-- Completed
-- Expired
-
----
-
-# Phase 6 — Loan Management
-
-## Complete lifecycle
-
-```text
-Loan Created
-↓
-Agreement
-↓
-Funded
-↓
-Active
-↓
-Installments
-↓
-Completed
-↓
-Closed
-```
-
-## Features
-- EMI Schedule
+- Electricity
+- Water
+- Gas
+- Internet
 - Due dates
-- Interest calculation
-- Penalty calculation
-- Late fees
-- Extension request
-- Partial payment
-- Foreclosure
-- Settlement
+- Paid on time
+
+## Recharge History
+
+- Recharge amount
+- Recharge interval
+- Missed recharge
+- Frequency score
+
+## E-commerce
+
+- Order count
+- Refund ratio
+- Average order value
+- Spending categories
+
+Everything here feeds feature engineering.
 
 ---
 
-# Phase 7 — Payment Module
+# Phase 4 — Feature Engineering Engine ⭐
 
-- Razorpay
-- Escrow
-- Wallet
-- UPI
-- Cards
-- Net Banking
-- Refunds
-- Webhooks
-- Transaction history
-- Payment retries
-- Failed payments
-- Split payments
+This is one of the hackathon's key evaluation points.
 
----
+Generate features like:
 
-# Phase 8 — Notifications
+- Expense/Income Ratio
+- Savings Ratio
+- Bill Payment Regularity
+- Recharge Consistency
+- Digital Payment Score
+- Spending Stability
+- Income Stability
+- Financial Discipline Score
+- Cash Flow
+- Merchant Diversity
+- Essential vs Luxury Spend
+- Monthly Variance
 
-## Channels
-- In-app
-- Email
-- Push
-- SMS
-
-## Events
-- Loan approved
-- Application received
-- Repayment reminder
-- Late payment
-- Offer accepted
-- KYC approved
+Store engineered features separately for ML.
 
 ---
 
-# Phase 9 — Chat System
+# Phase 5 — Explainable Credit Scoring AI ⭐⭐⭐
 
-- One-to-one chat
-- Loan specific chats
-- Attachments
-- Images
-- PDFs
-- Read receipts
-- Typing status
-- Online status
-- Notifications
-- Message search
-- Block user
+Exactly matches the problem statement.
 
----
+## Endpoints
 
-# Phase 10 — Reviews & Ratings
+- Generate Credit Score
+- Get Score
+- Score History
 
-- Rate borrower
-- Rate lender
-- Comments
-- Report review
-- Review moderation
+## Outputs
 
----
+- Credit Likelihood Score
+- Low / Medium / High Risk
+- Top 3 contributing factors
+- SHAP/LIME explanation
+- Confidence score
+- Improvement roadmap
 
-# Phase 11 — Reports
+### Example
 
-- Report user
-- Report listing
-- Report transaction
-- Report chat
-- Admin moderation
+**Score:** 742
 
----
+#### Top Factors
 
-# Phase 12 — Dashboard
+- Consistent utility payments (+18)
+- Stable recharge frequency (+13)
+- High discretionary spending (-11)
 
-## Dashboards
-- Borrower Dashboard
-- Lender Dashboard
-- Admin Dashboard
+#### Improvement Plan
 
-## Statistics
-- Charts
-- Revenue
-- Active loans
-- Pending requests
-- Recent activities
+- Reduce luxury spending by 15%
+- Maintain bill payment streak
+- Increase monthly savings by ₹500
 
 ---
 
-# Phase 13 — Search Engine
+# Phase 6 — Conversational Risk Profiling ⭐⭐⭐
 
-- Full text search
-- Elasticsearch/Meilisearch
-- Auto complete
-- Recent searches
-- Saved searches
+Another explicit hackathon requirement.
 
----
+## Build
 
-# Phase 14 — File Management
-
-- Cloudflare R2
-- Image upload
-- PDF upload
-- Compression
-- Validation
-- Virus scanning
-- Signed URLs
-
----
-
-# Phase 15 — Analytics
-
-- User Analytics
-- Loan Analytics
-- Revenue Analytics
-- Admin Analytics
-- Growth Metrics
-- Retention
-- Conversion
-- Fraud Metrics
-
----
-
-# Phase 16 — Fraud Detection
-
-- Duplicate accounts
-- Fake KYC
-- Device fingerprinting
-- Location mismatch
-- Rapid loan requests
-- Blacklist
+- 5–8 question assessment
+- Conversation/session handling
 - Risk scoring
+- Low / Medium / High profile
+- Goal extraction
+- Investment horizon
+
+## Questions Include
+
+- Investment goal
+- Monthly investment budget
+- Risk tolerance
+- Emergency fund
+- Time horizon
+- Income stability
+- Loss tolerance
+- Previous investment experience
 
 ---
 
-# Phase 17 — AI Module 🤖
+# Phase 7 — AI Micro-Investment Advisor ⭐⭐⭐
 
-## AI Credit Risk Engine
-- Borrower risk score
-- Default probability
-- Loan approval recommendation
-- Interest rate recommendation
-- Fraud probability
+This directly satisfies the problem statement.
 
-## AI Document Analysis
-- OCR
-- PAN extraction
-- Aadhaar extraction
-- Bank statement parsing
-- Salary slip parsing
-- ITR parsing
-- Validation
-- Forgery detection
+## Generate
 
-## AI Chat Assistant
-- Borrower Assistant
-- Lender Assistant
-- FAQs
-- Loan guidance
-- Repayment help
-- Support
+- Recommended allocation
+- Instrument categories
+- Monthly investment amount
+- SIP suggestions
+- Gold
+- Debt
+- Equity
+- Emergency fund
 
-## AI Recommendation System
-- Recommend lenders
-- Recommend borrowers
-- Recommend loan amount
-- Recommend repayment duration
-- Recommend interest rate
-- Recommend listings
+## Also Provide
 
-## AI Smart Matching
-- Borrower ↔ Lender matching
-- Similarity score
-- Availability
-- Risk
-- Location
-- Past history
-- Preferences
+- Plain-language explanation
+- Why this allocation?
+- Risks
+- Expected volatility
 
-## AI Fraud Detection
-- Fake documents
-- Multiple identities
-- Bot detection
-- Abnormal transactions
-- Fake GPS
-- Repeated defaults
+Include the mandatory disclaimer on every response.
 
-## AI Loan Summary
-- Summarize loan requests
-- Summarize applications
-- Summarize agreements
+---
 
-## AI Notification Engine
-- Best reminder timing
-- Late payment prediction
-- Personalized reminders
+# Phase 8 — Growth Projection Engine ⭐⭐⭐
+
+Produce:
+
+- 1-year projection
+- 3-year projection
+- 5-year projection
+
+For each:
+
+- Conservative
+- Moderate
+- Aggressive
+
+Generate chart data for the frontend.
+
+---
+
+# Phase 9 — Explainability & Insights
+
+## Financial Health Dashboard
+
+## Credit Dashboard
 
 ## AI Insights
-- Borrower insights
-- Lender insights
-- Portfolio analysis
-- Cash flow prediction
-- Repayment forecasting
 
-## AI Admin Copilot
-- Detect suspicious users
-- Moderation suggestions
-- Automatic report prioritization
-- Risk dashboards
-- Fraud explanations
+## Improvement Timeline
+
+## Financial Habit Trends
+
+## Monthly Reports
+
+## Achievement Badges (Optional)
 
 ---
 
-# Phase 18 — Background Jobs
+# Phase 10 — Admin Dashboard
 
-- Cron jobs
-- Email queue
-- Notification queue
-- Payment queue
-- Document processing
-- AI inference queue
-- Cleanup jobs
-- Retry jobs
+- User management
+- Dataset management
+- AI model monitoring
+- Feature statistics
+- Risk bucket distribution
+- API monitoring
+- Audit logs
+- System analytics
 
 ---
 
-# Phase 19 — Infrastructure
+# Phase 11 — AI Infrastructure
 
-- Swagger
-- Docker
-- Redis
-- BullMQ
+- Dataset versioning
+- Model versioning
+- Prediction history
+- SHAP/LIME service
+- Feature importance service
+- Recommendation engine
+- Projection engine
+
+---
+
+# Phase 12 — Production Readiness
+
 - Caching
-- CI/CD
-- Monitoring
-- Health checks
-- Sentry
-- Prometheus
-- Grafana
-- Nginx
+- Background jobs
+- Notifications
 - Rate limiting
-- Backup
-- Logging
-
----
-
-# Phase 20 — Testing
-
-- Unit Tests
-- Integration Tests
-- API Tests
-- Performance Tests
-- Load Tests
-- Security Tests
+- Monitoring
+- Testing
+- CI/CD
+- Docker
+- Deployment

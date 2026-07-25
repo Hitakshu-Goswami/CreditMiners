@@ -1,115 +1,47 @@
-# API Documentation
+# API reference
 
-Base URL:
+Local API base URL: `http://localhost:5000`. Vite proxies `/api` during development.
 
-```text
-http://localhost:5000
-```
+## Response and error conventions
 
-## Health
-
-```http
-GET /api/health
-```
-
-Returns API status.
-
-## Demo Summary
-
-```http
-GET /api/demo/summary
-```
-
-Returns profile count, risk-bucket distribution, average score, and demo data source note.
-
-Example fields:
+Most successful controllers use `utils/response`:
 
 ```json
-{
-  "totalProfiles": 12,
-  "buckets": {
-    "LOW": 7,
-    "MEDIUM": 2,
-    "HIGH": 3
-  },
-  "averageScore": 730
-}
+{ "success": true, "message": "…", "data": {}, "timestamp": "ISO-8601" }
 ```
 
-## Sample Profiles
+The global error middleware returns `{ "success": false, "message": "…" }` and includes a stack outside production. Health and 404 handlers are separate simple responses. Do not treat undocumented fields as stable contracts.
 
-```http
-GET /api/demo/profiles
-```
+## Implemented routes
 
-Returns all sample users with score, risk level, city, occupation, income, confidence, and top reason.
+| Method | Path | Auth | Purpose |
+|---|---|---|---|
+| GET | `/api/health` | No | Basic API health response. |
+| GET | `/api/demo/summary` | No | Synthetic demo metrics. |
+| GET | `/api/demo/profiles` | No | Synthetic profile summaries. |
+| GET | `/api/demo/profiles/:userId/assessment` | No | Full synthetic explainable assessment. |
+| POST | `/api/demo/score` | No | Assessment from `{ "userId": "…" }`. |
+| GET | `/api/demo/investment/questions` | No | Six demo risk questions. |
+| POST | `/api/demo/investment/assess` | No | Educational risk/allocation/projection response. |
+| POST | `/api/auth/register` | No | Register with strong password validation. |
+| POST | `/api/auth/login` | No | Login verified user. |
+| POST | `/api/auth/refresh` | No | Rotate a refresh token. |
+| POST | `/api/auth/logout` | Bearer | Delete supplied refresh-token session. |
+| GET | `/api/auth/verify-email?token=` | No | Verify email token. |
+| POST | `/api/auth/resend-verification` | No | Resend verification email. |
+| POST | `/api/auth/forgot-password` | No | Initiate reset without revealing account existence. |
+| POST | `/api/auth/reset-password` | No | Reset password from token. |
+| POST | `/api/auth/change-password` | Bearer | Change password and revoke sessions. |
+| GET | `/api/auth/sessions` | Bearer | List current user's sessions. |
+| DELETE | `/api/auth/sessions/:sessionId` | Bearer | Delete owned session. |
+| DELETE | `/api/auth/sessions` | Bearer | Delete all current-user sessions. |
 
-## User Assessment
+Authenticated requests use `Authorization: Bearer <access-token>`. Authentication loads the user and role from the database. `authorize(...roleNames)` is the verified role middleware foundation; no role-management API is mounted.
 
-```http
-GET /api/demo/profiles/:userId/assessment
-```
+## In progress / planned APIs
 
-Returns a full explainable credit-likelihood assessment for one sample user.
+Financial identity, consent, transactions, bills, recharges, e-commerce data, features, persisted scoring, dashboard, admin, and AI-service APIs are roadmap work. Follow [ROADMAP.md](ROADMAP.md) and do not expose them as existing contracts.
 
-Includes:
+## Technical debt
 
-- User profile
-- Score
-- Estimated credit score
-- Financial health score
-- Confidence score
-- Risk level
-- Raw engineered features
-- Category scores
-- Top 3 factors
-- Improvement recommendations
-- Disclaimer
-
-## Score Profile
-
-```http
-POST /api/demo/score
-Content-Type: application/json
-
-{
-  "userId": "u001"
-}
-```
-
-Returns the same assessment shape as the user assessment endpoint.
-
-## Investment Questions
-
-```http
-GET /api/demo/investment/questions
-```
-
-Returns six risk-profile questions and answer options.
-
-## Investment Risk Assessment
-
-```http
-POST /api/demo/investment/assess
-Content-Type: application/json
-
-{
-  "answers": {
-    "monthlyAmount": 2000,
-    "horizonYears": 3,
-    "lossComfort": "medium",
-    "emergencyFundMonths": 2,
-    "incomeStability": "mostly_stable",
-    "experience": "some"
-  }
-}
-```
-
-Returns:
-
-- Low/medium/high appetite
-- Plain-language recommendation
-- Suggested allocation
-- Conservative/base/optimistic expected returns
-- 1/3/5 year projection
-- Disclaimer
+The auth service expects a refresh-token `deviceInfo` field absent from the checked-in schema/migrations, so session/token persistence must be reconciled before treating the auth path as production-ready.

@@ -1,30 +1,10 @@
 # Contributing
 
-## Before Starting Work
+1. Inspect current source and `git status`; read [CONTEXT.md](CONTEXT.md), [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md), and applicable roadmap references.
+2. Classify work as Implemented, In Progress, Planned, Future Production, or Technical Debt; do not claim roadmap work exists before it is built.
+3. Follow [BACKEND_GUIDELINES.md](BACKEND_GUIDELINES.md), [SECURITY.md](SECURITY.md), and [AI_CONTEXT.md](AI_CONTEXT.md) for backend/data/AI changes.
+4. Keep commits focused. Do not mix unrelated formatting, application changes, or destructive migrations.
+5. Run proportionate checks and state exactly what ran. The repository has no verified test script/framework.
+6. Update API/database/architecture/module/decision documentation as appropriate and append material work to `memory.md`.
 
-1. Pull/sync the latest branch.
-2. Read `.project/memory.md`.
-3. Check `git status --short`.
-4. Run the app if your change touches frontend or backend behavior.
-
-## After Making Changes
-
-1. Run relevant checks.
-2. Update docs when behavior, API, architecture, or demo flow changes.
-3. Append a short entry to `.project/memory.md`.
-4. Keep commits focused by topic.
-
-## Commit Style
-
-Use short, descriptive commit messages:
-
-```text
-feat(data): add synthetic prescreening datasets
-feat(api): add demo scoring endpoints
-feat(ui): build prescreening dashboard
-docs(project): document demo architecture and handoff memory
-```
-
-## Push Style
-
-Push after each coherent commit when collaborating during the hackathon. This keeps teammates synced and reduces merge confusion.
+Never commit secrets, tokens, real financial/identity data, or raw sensitive documents. Schema changes require a reviewed migration, query/index rationale, data/recovery considerations, and documentation update.

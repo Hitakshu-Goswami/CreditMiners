@@ -1,100 +1,46 @@
 # Architecture
 
-## Current Prescreening Architecture
+## Hackathon prototype — implemented architecture
 
 ```text
-Synthetic CSV data
-        ↓
-Backend demo services
-        ↓
-Feature engineering and scorecard
-        ↓
-Top 3 explanations + recommendations
-        ↓
-Express REST API
-        ↓
 React/Vite dashboard
+  → Express /api/demo
+  → demo controller/service
+  → synthetic CSV datasets
+  → deterministic features, scorecard, explanations, recommendations
 ```
 
-## Data Sources
+The current prototype intentionally consumes synthetic datasets. `signals.service.js` calculates alternative-signal features from recharge, utility, e-commerce, and financial sample data; `investment.service.js` provides risk profiling, allocation, and projections.
 
-Current MVP:
-
-- `data/sample-data/users.csv`
-- `data/sample-data/mobile_recharges.csv`
-- `data/sample-data/utility_payments.csv`
-- `data/sample-data/ecommerce_transactions.csv`
-
-Future adapters:
-
-- Account Aggregator
-- Gmail API / Google Takeout
-- Bank statement upload
-- Payment gateway webhooks
-- BBPS / utility APIs
-
-## Backend
-
-Runtime: Node.js + Express.
-
-Important files:
-
-- `backend/src/app.js` mounts `/api/demo`.
-- `backend/src/routes/demo.routes.js` defines demo routes.
-- `backend/src/controllers/demo.controller.js` maps requests to services.
-- `backend/src/services/signals.service.js` loads CSVs, extracts features, scores users, and creates explanations.
-- `backend/src/services/investment.service.js` classifies investment appetite and generates projections.
-
-The demo scoring path does not require the database. This keeps the prescreening demo reproducible.
-
-## Frontend
-
-Runtime: React + Vite.
-
-Important files:
-
-- `frontend/src/App.jsx` contains the demo app screens and API wiring.
-- `frontend/src/styles.css` contains the visual system and responsive layout.
-- `frontend/vite.config.js` proxies `/api` to `http://localhost:5000`.
-
-Screens:
-
-- Overview
-- Profiles
-- Risk profile
-- Advisor
-
-## Scoring Model
-
-The credit-likelihood score is a transparent scorecard:
+Authentication follows a separate API path:
 
 ```text
-Utility regularity: 30%
-Recharge consistency: 20%
-E-commerce discipline: 20%
-Cashflow strength: 20%
-Data completeness: 10%
+client → /api/auth → validation → controller → auth service
+       → JWT/utilities + Prisma → PostgreSQL
 ```
 
-Score range:
+Routes, controllers, services, middleware, utilities, config, and Prisma form the current modular-monolith boundary. The request lifecycle is: security/parsing middleware → request logger/rate limit → route middleware → controller → service → response/global error handler.
+
+## Production transition — planned
 
 ```text
-300-619: High risk
-620-739: Medium risk
-740-900: Low risk
+Consented traditional and non-traditional sources
+  → consent / access controls
+  → validation, cleaning, normalization
+  → canonical financial data + feature store
+  → versioned AI inference APIs
+  → explainability and recommendation services
+  → backend/domain APIs and dashboards
 ```
 
-## Migration To Real Data
+Traditional data may include bank/Account Aggregator, salary, investment, and future bureau data. Alternative signals may include recharge, utilities, UPI/wallet, e-commerce, spending, savings, and financial-discipline behavior. These integrations are Future Production only.
 
-Keep the scorecard and feature layer stable. Replace only the ingestion layer:
+## Coupling rule
 
-```text
-CSV adapter today
-AA/Gmail/upload/payment adapters later
-        ↓
-Canonical event format
-        ↓
-Same feature engineering
-        ↓
-Same scorecard and explanations
-```
+Backend modules own domain validation, authorization, persistence, and API contracts. AI components consume versioned, consented data through explicit contracts and return versioned outcomes; they must remain loosely coupled from controllers and raw ingestion. See [AI_CONTEXT.md](AI_CONTEXT.md) and [BACKEND_GUIDELINES.md](BACKEND_GUIDELINES.md).
+
+## Status and debt
+
+- Prisma models support future financial/AI domains, but they do not create implemented modules.
+- No worker, queue, cache, model service, external connector, or production observability stack is present.
+- Auth/session schema alignment and audit-log contract reconciliation remain technical debt; see [DATABASE.md](DATABASE.md).

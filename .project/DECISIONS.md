@@ -1,45 +1,35 @@
-# Decisions
+# Architecture decisions
 
-## 2026-07-25 - Use synthetic data for prescreening
+## Active decisions
 
-Decision:
-Use synthetic consent-style CSV datasets for the prescreening round.
+### Synthetic, explainable hackathon prototype
 
-Reason:
-The team has limited time before July 29. Live financial-data integrations need onboarding, consent flows, and compliance review. Synthetic data keeps the demo reproducible and safe.
+Use synthetic/consent-style datasets and deterministic scorecard/advisor logic for the current demonstration. This makes the workflow reproducible and explainable without claiming trained-model or regulated-decision behavior.
 
-Consequence:
-The product must clearly explain that production ingestion can later come from Account Aggregator, Gmail/Takeout, uploads, payment gateways, or BBPS APIs.
+### PostgreSQL with Prisma
 
-## 2026-07-25 - Use transparent scorecard before ML model
+Use Prisma/PostgreSQL for identity, financial, AI-outcome, and system records. Schema and migrations are a single contract; see [DATABASE.md](DATABASE.md).
 
-Decision:
-Use a deterministic weighted scorecard for the MVP.
+### Modular monolith and explicit AI boundary
 
-Reason:
-Judges can understand the scoring logic, feature weights, and top-3 explanations. It is easier to defend than a black-box model trained on synthetic labels.
+Keep backend modules within the existing layered Express architecture. Future AI work is a separate API/data-contract concern, not controller logic. See [ARCHITECTURE.md](ARCHITECTURE.md).
 
-Consequence:
-Future ML can be added later as logistic regression or gradient boosting, but the explanation contract should stay stable.
+### Roadmap-led product delivery
 
-## 2026-07-25 - Keep demo scoring database-independent
+Use the official backend and AI roadmaps to sequence work: financial identity/data → features → explainable score → risk/advisor/projections → insight/admin → AI infrastructure/production readiness.
 
-Decision:
-Read sample CSVs directly in the demo scoring service.
+## Resolved decisions
 
-Reason:
-The existing Prisma/auth stack is not necessary for prescreening and can slow setup.
+- Demo scoring deliberately remains database-independent and reads synthetic CSVs.
+- Auth routes are lazy-mounted, preserving separation between demo and auth import paths.
+- Authentication and role foundations are present in current source; future authorization work must build on them rather than bypass them.
 
-Consequence:
-After prescreening, assessments should be persisted into the existing Prisma tables.
+## Technical debt requiring a decision
 
-## 2026-07-25 - Lazy-load auth routes
+- Reconcile refresh-token device/session metadata with the Prisma schema and migrations.
+- Establish one controlled audit-event/table contract, including retention and access needs.
+- Decide production consent, feature-store, AI API, model-governance, and MLOps architecture before real data/model deployment.
 
-Decision:
-Mount `/api/auth` through a lazy require in `backend/src/app.js`.
+## Not decided in verified source
 
-Reason:
-This prevents demo startup from being blocked by the auth/Prisma import path.
-
-Consequence:
-Auth behavior should be re-tested before any production-style release.
+Model/provider selection, queue/cache stack, external financial/KYC/payment providers, API versioning/OpenAPI approach, deployment topology, RLS strategy, and production compliance posture remain planned/unknown.

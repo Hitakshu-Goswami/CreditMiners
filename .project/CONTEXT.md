@@ -1,32 +1,40 @@
-# Context
+# CreditMiners context
 
-## Hackathon Timeline
+## Vision
 
-Current date in this session: 2026-07-25.
+CreditMiners is an AI-first financial-intelligence platform designed for financial inclusion. The hackathon problem is addressed through transparent alternative-credit scoring, understandable improvement guidance, conversational risk profiling, educational micro-investment advice, and growth projections.
 
-Prescreening target date mentioned by the team: 2026-07-29.
+The long-term product must remain explainable, privacy-conscious, secure, modular, and scalable. It must not treat synthetic demo output as lending approval, a regulated credit score, or investment advice.
 
-## Problem Statement
+## Current implementation
 
-Build an integrated fintech prototype for underserved users:
+### Implemented
 
-- Transparent credit-likelihood scoring from non-traditional digital signals.
-- AI-driven micro-investment advisor.
-- Explainable outputs.
-- REST API and dashboard.
-- Synthetic or fully consented data.
-- Educational/non-advice disclaimer.
+- React/Vite demo dashboard for synthetic user profiles, explanation drill-down, risk profiling, allocation, and projections.
+- Express `/api/demo` endpoints backed by synthetic CSV data and deterministic services.
+- Authentication foundation: registration/login, refresh rotation, logout/sessions, email verification, password reset/change, lockout, validators, JWT helpers, and audit calls.
+- Role foundation: `ADMIN`/`USER` seed roles, role loading, JWT role claims, and the `authorize(...roles)` helper.
+- PostgreSQL/Prisma schema for authentication, financial, AI, and system domains.
 
-## Current State
+### In progress
 
-The MVP is implemented as a local demo:
+- The roadmap's financial-identity, data-engine, and feature-engine foundations are represented by schema/model design and demo signals, not mounted production modules.
+- AI data/assessment models exist in Prisma but are not used by the demo pipeline.
 
-- Express backend with `/api/demo`.
-- React/Vite frontend.
-- Synthetic sample data.
-- Transparent scorecard.
-- Investment profile wizard.
+### Planned / Future Production
 
-## Important Caveat
+Consent-led ingestion, feature store, model-backed scoring, SHAP/LIME, persisted profiling/advice, dashboards, admin platform, AI infrastructure, and production hardening. See [ROADMAP.md](ROADMAP.md) and [AI_CONTEXT.md](AI_CONTEXT.md).
 
-The current system is not a regulated financial product. It is a hackathon prototype for education and prescreening demonstration.
+## Source hierarchy
+
+1. Current source, schema, migrations, and routes define implementation truth.
+2. `docs/creditminers roadmap.md` and `docs/AI creditminers.md` define current backend/AI planning direction.
+3. This `.project` knowledge base synchronizes engineering context; it must not override the source documents.
+
+`docs/CREDITMINERS_PROJECT_CONTEXT_COMPLETED_TILL_NOW.md` was requested for review but is absent from the current working tree; its current content is unknown.
+
+## Technical debt
+
+- Auth service references `RefreshToken.deviceInfo`, absent from checked-in Prisma schema/migrations.
+- Audit-log schema/migration evolution is inconsistent; an unused `AuditAction` enum remains.
+- RBAC has a verified role helper, but permissions CRUD/hierarchy and consistent use of the alternate RBAC middleware are not verified.

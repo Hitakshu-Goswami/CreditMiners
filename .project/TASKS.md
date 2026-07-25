@@ -1,42 +1,22 @@
-# Tasks
+# Delivery tasks
 
-## Done
+The official phase sequence is [ROADMAP.md](ROADMAP.md); this file is a compact execution view.
 
-- Created synthetic prescreening datasets.
-- Added explainable scorecard backend service.
-- Added investment profiling backend service.
-- Added demo API routes.
-- Created Vite + React frontend app.
-- Built polished multi-screen demo UI.
-- Verified frontend production build.
-- Verified demo scoring produces profiles across all risk buckets.
-- Added project documentation and memory protocol.
+## Technical debt first
 
-## Next Before Prescreening
+- Reconcile `RefreshToken.deviceInfo` across auth service, Prisma schema, migration, and client.
+- Reconcile audit-log table/model/event contract.
+- Validate and standardize RBAC middleware usage before expanding protected modules.
+- Establish test, configuration, CORS, logging/redaction, and verification baselines.
 
-- Record a short demo video or screen walkthrough.
-- Add 3-5 screenshots to `presentation/demo-images/`.
-- Update main `readme.md` with current run/demo instructions.
-- Prepare a short pitch explaining why synthetic data is used for prescreening.
-- Add a small API test file for `/api/demo/summary` and `/api/demo/profiles/:id/assessment`.
-- Confirm the UI works on the presentation laptop.
+## Next hackathon-direction work
 
-## After Prescreening
+1. Phase 2: user financial identity, financial profile, consent, and alternative digital-signal contracts.
+2. Phase 3: canonical financial data engine for transactions, bills, recharges, and e-commerce.
+3. Phase 4: persisted/versioned feature engineering.
+4. Phase 5: explainable score generation/history backed by defined data contracts.
+5. Phase 6–8: persisted conversational profiling, advisor, and projections.
+6. Phase 9–11: dashboard/insights, admin, and AI infrastructure.
+7. Phase 12: production readiness.
 
-- Add canonical event schema for real ingestion.
-- Build manual CSV upload adapter.
-- Add Gmail/Takeout parser proof of concept.
-- Explore Account Aggregator sandbox provider onboarding.
-- Persist assessments into Prisma models.
-- Add audit trail for user consent and data source.
-- Add fairness and bias checks for scorecard features.
-
-## Suggested Current Commit Split
-
-Use several small commits rather than one giant commit:
-
-1. Synthetic datasets.
-2. Demo scoring and investment backend APIs.
-3. Frontend Vite setup.
-4. Prescreening dashboard UI.
-5. Documentation updates.
+Do not start a later phase by bypassing the consent, ownership, validation, provenance, and explanation requirements of earlier phases.

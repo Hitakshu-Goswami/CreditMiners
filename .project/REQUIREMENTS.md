@@ -1,40 +1,28 @@
-# Requirements
+# Requirements baseline
 
-## Hackathon Problem Requirements
+## Implemented
 
-- Ingest non-traditional digital signals.
-- Generate an interpretable credit-likelihood score.
-- Show top 3 feature explanations.
-- Provide actionable score-improvement recommendations.
-- Classify users into low, medium, and high risk buckets.
-- Provide a REST API.
-- Show at least 10 sample profiles across risk buckets.
-- Provide a 5-8 question conversational risk assessment.
-- Map risk appetite to suitable instrument categories.
-- Generate micro-investment allocation recommendation.
-- Show simulated 1-5 year projected growth chart with scenarios.
-- Display prominent educational/non-advice disclaimer.
+- Synthetic alternative-credit demo using recharge, utility, e-commerce, and financial sample inputs.
+- Explainable score/risk/confidence/recommendation output and educational disclaimer.
+- Six-question risk profile, allocation categories, and 1/3/5-year projections.
+- Authentication and foundational role authorization.
+- Prisma model foundation for financial and AI-outcome domains.
 
-## Current Implementation
+## In progress
 
-Implemented for prescreening:
+- User Financial Identity and financial profile requirements are represented in roadmap/schema but lack mounted APIs, consent records, and ownership workflows.
+- Audit recording exists for auth actions but requires contract reconciliation.
 
-- 12 synthetic profiles in `data/sample-data/users.csv`.
-- Non-traditional signal CSVs for mobile recharge, utility payments, and e-commerce transactions.
-- Weighted transparent scorecard in `backend/src/services/signals.service.js`.
-- Top 3 explanations and improvement recommendations from score drivers.
-- Demo REST API under `/api/demo`.
-- React dashboard with overview, profile explorer, explainability drill-down, risk wizard, and advisor view.
-- Investment risk profile with six questions in `backend/src/services/investment.service.js`.
-- 1/3/5 year conservative/base/optimistic projection.
-- Disclaimer in API responses and UI footer.
+## Planned
 
-## Deferred Until After Prescreening
+Financial data engine, reusable/persisted features, scoring history, user insights/dashboard, and admin platform. Their scope is defined in [ROADMAP.md](ROADMAP.md).
 
-- Account Aggregator integration.
-- Gmail/Google Takeout parser.
-- Bank statement PDF/CSV upload parser.
-- Payment gateway webhook ingestion.
-- BBPS/utility provider API integration.
-- Persisting demo assessments into Prisma tables.
-- Automated backend API tests.
+## Future Production
+
+Consent-driven traditional/non-traditional data acquisition; model-backed scoring/XAI; evaluation/MLOps; KYC; payments/lending; background jobs; observability; CI/CD; testing; deployment; compliance controls.
+
+## Non-functional requirements
+
+- Explainability, inclusion, privacy, security, modularity, and maintainability are mandatory product principles.
+- Real-data or high-impact decisions require consent/provenance, auditability, authorization, data minimization, evaluation, governance, and applicable legal/compliance review.
+- The current demo has no verified production SLA, live integration, test suite, or deployment capability.

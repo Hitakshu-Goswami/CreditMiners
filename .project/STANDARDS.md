@@ -1,28 +1,30 @@
-# Standards
+# Engineering standards
 
-## Data
+## Status vocabulary
 
-- Use synthetic or explicitly consented data only.
-- Keep demo source data in `data/sample-data/`.
-- Do not commit secrets or real personal financial data.
-- If adding a new source, document whether it is synthetic, uploaded, or consented.
+- **Implemented:** present and used by current source.
+- **In Progress:** partially present, scaffolded, or awaiting integration.
+- **Planned:** defined roadmap work not yet implemented.
+- **Future Production:** requires production data, governance, infrastructure, or external integration.
+- **Technical Debt:** verified inconsistency or limitation requiring remediation.
 
-## Backend
+## Code standards
 
-- Keep demo endpoints under `/api/demo`.
-- Keep scoring logic explainable.
-- Return disclaimers with investment outputs.
-- Prefer small services over placing business logic in route files.
+- Preserve backend layering and shared validation/error/response patterns.
+- Keep functions focused, names meaningful, and domain rules out of routes/controllers.
+- Use CommonJS in backend and ESM in frontend unless an approved migration changes this.
+- Validate at route boundaries, authorize/verify ownership in services, and propagate expected failures through `AppError` subclasses.
 
-## Frontend
+## Data and AI standards
 
-- Show the working product first.
-- Keep explanation and improvement actions visible.
-- Keep investment advice framed as educational simulation.
-- Verify with `npm run build` after UI changes.
+- Use only synthetic or explicitly consented data; never commit sensitive customer data.
+- Treat Prisma schema/migrations as reviewed contract; use `Decimal` for money and transactions for atomic operations.
+- Build each roadmap data/AI phase with source provenance, consent, versioning, and explainability from the start.
+- Do not claim prototype score/advisor output is regulated advice or credit approval.
 
-## Documentation
+## Quality/documentation standards
 
-- Update `.project/memory.md` after meaningful changes.
-- Update `.project/API.md` when endpoints change.
-- Update `.project/ARCHITECTURE.md` when data flow or service boundaries change.
+- Verify current repository state before work and report only checks actually run.
+- Make focused changes and preserve unrelated work.
+- Update relevant `.project` documents and `memory.md` when behavior, contracts, decisions, or status changes.
+- Record only verified issues as Technical Debt; move an item to resolved only after source proves it.

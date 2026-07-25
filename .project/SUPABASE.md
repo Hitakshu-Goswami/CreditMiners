@@ -1,95 +1,19 @@
-# Supabase Setup
+# Supabase / PostgreSQL notes
 
-The Prisma schema is already configured for Supabase/PostgreSQL:
+## Current status
 
-```prisma
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-```
+Prisma is configured for PostgreSQL through `DATABASE_URL`; Supabase is the documented intended provider. The synthetic `/api/demo` path does not require a database. Authentication and future persisted modules do.
 
-## What You Need From Supabase
+## Implemented repository support
 
-From your Supabase dashboard:
+- Prisma schema, migrations, client configuration, and a role seed (`ADMIN`, `USER`).
+- `backend/.env.example` documents required database/auth/mail values.
 
-1. Open your project.
-2. Go to Project Settings.
-3. Open Database.
-4. Copy the PostgreSQL connection string.
-5. Replace `[YOUR-PASSWORD]` with your database password.
+## In progress / technical debt
 
-For local Prisma migrations, prefer the direct database connection:
+- No live Supabase project, migration state, backup configuration, RLS policy, or connection verification is represented in source control.
+- Resolve current auth refresh-token schema mismatch before relying on database-backed sessions.
 
-```text
-postgresql://postgres:[YOUR-PASSWORD]@db.[YOUR-PROJECT-REF].supabase.co:5432/postgres
-```
+## Future Production requirements
 
-## Local Env File
-
-Create `backend/.env`.
-
-Do not commit this file. It is ignored by `.gitignore`.
-
-```env
-NODE_ENV=development
-PORT=5000
-CLIENT_URL=http://localhost:5173
-APP_URL=http://localhost:5000
-
-DATABASE_URL=postgresql://postgres:[YOUR-PASSWORD]@db.[YOUR-PROJECT-REF].supabase.co:5432/postgres
-
-JWT_ACCESS_SECRET=replace-this-with-a-long-random-secret
-JWT_REFRESH_SECRET=replace-this-with-a-long-random-secret
-ACCESS_TOKEN_EXPIRY=15m
-REFRESH_TOKEN_EXPIRY=7d
-
-MAIL_HOST=localhost
-MAIL_PORT=587
-MAIL_USER=demo@creditminers.local
-MAIL_PASS=demo-password
-```
-
-## Connect And Push Schema
-
-From `backend/`:
-
-```bash
-npm run prisma:generate
-npm run prisma:migrate
-npm run seed
-```
-
-If you want to sync schema without creating a migration during a hackathon demo:
-
-```bash
-npx prisma db push
-npm run seed
-```
-
-## Verify Connection
-
-Run:
-
-```bash
-npx prisma studio
-```
-
-Or start the backend:
-
-```bash
-npm start
-```
-
-Then check:
-
-```text
-http://localhost:5000/api/health
-```
-
-## Security Notes
-
-- Never commit `backend/.env`.
-- Never paste the Supabase database password into docs or commits.
-- Use a separate Supabase project for hackathon/demo data.
-- The current `/api/demo` scoring flow does not require Supabase yet; auth, Prisma models, future persisted assessments, and seeded roles use the database.
+Use environment-managed secrets, separate environments, least-privilege database access, backup/recovery testing, migration review, data-retention controls, and monitoring. Do not use `db push` as a substitute for reviewed migration history in a shared or production environment.

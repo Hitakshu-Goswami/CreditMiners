@@ -1,54 +1,12 @@
-# CreditMiners Project Notes
+# CreditMiners internal documentation
 
-CreditMiners is a hackathon prototype for:
+Start with [CONTEXT.md](CONTEXT.md) and [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md).
 
-- Transparent credit-likelihood scoring for credit-invisible or thin-file users.
-- Explainable feature attribution from non-traditional digital signals.
-- Actionable score-improvement pathways.
-- Conversational micro-investment risk profiling.
-- Plain-language allocation and 1/3/5 year growth projection.
+- Architecture: [ARCHITECTURE.md](ARCHITECTURE.md)
+- Backend/API/database: [BACKEND_GUIDELINES.md](BACKEND_GUIDELINES.md), [API.md](API.md), [DATABASE.md](DATABASE.md)
+- Product/module roadmap: [ROADMAP.md](ROADMAP.md), [MODULES.md](MODULES.md), [REQUIREMENTS.md](REQUIREMENTS.md)
+- AI: [AI_CONTEXT.md](AI_CONTEXT.md)
+- Engineering/security: [STANDARDS.md](STANDARDS.md), [SECURITY.md](SECURITY.md), [DECISIONS.md](DECISIONS.md)
+- Collaboration: [CONTRIBUTING.md](CONTRIBUTING.md), [memory.md](memory.md)
 
-## Current MVP
-
-The prescreening MVP uses synthetic consent-style data and a deterministic scorecard. This is deliberate: it keeps the demo ethical, reproducible, and easy to explain to judges before live financial-data integrations are introduced.
-
-## Main Demo Flow
-
-1. Start backend API.
-2. Start frontend Vite app.
-3. Open the dashboard.
-4. Show overview metrics and risk mix.
-5. Open profiles and drill into top 3 explanations.
-6. Show improvement recommendations.
-7. Complete the risk-profile wizard.
-8. Show advisor allocation and growth projections.
-
-## Run Locally
-
-Backend:
-
-```bash
-cd backend
-npm start
-```
-
-Frontend:
-
-```bash
-cd frontend
-npm run dev -- --host 127.0.0.1
-```
-
-Open:
-
-```text
-http://127.0.0.1:5173
-```
-
-## Shared Memory
-
-Read `.project/memory.md` before starting work. Append a new entry there after meaningful changes.
-
-## Supabase
-
-See `.project/SUPABASE.md` for database connection setup. Keep real Supabase credentials in `backend/.env` only.
+The official roadmap sources remain `docs/creditminers roadmap.md` and `docs/AI creditminers.md`.

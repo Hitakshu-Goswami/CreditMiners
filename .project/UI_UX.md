@@ -1,36 +1,21 @@
-# UI/UX Notes
+# UI/UX context
 
-## Current UI
+## Implemented demo
 
-The frontend is a polished prescreening demo with four screens:
+The current React prototype provides:
 
-- Overview
-- Profiles
-- Risk profile
-- Advisor
+- Overview/risk-mix dashboard.
+- Searchable/filterable synthetic profiles.
+- Explainable assessment detail with top drivers, feature groups, and improvement actions.
+- Six-question conversational risk flow.
+- Educational allocation and 1/3/5-year projection view.
 
-The design is intentionally product-like and demo-friendly:
+## Product rules
 
-- Editorial but functional landing overview.
-- Searchable and filterable profile portfolio.
-- Score cards with visible risk bands.
-- Explainability detail panel with top 3 drivers.
-- Feature-group meters for the scorecard.
-- Conversational risk wizard.
-- Advisor allocation strip and growth projection.
+- Make explanation, uncertainty, and educational disclaimer visible wherever scoring or investment guidance appears.
+- Use clear, inclusive language; do not present prototype results as approval, denial, or personalized regulated advice.
+- Preserve consent and privacy context when Future Production interfaces expose real data.
 
-## Design Principles
+## Planned
 
-- Show the actual product immediately, not a marketing-only landing page.
-- Keep the score explanation prominent.
-- Avoid jargon in user-facing recommendation copy.
-- Make disclaimer visible on investment outputs.
-- Keep profile drill-down easy for judges to inspect.
-
-## Demo Path
-
-1. Overview: explain the thesis and risk mix.
-2. Profiles: filter to high risk and select a profile.
-3. Explainability: show top 3 drivers and improvement actions.
-4. Risk profile: answer six questions.
-5. Advisor: show allocation and growth scenarios.
+Authenticated financial-identity onboarding, consent management, financial-data dashboards, score history, recommendations, admin experiences, and production accessibility/testing work follow the roadmap. The current single-file demo UI is not the required future frontend architecture.
