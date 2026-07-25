@@ -32,7 +32,7 @@ const authenticate = async (req, res, next) => {
      throw new UnauthorizedError("User not found.");
     }
 
-    if (!user.isActive) {
+    if (!user.isActive || user.status !== "ACTIVE" || user.deletedAt) {
    throw new ForbiddenError("Account is inactive.");
     }
 

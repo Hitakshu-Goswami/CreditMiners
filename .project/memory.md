@@ -2,22 +2,20 @@
 
 ## Current baseline
 
-- Current product: synthetic-data hackathon prototype with explainable scorecard and educational investment advisor, plus authentication/RBAC foundation.
-- Backend roadmap authority: `docs/creditminers roadmap.md`.
-- AI roadmap authority: `docs/AI creditminers.md`.
+- Product: synthetic-data hackathon prototype plus Phase 2 User Financial Identity implementation.
+- Roadmap authorities: `docs/creditminers roadmap.md` and `docs/AI creditminers.md`.
 - Current delivery state: [IMPLEMENTATION_STATUS.md](IMPLEMENTATION_STATUS.md).
 
 ## Verified technical debt
 
-1. Auth service expects `RefreshToken.deviceInfo`; current schema/migrations omit it.
-2. Audit-log migration/model contract is inconsistent; `AuditAction` is unused.
-3. Alternate RBAC middleware does not match current authenticated role shape.
+1. Audit-log migration/model contract is inconsistent; `AuditAction` is unused.
+2. Alternate RBAC middleware does not match the authenticated role shape.
+3. No SMS phone-verification or image object-storage provider is configured.
 
-## Documentation maintenance
+## 2026-07-26 — Phase 2 User Financial Identity
 
-- Append a dated entry after material changes: what changed, why, verification, and documents updated.
-- Do not record planned work as complete. Move debt to resolved only after source/migrations verify it.
+Implemented profile, financial identity, goals, preferences, onboarding, derived trust profile, email/phone change flows, admin user management, OpenAPI/Swagger documentation, and native unit tests. Added the corresponding Prisma migration. KYC, scoring, loans, and other future modules were intentionally not implemented.
 
-## 2026-07-25 — roadmap synchronization
+## Maintenance rule
 
-Internal documentation and `AGENTS.md` were synchronized to the latest backend/AI roadmap direction without modifying `/docs` roadmap sources or application code. Added `IMPLEMENTATION_STATUS.md`. The requested `docs/CREDITMINERS_PROJECT_CONTEXT_COMPLETED_TILL_NOW.md` was absent from the working tree at review time.
+Append a dated entry after material work with scope, verification, and documentation updates. Do not mark future roadmap work complete without source evidence.

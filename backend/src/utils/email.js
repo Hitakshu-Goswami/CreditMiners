@@ -86,8 +86,24 @@ const sendPasswordResetEmail = async (
   });
 };
 
+const sendEmailChangeVerification = async (email, token) => {
+  const verificationUrl = `${process.env.APP_URL}/api/users/email/verify?token=${token}`;
+
+  await sendEmail({
+    to: email,
+    subject: "Confirm your new CreditMiners email address",
+    html: `
+      <h2>Confirm your new email address</h2>
+      <p>Click the link below to confirm this address for your CreditMiners account.</p>
+      <a href="${verificationUrl}">Confirm email address</a>
+      <p>This link expires in 24 hours.</p>
+    `,
+  });
+};
+
 module.exports = {
   sendEmail,
   sendVerificationEmail,
   sendPasswordResetEmail,
+  sendEmailChangeVerification,
 };

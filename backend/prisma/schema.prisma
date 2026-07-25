@@ -28,6 +28,52 @@ enum EmploymentType {
   RETIRED
 }
 
+enum Gender {
+  MALE
+  FEMALE
+  NON_BINARY
+  PREFER_NOT_TO_SAY
+}
+
+enum EducationLevel {
+  HIGH_SCHOOL
+  DIPLOMA
+  BACHELORS
+  MASTERS
+  DOCTORATE
+  OTHER
+  PREFER_NOT_TO_SAY
+}
+
+enum IncomeFrequency {
+  WEEKLY
+  BIWEEKLY
+  MONTHLY
+  QUARTERLY
+  ANNUALLY
+  IRREGULAR
+}
+
+enum SavingsHabit {
+  NONE
+  OCCASIONAL
+  REGULAR
+  AUTOMATED
+}
+
+enum Theme {
+  LIGHT
+  DARK
+  SYSTEM
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  BANNED
+  DELETED
+}
+
 enum TransactionType {
   INCOME
   EXPENSE
@@ -160,6 +206,18 @@ model User {
 
   profileImage String?
 
+  dateOfBirth DateTime?
+
+  gender Gender?
+
+  education EducationLevel?
+
+  city String?
+
+  state String?
+
+  country String?
+
   // Authentication
 
   passwordHash String
@@ -175,6 +233,15 @@ model User {
   verificationToken   String?   @unique
   verificationExpires DateTime?
 
+  pendingEmail       String?   @unique
+  emailChangeToken   String?   @unique
+  emailChangeExpires DateTime?
+
+  phoneVerified            Boolean   @default(false)
+  pendingPhone             String?   @unique
+  phoneVerificationToken   String?   @unique
+  phoneVerificationExpires DateTime?
+
   auditLogs AuditLog[]
 
   // Account Status
@@ -182,6 +249,8 @@ model User {
   isVerified Boolean @default(false)
 
   isActive Boolean @default(true)
+
+  status UserStatus @default(ACTIVE)
 
   // Soft Delete
 
@@ -196,6 +265,10 @@ model User {
   // Relations
 
   financialProfile FinancialProfile?
+
+  preferences UserPreference?
+
+  onboarding Onboarding?
 
   financialSnapshots FinancialSnapshot[]
 
@@ -223,6 +296,8 @@ model User {
   @@index([phone])
   @@index([roleId])
   @@index([isActive])
+  @@index([status])
+  @@index([city])
   @@map("users")
 }
 
@@ -238,6 +313,8 @@ model RefreshToken {
   expiresAt DateTime
 
   revoked Boolean @default(false)
+
+  deviceInfo String?
 
   userId String @db.Uuid
 
@@ -268,6 +345,18 @@ model FinancialProfile {
 
   annualIncome Decimal? @db.Decimal(18, 2)
 
+  monthlyIncome Decimal? @db.Decimal(18, 2)
+
+  incomeFrequency IncomeFrequency?
+
+  monthlyExpenses Decimal? @db.Decimal(18, 2)
+
+  savingsHabit SavingsHabit?
+
+  existingInvestments Decimal @default(0) @db.Decimal(18, 2)
+
+  emergencyFund Decimal @default(0) @db.Decimal(18, 2)
+
   riskLevel RiskLevel @default(MEDIUM)
 
   investmentExperience Int? // Years
@@ -293,6 +382,59 @@ model FinancialProfile {
   @@index([employmentType])
   @@index([riskLevel])
   @@map("financial_profiles")
+}
+
+// ------------------------------------------------------
+// USER PREFERENCES
+// ------------------------------------------------------
+
+model UserPreference {
+  id String @id @default(uuid()) @db.Uuid
+
+  userId String @unique @db.Uuid
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  language String @default("en")
+
+  theme Theme @default(SYSTEM)
+
+  notificationPreferences Json?
+
+  privacyPreferences Json?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@map("user_preferences")
+}
+
+// ------------------------------------------------------
+// ONBOARDING
+// ------------------------------------------------------
+
+model Onboarding {
+  id String @id @default(uuid()) @db.Uuid
+
+  userId String @unique @db.Uuid
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  currentStep Int @default(1)
+
+  profileCompletionPercentage Int @default(0)
+
+  financialProfileCompletionPercentage Int @default(0)
+
+  onboardingCompleted Boolean @default(false)
+
+  completedAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  @@index([onboardingCompleted])
+  @@map("onboarding")
 }
 
 // ------------------------------------------------------

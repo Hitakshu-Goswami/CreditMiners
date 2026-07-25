@@ -8,6 +8,9 @@ const requestLogger = require("./middleware/request.middleware");
 const errorHandler = require("./middleware/error.middleware");
 
 const demoRoutes = require("./routes/demo.routes");
+const userRoutes = require("./routes/user.routes");
+const adminRoutes = require("./routes/admin.routes");
+const { swaggerSpec, swaggerUi } = require("./docs/swagger");
 
 const app = express();
 const { apiLimiter } = require("./middleware/rateLimit.middleware");
@@ -60,6 +63,10 @@ app.use("/api/auth", (req, res, next) => {
   const authRoutes = require("./routes/auth.routes");
   return authRoutes(req, res, next);
 });
+app.use("/api/users", userRoutes);
+app.use("/api/admin", adminRoutes);
+app.get("/api/openapi.json", (req, res) => res.status(200).json(swaggerSpec));
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec, { explorer: true }));
 
 /* ---------------- 404 Handler ---------------- */
 
