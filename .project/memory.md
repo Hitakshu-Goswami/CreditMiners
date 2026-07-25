@@ -64,3 +64,16 @@ Notes:
 - The demo path is intentionally database-independent.
 - Existing auth routes are lazy-loaded so demo startup is not blocked by Prisma/auth imports.
 - Live integrations are deferred until after prescreening. Future sources can be Account Aggregator, Gmail/Takeout, payment gateway webhooks, BBPS APIs, and manual uploads.
+
+### 2026-07-25 - Supabase setup documented
+
+Changed by: AI assistant
+
+Summary:
+- Confirmed Prisma is already configured for PostgreSQL/Supabase through `DATABASE_URL`.
+- Updated `backend/.env.example` with Supabase connection-string guidance.
+- Added `.project/SUPABASE.md` with local `.env`, migration, seed, and verification steps.
+
+Notes:
+- Real Supabase credentials must stay in `backend/.env`, which is ignored by Git.
+- The demo `/api/demo` flow is database-independent; Supabase is needed for Prisma-backed auth and future persisted product data.

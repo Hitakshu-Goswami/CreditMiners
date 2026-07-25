@@ -48,3 +48,7 @@ http://127.0.0.1:5173
 ## Shared Memory
 
 Read `.project/memory.md` before starting work. Append a new entry there after meaningful changes.
+
+## Supabase
+
+See `.project/SUPABASE.md` for database connection setup. Keep real Supabase credentials in `backend/.env` only.
