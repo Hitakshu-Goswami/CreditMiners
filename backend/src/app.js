@@ -10,10 +10,17 @@ const errorHandler = require("./middleware/error.middleware");
 const demoRoutes = require("./routes/demo.routes");
 const userRoutes = require("./routes/user.routes");
 const adminRoutes = require("./routes/admin.routes");
+const loanRoutes = require("./routes/loan.routes");
 const { swaggerSpec, swaggerUi } = require("./docs/swagger");
+
+const path = require("path");
 
 const app = express();
 const { apiLimiter } = require("./middleware/rateLimit.middleware");
+const loanMediaRoutes = require("./routes/loanMedia.routes");
+const loanInterestRoutes = require("./routes/loanInterest.routes");
+const aiCreditRoutes = require("./routes/aiCredit.routes");
+const dashboardRoutes = require("./routes/dashboard.routes");
 
 /* ---------------- Security ---------------- */
 
@@ -65,6 +72,7 @@ app.use("/api/auth", (req, res, next) => {
 });
 app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/loans", loanRoutes);
 app.get("/api/openapi.json", (req, res) => res.status(200).json(swaggerSpec));
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec, { explorer: true }));
 
@@ -80,5 +88,12 @@ app.use((req, res) => {
 /* ---------------- Global Error Handler ---------------- */
 
 app.use(errorHandler);
+
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+app.use("/api", loanMediaRoutes);
+
+app.use("/api", loanInterestRoutes);
+app.use("/api", aiCreditRoutes);
+app.use("/api", dashboardRoutes);
 
 module.exports = app;
