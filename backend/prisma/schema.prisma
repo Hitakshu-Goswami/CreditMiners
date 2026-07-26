@@ -316,6 +316,20 @@ enum ConsentScope {
   BANK_STATEMENT
 }
 
+enum FeatureDataType {
+  NUMERIC
+  SCORE
+  RATIO
+  COUNT
+  DAYS
+  AMOUNT
+  PERCENTAGE
+}
+
+enum FeatureRunStatus {
+  COMPLETED
+  FAILED
+}
 
 // ------------------------------------------------------
 // ROLE
@@ -471,12 +485,13 @@ model User {
   loanRequests  LoanRequest[]
   loanInterests LoanInterest[]
 
-  utilityBills     UtilityBill[]
-  mobileRecharges  MobileRecharge[]
-  ecommerceOrders  EcommerceOrder[]
-  userConsents     UserConsent[]
-  financialImports FinancialImport[]
-
+  utilityBills         UtilityBill[]
+  mobileRecharges      MobileRecharge[]
+  ecommerceOrders      EcommerceOrder[]
+  userConsents         UserConsent[]
+  financialImports     FinancialImport[]
+  financialFeatureRuns FinancialFeatureRun[]
+  financialFeatures    FinancialFeature[]
 
   // Timestamps
 
@@ -542,10 +557,10 @@ model LoanRequest {
   status LoanStatus @default(DRAFT)
 
   // AI Assessment
-  aiCreditScore     Int?
-  
-  aiRecommendation  String?    @db.Text
-  aiSummary         String?    @db.Text
+  aiCreditScore Int?
+
+  aiRecommendation  String?   @db.Text
+  aiSummary         String?   @db.Text
   aiConfidence      Float?
   aiLastEvaluatedAt DateTime?
 
@@ -906,7 +921,6 @@ model Transaction {
   @@index([paymentMethod])
   @@map("transactions")
 }
-
 
 // ------------------------------------------------------
 // FINANCIAL GOAL
@@ -1527,3 +1541,103 @@ model EcommerceOrder {
   @@map("ecommerce_orders")
 }
 
+// ------------------------------------------------------
+// FINANCIAL FEATURE RUN
+// Versioned Feature Computation Batch
+// ------------------------------------------------------
+
+model FinancialFeatureRun {
+  id String @id @default(uuid()) @db.Uuid
+
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  version String
+
+  window String
+
+  windowStart DateTime
+  windowEnd   DateTime
+
+  status FeatureRunStatus @default(COMPLETED)
+
+  featureCount Int @default(0)
+
+  qualityScore Decimal @default(0) @db.Decimal(5, 2)
+
+  inputSummary Json?
+
+  validationIssues Json?
+
+  computedAt DateTime @default(now())
+
+  createdAt DateTime @default(now())
+
+  features FinancialFeature[]
+
+  @@index([userId])
+  @@index([version])
+  @@index([computedAt])
+  @@index([userId, computedAt])
+  @@map("financial_feature_runs")
+}
+
+// ------------------------------------------------------
+// FINANCIAL FEATURE
+// Explainable ML-Ready Feature Store
+// ------------------------------------------------------
+
+model FinancialFeature {
+  id String @id @default(uuid()) @db.Uuid
+
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  runId String              @db.Uuid
+  run   FinancialFeatureRun @relation(fields: [runId], references: [id], onDelete: Cascade)
+
+  featureName String
+
+  featureGroup String
+
+  rawValue Decimal @db.Decimal(18, 6)
+
+  normalizedValue Decimal @db.Decimal(8, 6)
+
+  percentile Decimal @db.Decimal(5, 2)
+
+  bucket String
+
+  dataType FeatureDataType
+
+  window String
+
+  version String
+
+  qualityScore Decimal @default(0) @db.Decimal(5, 2)
+
+  confidence Decimal @default(0) @db.Decimal(5, 2)
+
+  definition String @db.Text
+
+  formula String @db.Text
+
+  dependencies Json?
+
+  source Json?
+
+  metadata Json?
+
+  computedAt DateTime @default(now())
+
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([runId])
+  @@index([featureName])
+  @@index([featureGroup])
+  @@index([version])
+  @@index([userId, featureName])
+  @@index([userId, featureGroup])
+  @@map("financial_features")
+}

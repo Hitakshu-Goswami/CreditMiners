@@ -3,7 +3,7 @@ const cors = require("cors");
 const helmet = require("helmet");
 const compression = require("compression");
 const cookieParser = require("cookie-parser");
-const categoryRoutes = require("./routes/category.routes");const categoryRoutes = require("./routes/category.routes");
+const path = require("path");
 
 const requestLogger = require("./middleware/request.middleware");
 const errorHandler = require("./middleware/error.middleware");
@@ -12,24 +12,22 @@ const demoRoutes = require("./routes/demo.routes");
 const userRoutes = require("./routes/user.routes");
 const adminRoutes = require("./routes/admin.routes");
 const loanRoutes = require("./routes/loan.routes");
-const { swaggerSpec, swaggerUi } = require("./docs/swagger");
-const mobileRechargeRoutes = require("./routes/mobileRecharge.routes");
-const path = require("path");
-
-const tagRoutes =
-require("./routes/tag.routes");
-
-const app = express();
-const { apiLimiter } = require("./middleware/rateLimit.middleware");
 const loanMediaRoutes = require("./routes/loanMedia.routes");
 const loanInterestRoutes = require("./routes/loanInterest.routes");
 const aiCreditRoutes = require("./routes/aiCredit.routes");
 const dashboardRoutes = require("./routes/dashboard.routes");
 const transactionRoutes = require("./routes/transaction.routes");
 const utilityBillRoutes = require("./routes/utilityBill.routes");
+const mobileRechargeRoutes = require("./routes/mobileRecharge.routes");
 const ecommerceOrderRoutes = require("./routes/ecommerceOrder.routes");
-const merchantRoutes =
-require("./routes/merchant.routes");
+const categoryRoutes = require("./routes/category.routes");
+const merchantRoutes = require("./routes/merchant.routes");
+const tagRoutes = require("./routes/tag.routes");
+const financialFeatureRoutes = require("./routes/financialFeature.routes");
+const { swaggerSpec, swaggerUi } = require("./docs/swagger");
+const { apiLimiter } = require("./middleware/rateLimit.middleware");
+
+const app = express();
 
 /* ---------------- Security ---------------- */
 
@@ -59,7 +57,6 @@ app.use(compression());
 /* ---------------- Request Logging ---------------- */
 
 app.use(requestLogger);
-
 app.use(apiLimiter);
 
 /* ---------------- Health Check ---------------- */
@@ -82,7 +79,20 @@ app.use("/api/auth", (req, res, next) => {
 app.use("/api/users", userRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/loans", loanRoutes);
+app.use("/api", loanMediaRoutes);
+app.use("/api", loanInterestRoutes);
+app.use("/api", aiCreditRoutes);
+app.use("/api", dashboardRoutes);
 app.use("/api/financial/transactions", transactionRoutes);
+app.use("/api/financial/utility-bills", utilityBillRoutes);
+app.use("/api/financial/mobile-recharges", mobileRechargeRoutes);
+app.use("/api/financial/ecommerce-orders", ecommerceOrderRoutes);
+app.use("/api/financial/categories", categoryRoutes);
+app.use("/api/financial/merchants", merchantRoutes);
+app.use("/api/financial/tags", tagRoutes);
+app.use("/api/financial/features", financialFeatureRoutes);
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+
 app.get("/api/openapi.json", (req, res) => res.status(200).json(swaggerSpec));
 app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec, { explorer: true }));
 
@@ -98,41 +108,5 @@ app.use((req, res) => {
 /* ---------------- Global Error Handler ---------------- */
 
 app.use(errorHandler);
-
-app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
-app.use("/api", loanMediaRoutes);
-
-app.use("/api", loanInterestRoutes);
-app.use("/api", aiCreditRoutes);
-app.use("/api", dashboardRoutes);
-
-app.use(
-  "/api/financial/utility-bills",
-  utilityBillRoutes
-);
-
-app.use(
-  "/api/financial/mobile-recharges",
-  mobileRechargeRoutes
-);
-
-app.use(
-  "/api/financial/ecommerce-orders",
-  ecommerceOrderRoutes
-);
-
-app.use(
-  "/api/financial/categories",
-  categoryRoutes
-);
-
-app.use(
-  "/api/financial/merchants",
-  merchantRoutes
-);
-app.use(
-  "/api/financial/tags",
-  tagRoutes
-);
 
 module.exports = app;

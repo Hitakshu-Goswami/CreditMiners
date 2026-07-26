@@ -4,7 +4,7 @@ const {
   calculateProfileCompletion,
   calculateFinancialProfileCompletion,
   buildTrustProfile,
-} = require("../src/utils/profileCompletion");
+} = require("../utils/profileCompletion");
 
 test("calculates complete personal and financial identity profiles", () => {
   const user = {
