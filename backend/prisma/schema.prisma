@@ -251,6 +251,72 @@ enum CollateralType {
   OTHER
 }
 
+enum FinancialSource {
+  MANUAL
+  CSV
+  ACCOUNT_AGGREGATOR
+  BANK_STATEMENT
+  UTILITY_PROVIDER
+  RECHARGE_PROVIDER
+  ECOMMERCE_PLATFORM
+}
+
+enum ImportStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum UtilityType {
+  ELECTRICITY
+  WATER
+  GAS
+  INTERNET
+  MOBILE_POSTPAID
+  OTHER
+}
+
+enum BillStatus {
+  PAID
+  PARTIAL
+  MISSED
+  PENDING
+}
+
+enum RechargeStatus {
+  SUCCESS
+  FAILED
+  PENDING
+}
+
+enum RechargeProvider {
+  AIRTEL
+  JIO
+  VI
+  BSNL
+  OTHER
+}
+
+enum OrderStatus {
+  DELIVERED
+  RETURNED
+  CANCELLED
+  REFUNDED
+  PENDING
+  SHIPPED
+}
+
+enum ConsentScope {
+  ALL
+  ACCOUNT_AGGREGATOR
+  UTILITY_BILL
+  MOBILE_RECHARGE
+  ECOMMERCE
+  BANK_STATEMENT
+}
+
+
 // ------------------------------------------------------
 // ROLE
 // ------------------------------------------------------
@@ -404,6 +470,13 @@ model User {
 
   loanRequests  LoanRequest[]
   loanInterests LoanInterest[]
+
+  utilityBills     UtilityBill[]
+  mobileRecharges  MobileRecharge[]
+  ecommerceOrders  EcommerceOrder[]
+  userConsents     UserConsent[]
+  financialImports FinancialImport[]
+
 
   // Timestamps
 
@@ -803,18 +876,37 @@ model Transaction {
 
   tags String?
 
+  importId String?          @db.Uuid
+  import   FinancialImport? @relation(fields: [importId], references: [id], onDelete: SetNull)
+
+  merchantId  String?   @db.Uuid
+  merchantRef Merchant? @relation(fields: [merchantId], references: [id], onDelete: SetNull)
+
+  categoryRefId String?   @db.Uuid
+  categoryRef   Category? @relation(fields: [categoryRefId], references: [id], onDelete: SetNull)
+
+  transactionTags TransactionTag[]
+
+  utilityBill    UtilityBill?
+  mobileRecharge MobileRecharge?
+  ecommerceOrder EcommerceOrder?
+
   createdAt DateTime @default(now())
 
   updatedAt DateTime @updatedAt
 
   @@index([userId])
   @@index([categoryId])
+  @@index([importId])
+  @@index([merchantId])
+  @@index([categoryRefId])
   @@index([transactionDate])
   @@index([userId, transactionDate])
   @@index([transactionType])
   @@index([paymentMethod])
   @@map("transactions")
 }
+
 
 // ------------------------------------------------------
 // FINANCIAL GOAL
@@ -1117,3 +1209,321 @@ model AuditLog {
 
   createdAt DateTime @default(now())
 }
+
+// ------------------------------------------------------
+// FINANCIAL IMPORT
+// Batch Provenance & Audit Trail
+// ------------------------------------------------------
+
+model FinancialImport {
+  id String @id @default(uuid()) @db.Uuid
+
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  source FinancialSource
+
+  fileName String?
+  fileSize Int?
+
+  recordCount Int @default(0)
+
+  status ImportStatus @default(PENDING)
+
+  errorMessage String? @db.Text
+
+  metadata Json?
+
+  importedAt DateTime @default(now())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  transactions    Transaction[]
+  utilityBills    UtilityBill[]
+  mobileRecharges MobileRecharge[]
+  ecommerceOrders EcommerceOrder[]
+
+  @@index([userId])
+  @@index([status])
+  @@index([source])
+  @@map("financial_imports")
+}
+
+// ------------------------------------------------------
+// USER CONSENT
+// Consent & Privacy Management
+// ------------------------------------------------------
+
+model UserConsent {
+  id String @id @default(uuid()) @db.Uuid
+
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  scope ConsentScope
+
+  isGranted Boolean @default(true)
+
+  grantedAt DateTime  @default(now())
+  revokedAt DateTime?
+  expiresAt DateTime?
+
+  ipAddress String?
+  userAgent String?
+
+  consentVersion String @default("1.0")
+
+  metadata Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([scope])
+  @@index([userId, scope])
+  @@map("user_consents")
+}
+
+// ------------------------------------------------------
+// MERCHANT
+// Normalized Vendor & Merchant Entities
+// ------------------------------------------------------
+
+model Merchant {
+  id String @id @default(uuid()) @db.Uuid
+
+  name String  @unique
+  code String? @unique
+
+  category String?
+  logoUrl  String?
+  website  String?
+
+  isVerified Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  transactions    Transaction[]
+  ecommerceOrders EcommerceOrder[]
+
+  @@index([name])
+  @@map("merchants")
+}
+
+// ------------------------------------------------------
+// CATEGORY
+// Normalized Taxonomy Entity
+// ------------------------------------------------------
+
+model Category {
+  id String @id @default(uuid()) @db.Uuid
+
+  name String  @unique
+  slug String? @unique
+
+  description String?
+  icon        String?
+  color       String?
+
+  parentId String?   @db.Uuid
+  parent   Category? @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: SetNull)
+
+  subcategories Category[] @relation("CategoryHierarchy")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  transactions    Transaction[]
+  ecommerceOrders EcommerceOrder[]
+
+  @@index([name])
+  @@map("categories")
+}
+
+// ------------------------------------------------------
+// TAG & TRANSACTION TAG
+// Universal Tagging Engine
+// ------------------------------------------------------
+
+model Tag {
+  id String @id @default(uuid()) @db.Uuid
+
+  name  String  @unique
+  color String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  transactionTags TransactionTag[]
+
+  @@index([name])
+  @@map("tags")
+}
+
+model TransactionTag {
+  id String @id @default(uuid()) @db.Uuid
+
+  transactionId String      @db.Uuid
+  transaction   Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+
+  tagId String @db.Uuid
+  tag   Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@unique([transactionId, tagId])
+  @@index([transactionId])
+  @@index([tagId])
+  @@map("transaction_tags")
+}
+
+// ------------------------------------------------------
+// UTILITY BILL
+// Alternative Signal Facts (Electricity, Water, Gas, etc)
+// ------------------------------------------------------
+
+model UtilityBill {
+  id String @id @default(uuid()) @db.Uuid
+
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  importId String?          @db.Uuid
+  import   FinancialImport? @relation(fields: [importId], references: [id], onDelete: SetNull)
+
+  transactionId String?      @unique @db.Uuid
+  transaction   Transaction? @relation(fields: [transactionId], references: [id], onDelete: SetNull)
+
+  utilityType UtilityType
+
+  providerName String
+
+  accountNumber String?
+  billNumber    String?
+
+  billMonth String // Format: "YYYY-MM"
+
+  billDate DateTime?
+  dueDate  DateTime
+  paidDate DateTime?
+
+  amountDue  Decimal @db.Decimal(18, 2)
+  amountPaid Decimal @default(0) @db.Decimal(18, 2)
+
+  status BillStatus @default(PENDING)
+
+  paymentDelayDays Int?
+
+  receiptUrl String?
+  notes      String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([utilityType])
+  @@index([status])
+  @@index([dueDate])
+  @@index([userId, billMonth])
+  @@map("utility_bills")
+}
+
+// ------------------------------------------------------
+// MOBILE RECHARGE
+// Alternative Signal Facts (Mobile Prepaid History)
+// ------------------------------------------------------
+
+model MobileRecharge {
+  id String @id @default(uuid()) @db.Uuid
+
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  importId String?          @db.Uuid
+  import   FinancialImport? @relation(fields: [importId], references: [id], onDelete: SetNull)
+
+  transactionId String?      @unique @db.Uuid
+  transaction   Transaction? @relation(fields: [transactionId], references: [id], onDelete: SetNull)
+
+  provider RechargeProvider
+
+  mobileNumber String?
+
+  amount Decimal @db.Decimal(18, 2)
+
+  rechargeDate DateTime
+
+  validityDays Int?
+
+  status RechargeStatus @default(SUCCESS)
+
+  isEmergencyRecharge Boolean @default(false)
+
+  planType String?
+
+  referenceNumber String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([provider])
+  @@index([status])
+  @@index([rechargeDate])
+  @@index([userId, rechargeDate])
+  @@map("mobile_recharges")
+}
+
+// ------------------------------------------------------
+// E-COMMERCE ORDER
+// Alternative Signal Facts (Online Purchasing Behaviour)
+// ------------------------------------------------------
+
+model EcommerceOrder {
+  id String @id @default(uuid()) @db.Uuid
+
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  importId String?          @db.Uuid
+  import   FinancialImport? @relation(fields: [importId], references: [id], onDelete: SetNull)
+
+  transactionId String?      @unique @db.Uuid
+  transaction   Transaction? @relation(fields: [transactionId], references: [id], onDelete: SetNull)
+
+  merchantId String?   @db.Uuid
+  merchant   Merchant? @relation(fields: [merchantId], references: [id], onDelete: SetNull)
+
+  categoryId String?   @db.Uuid
+  category   Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  platform String
+
+  orderId String?
+
+  orderDate DateTime
+
+  amount Decimal @db.Decimal(18, 2)
+
+  status OrderStatus @default(DELIVERED)
+
+  isReturned Boolean @default(false)
+  isRefunded Boolean @default(false)
+
+  paymentMode PaymentMethod
+
+  itemCount Int @default(1)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@index([platform])
+  @@index([status])
+  @@index([orderDate])
+  @@index([userId, orderDate])
+  @@map("ecommerce_orders")
+}
+
