@@ -1,5 +1,7 @@
-const assessmentSessionService = require("./assessmentSession.service");
-const dynamicQuestionService = require("./dynamicQuestion.service");
+const assessmentSessionService =
+    require("./assessmentLifecycle.service");
+const dynamicQuestionService =
+    require("./question.service");
 const answerValidationService = require("./answerValidation.service");
 const assessmentHistoryService = require("./assessmentHistory.service");
 const investorPersonaService = require("./investorPersona.service");

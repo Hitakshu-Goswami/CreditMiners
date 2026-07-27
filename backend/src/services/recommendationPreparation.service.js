@@ -94,10 +94,10 @@ class RecommendationPreparationService {
 
     return {
       riskLevel:
-        risk.overallRisk?.level || "MODERATE",
+        risk.profile.overallRisk.level || "MODERATE",
 
       liquidityPreference:
-        risk.liquidityRisk?.level || "MEDIUM",
+      risk.profile.liquidityRisk.level || "MEDIUM",
 
       investmentFrequency:
         behaviour.investmentFrequency || "MONTHLY",

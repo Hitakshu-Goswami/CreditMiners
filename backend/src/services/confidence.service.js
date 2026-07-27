@@ -2,7 +2,8 @@ const prisma = require("../config/prisma");
 
 const ConfidenceEngine = require("../engines/confidence.engine");
 
-const assessmentService = require("./assessment.service");
+const assessmentService =
+    require("./creditAssessment.service");
 const domainService = require("./domain.service");
 const answerValidationService = require("./answerValidation.service");
 const behaviourSignalService = require("./behaviourSignal.service");

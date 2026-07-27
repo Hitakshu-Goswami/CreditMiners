@@ -22,7 +22,7 @@ class AssessmentHistoryService {
       riskProfile,
       answers,
     ] = await Promise.all([
-      behaviourSignalService.getBehaviourSignals(sessionId),
+      behaviourSignalService.generateBehaviourSignals(sessionId),
       confidenceService.getOverallConfidence(sessionId),
       goalExtractionService.extractGoals(sessionId),
       investorPersonaService.generateInvestorPersona(sessionId),

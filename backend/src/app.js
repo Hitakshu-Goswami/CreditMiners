@@ -24,7 +24,6 @@ const categoryRoutes = require("./routes/category.routes");
 const merchantRoutes = require("./routes/merchant.routes");
 const tagRoutes = require("./routes/tag.routes");
 const financialFeatureRoutes = require("./routes/financialFeature.routes");
-const { swaggerSpec, swaggerUi } = require("./docs/swagger");
 const { apiLimiter } = require("./middleware/rateLimit.middleware");
 const riskAssessmentRoutes = require("./routes/riskAssessment.routes");
 const answerValidationRoutes = require("./routes/answerValidation.routes");
@@ -39,7 +38,13 @@ const explainabilityRoutes = require("./routes/explainability.routes");
 const recommendationPreparationRoutes = require("./routes/recommendationPreparation.routes");
 const assessmentHistoryRoutes = require("./routes/assessmentHistory.routes");
 const aiRiskProfileRoutes = require("./routes/aiRiskProfile.routes");
-
+const growthProjectionRoutes =
+    require("./routes/growthProjection.routes");
+const {
+    swaggerUi,
+    swaggerSpec
+} =
+require("./config/swagger");
 
 /* ---------------- Security ---------------- */
 
@@ -125,6 +130,24 @@ app.use("/api", adaptiveFlowRoutes);
 app.use("/api", answerValidationRoutes);
 
 app.use("/api", goalExtractionRoutes);
+app.use(
+
+    "/api/growth-projection",
+
+    growthProjectionRoutes
+
+);
+app.use(
+
+    "/api-docs",
+
+    swaggerUi.serve,
+
+    swaggerUi.setup(
+        swaggerSpec
+    )
+
+);
 
 /* ---------------- Global Error Handler ---------------- */
 
@@ -137,5 +160,8 @@ app.use("/api", explainabilityRoutes);
 app.use("/api", recommendationPreparationRoutes);
 app.use("/api", assessmentHistoryRoutes);
 app.use("/api/v1/ai/risk-profile", aiRiskProfileRoutes);
+app.use(
+    require("./middleware/error.middleware")
+);
 
 module.exports = app;

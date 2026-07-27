@@ -5,8 +5,9 @@ const router = express.Router();
 const questionController = require("../controllers/question.controller");
 
 const questionValidator = require("../validators/question.validator");
-
-const authenticate = require("../middleware/authenticate");
+const {
+    authenticate
+} = require("../middleware/auth.middleware");
 
 /*
 |--------------------------------------------------------------------------

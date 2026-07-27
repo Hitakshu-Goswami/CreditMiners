@@ -2,7 +2,9 @@ const express = require("express");
 
 const router = express.Router();
 
-const authenticate = require("../middleware/authenticate");
+const {
+    authenticate
+} = require("../middleware/auth.middleware");
 
 const aiRiskProfileController = require("../controllers/aiRiskProfile.controller");
 const aiRiskProfileValidator = require("../validators/aiRiskProfile.validator");

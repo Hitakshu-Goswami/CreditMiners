@@ -5,8 +5,9 @@ const router = express.Router();
 const riskAssessmentController = require("../controllers/riskAssessment.controller");
 
 const riskAssessmentValidator = require("../validators/riskAssessment.validator");
-
-const authenticate = require("../middleware/authenticate");
+const {
+    authenticate
+} = require("../middleware/auth.middleware");
 
 /*
 |--------------------------------------------------------------------------
