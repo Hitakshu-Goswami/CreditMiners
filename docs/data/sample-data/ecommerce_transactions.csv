@@ -1,0 +1,59 @@
+user_id,date,amount,merchant,category,payment_mode,status,is_returned,is_refunded,source_type
+u001,2026-02-11,780,Flipkart,Household,UPI,COMPLETED,false,false,synthetic
+u001,2026-03-18,1190,Amazon,Education,UPI,COMPLETED,false,false,synthetic
+u001,2026-05-21,640,Myntra,Fashion,CARD,COMPLETED,false,false,synthetic
+u001,2026-07-09,920,BigBasket,Groceries,UPI,COMPLETED,false,false,synthetic
+u002,2026-02-05,2400,Amazon,Electronics,COD,RETURNED,true,true,synthetic
+u002,2026-03-08,1800,Flipkart,Fashion,COD,CANCELLED,false,false,synthetic
+u002,2026-04-12,3100,Meesho,Fashion,COD,COMPLETED,false,false,synthetic
+u002,2026-06-18,2600,Amazon,Electronics,COD,RETURNED,true,true,synthetic
+u002,2026-07-04,900,Zomato,Food,UPI,COMPLETED,false,false,synthetic
+u003,2026-02-16,1450,Amazon,Household,UPI,COMPLETED,false,false,synthetic
+u003,2026-03-29,860,BigBasket,Groceries,UPI,COMPLETED,false,false,synthetic
+u003,2026-05-10,1250,Flipkart,Education,CARD,COMPLETED,false,false,synthetic
+u003,2026-07-18,990,Amazon,Household,UPI,COMPLETED,false,false,synthetic
+u004,2026-02-22,3800,Flipkart,Electronics,UPI,COMPLETED,false,false,synthetic
+u004,2026-03-15,890,Amazon,Tools,UPI,COMPLETED,false,false,synthetic
+u004,2026-05-27,4200,Myntra,Fashion,CARD,RETURNED,true,true,synthetic
+u004,2026-06-11,650,BigBasket,Groceries,UPI,COMPLETED,false,false,synthetic
+u004,2026-07-03,2100,Amazon,Tools,UPI,COMPLETED,false,false,synthetic
+u005,2026-02-19,1350,Amazon,Household,UPI,COMPLETED,false,false,synthetic
+u005,2026-03-12,1100,BigBasket,Groceries,UPI,COMPLETED,false,false,synthetic
+u005,2026-04-22,880,Flipkart,Education,CARD,COMPLETED,false,false,synthetic
+u005,2026-06-02,1450,Myntra,Fashion,UPI,COMPLETED,false,false,synthetic
+u005,2026-07-17,1280,Amazon,Household,UPI,COMPLETED,false,false,synthetic
+u006,2026-02-07,9800,Amazon,Electronics,CARD,COMPLETED,false,false,synthetic
+u006,2026-03-20,5600,Flipkart,Fashion,CARD,RETURNED,true,true,synthetic
+u006,2026-04-04,3200,Zomato,Food,UPI,COMPLETED,false,false,synthetic
+u006,2026-05-29,12500,Amazon,Electronics,CARD,COMPLETED,false,false,synthetic
+u006,2026-07-13,4700,Myntra,Fashion,COD,CANCELLED,false,false,synthetic
+u007,2026-02-18,490,Amazon,Education,UPI,COMPLETED,false,false,synthetic
+u007,2026-03-23,360,Flipkart,Education,UPI,COMPLETED,false,false,synthetic
+u007,2026-04-27,520,BigBasket,Groceries,UPI,COMPLETED,false,false,synthetic
+u007,2026-06-05,640,Amazon,Education,UPI,COMPLETED,false,false,synthetic
+u007,2026-07-11,450,Meesho,Fashion,UPI,COMPLETED,false,false,synthetic
+u008,2026-02-03,1700,Amazon,Business Supplies,UPI,COMPLETED,false,false,synthetic
+u008,2026-03-16,2100,Flipkart,Business Supplies,UPI,COMPLETED,false,false,synthetic
+u008,2026-04-25,1880,Amazon,Business Supplies,UPI,COMPLETED,false,false,synthetic
+u008,2026-05-17,2300,BigBasket,Groceries,UPI,COMPLETED,false,false,synthetic
+u008,2026-07-08,1960,Amazon,Business Supplies,UPI,COMPLETED,false,false,synthetic
+u009,2026-02-14,2700,Myntra,Fashion,COD,RETURNED,true,true,synthetic
+u009,2026-03-19,1250,Amazon,Kitchen,UPI,COMPLETED,false,false,synthetic
+u009,2026-04-30,3100,Flipkart,Electronics,CARD,COMPLETED,false,false,synthetic
+u009,2026-06-08,1600,Zomato,Food,UPI,COMPLETED,false,false,synthetic
+u009,2026-07-19,2200,Myntra,Fashion,COD,CANCELLED,false,false,synthetic
+u010,2026-02-10,820,BigBasket,Groceries,UPI,COMPLETED,false,false,synthetic
+u010,2026-03-22,640,Amazon,Household,UPI,COMPLETED,false,false,synthetic
+u010,2026-04-18,910,Flipkart,Household,UPI,COMPLETED,false,false,synthetic
+u010,2026-06-12,780,Amazon,Education,UPI,COMPLETED,false,false,synthetic
+u010,2026-07-15,860,BigBasket,Groceries,UPI,COMPLETED,false,false,synthetic
+u011,2026-02-13,1300,Amazon,Salon Supplies,UPI,COMPLETED,false,false,synthetic
+u011,2026-03-17,1650,Flipkart,Salon Supplies,UPI,COMPLETED,false,false,synthetic
+u011,2026-04-29,920,BigBasket,Groceries,UPI,COMPLETED,false,false,synthetic
+u011,2026-06-09,1880,Amazon,Salon Supplies,CARD,COMPLETED,false,false,synthetic
+u011,2026-07-12,1420,Myntra,Fashion,UPI,COMPLETED,false,false,synthetic
+u012,2026-02-06,2100,Amazon,Electronics,COD,CANCELLED,false,false,synthetic
+u012,2026-03-11,1250,Meesho,Fashion,COD,RETURNED,true,true,synthetic
+u012,2026-04-23,900,Zomato,Food,UPI,COMPLETED,false,false,synthetic
+u012,2026-06-14,1750,Flipkart,Fashion,COD,RETURNED,true,true,synthetic
+u012,2026-07-22,700,Amazon,Household,COD,COMPLETED,false,false,synthetic

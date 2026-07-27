@@ -1,0 +1,13 @@
+user_id,full_name,city,city_tier,occupation,monthly_income,monthly_savings,emergency_fund,current_investments,dependents,source_type
+u001,Asha Kumari,Patna,Tier-2,Freelance designer,32000,9000,42000,18000,1,synthetic
+u002,Rahul Verma,Indore,Tier-2,Gig delivery partner,26000,2500,6000,1000,3,synthetic
+u003,Meera Nair,Kochi,Tier-2,School teacher,48000,16000,120000,65000,2,synthetic
+u004,Imran Shaikh,Aurangabad,Tier-2,Mobile repair shop owner,38000,6000,22000,12000,4,synthetic
+u005,Pooja Singh,Jaipur,Tier-2,First-time salaried employee,42000,11000,70000,25000,0,synthetic
+u006,Karthik Reddy,Vijayawada,Tier-2,Small trader,56000,7000,18000,10000,3,synthetic
+u007,Neha Yadav,Gwalior,Tier-3,College student,18000,3500,15000,2000,0,synthetic
+u008,Arjun Das,Siliguri,Tier-3,E-commerce seller,61000,19000,145000,90000,2,synthetic
+u009,Sana Khan,Bhopal,Tier-2,Home baker,30000,4500,10000,5000,2,synthetic
+u010,Vikram Patel,Surat,Tier-2,Textile worker,34000,8000,52000,20000,1,synthetic
+u011,Lata Boro,Guwahati,Tier-2,Beauty salon owner,45000,12000,85000,42000,2,synthetic
+u012,Manoj Kumar,Ranchi,Tier-2,Auto driver,28000,1500,3000,0,4,synthetic
