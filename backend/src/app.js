@@ -36,6 +36,10 @@ const goalExtractionRoutes = require("./routes/goalExtraction.routes");
 const investorPersonaRoutes = require("./routes/investorPersona.routes");
 const confidenceRoutes = require("./routes/confidence.routes");
 const explainabilityRoutes = require("./routes/explainability.routes");
+const recommendationPreparationRoutes = require("./routes/recommendationPreparation.routes");
+const assessmentHistoryRoutes = require("./routes/assessmentHistory.routes");
+const aiRiskProfileRoutes = require("./routes/aiRiskProfile.routes");
+
 
 /* ---------------- Security ---------------- */
 
@@ -130,6 +134,8 @@ app.use("/api", investorPersonaRoutes);
 app.use("/api", confidenceRoutes);
 
 app.use("/api", explainabilityRoutes);
-
+app.use("/api", recommendationPreparationRoutes);
+app.use("/api", assessmentHistoryRoutes);
+app.use("/api/v1/ai/risk-profile", aiRiskProfileRoutes);
 
 module.exports = app;

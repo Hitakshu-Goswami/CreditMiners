@@ -1,0 +1,70 @@
+const ASSESSMENT_STATUS = Object.freeze({
+  NOT_STARTED: "NOT_STARTED",
+  IN_PROGRESS: "IN_PROGRESS",
+  COMPLETED: "COMPLETED",
+  PAUSED: "PAUSED",
+  RESTARTED: "RESTARTED",
+  ARCHIVED: "ARCHIVED",
+});
+
+const ASSESSMENT_ACTIONS = Object.freeze({
+  START: "START",
+  RESUME: "RESUME",
+  RESTART: "RESTART",
+  COMPLETE: "COMPLETE",
+  ARCHIVE: "ARCHIVE",
+  RESTORE: "RESTORE",
+});
+
+const ASSESSMENT_VERSION_STATUS = Object.freeze({
+  ACTIVE: "ACTIVE",
+  DEPRECATED: "DEPRECATED",
+  UPCOMING: "UPCOMING",
+});
+
+const ASSESSMENT_TYPES = Object.freeze({
+  INITIAL: "INITIAL",
+  PERIODIC: "PERIODIC",
+  ANNUAL: "ANNUAL",
+  REASSESSMENT: "REASSESSMENT",
+});
+
+const RESUME_STATUS = Object.freeze({
+  AVAILABLE: "AVAILABLE",
+  NOT_AVAILABLE: "NOT_AVAILABLE",
+});
+
+const HISTORY_SORT = Object.freeze({
+  NEWEST_FIRST: "NEWEST_FIRST",
+  OLDEST_FIRST: "OLDEST_FIRST",
+});
+
+const VERSION = Object.freeze({
+  CURRENT: "v1.0",
+  SUPPORTED: ["v1.0"],
+});
+
+const MAX_ACTIVE_ASSESSMENTS = 10;
+
+const HISTORY_FIELDS = Object.freeze([
+  "assessmentId",
+  "startedAt",
+  "completedAt",
+  "status",
+  "version",
+  "riskLevel",
+  "investorPersona",
+  "confidenceScore",
+]);
+
+module.exports = {
+  ASSESSMENT_STATUS,
+  ASSESSMENT_ACTIONS,
+  ASSESSMENT_VERSION_STATUS,
+  ASSESSMENT_TYPES,
+  RESUME_STATUS,
+  HISTORY_SORT,
+  VERSION,
+  MAX_ACTIVE_ASSESSMENTS,
+  HISTORY_FIELDS,
+};
