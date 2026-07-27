@@ -1,0 +1,90 @@
+const FLOW_OPERATORS = Object.freeze({
+  EQUALS: "EQUALS",
+  NOT_EQUALS: "NOT_EQUALS",
+  GREATER_THAN: "GREATER_THAN",
+  GREATER_THAN_OR_EQUAL: "GREATER_THAN_OR_EQUAL",
+  LESS_THAN: "LESS_THAN",
+  LESS_THAN_OR_EQUAL: "LESS_THAN_OR_EQUAL",
+  INCLUDES: "INCLUDES",
+  NOT_INCLUDES: "NOT_INCLUDES",
+  EXISTS: "EXISTS",
+  NOT_EXISTS: "NOT_EXISTS",
+});
+
+const FLOW_ACTIONS = Object.freeze({
+  ASK: "ASK",
+  SKIP: "SKIP",
+  BRANCH: "BRANCH",
+  COMPLETE: "COMPLETE",
+});
+
+const BRANCH_TYPES = Object.freeze({
+  DEFAULT: "DEFAULT",
+  BASIC: "BASIC",
+  ADVANCED: "ADVANCED",
+  BEGINNER: "BEGINNER",
+  INTERMEDIATE: "INTERMEDIATE",
+  EXPERT: "EXPERT",
+  EMPLOYED: "EMPLOYED",
+  SELF_EMPLOYED: "SELF_EMPLOYED",
+  STUDENT: "STUDENT",
+  RETIRED: "RETIRED",
+});
+
+const VISIBILITY_STATUS = Object.freeze({
+  VISIBLE: "VISIBLE",
+  HIDDEN: "HIDDEN",
+  SKIPPED: "SKIPPED",
+});
+
+const SKIP_REASONS = Object.freeze({
+  DEPENDENCY_FAILED: "DEPENDENCY_FAILED",
+  CONDITION_NOT_MET: "CONDITION_NOT_MET",
+  ALREADY_ANSWERED: "ALREADY_ANSWERED",
+  NOT_APPLICABLE: "NOT_APPLICABLE",
+  USER_SKIPPED: "USER_SKIPPED",
+  COMPLETED: "COMPLETED",
+});
+
+const FLOW_STATUS = Object.freeze({
+  NOT_STARTED: "NOT_STARTED",
+  IN_PROGRESS: "IN_PROGRESS",
+  COMPLETED: "COMPLETED",
+  CANCELLED: "CANCELLED",
+});
+
+const FLOW_PRIORITY = Object.freeze({
+  LOW: 1,
+  MEDIUM: 2,
+  HIGH: 3,
+  CRITICAL: 4,
+});
+
+const DEFAULT_FLOW_CONFIGURATION = Object.freeze({
+  allowQuestionSkipping: true,
+
+  allowDynamicOrdering: true,
+
+  allowBranching: true,
+
+  allowConditionalVisibility: true,
+
+  stopWhenCompleted: true,
+
+  maxSkippedQuestions: 50,
+
+  estimatedSecondsPerQuestion: 20,
+
+  minimumCompletionPercent: 100,
+});
+
+module.exports = {
+  FLOW_OPERATORS,
+  FLOW_ACTIONS,
+  BRANCH_TYPES,
+  VISIBILITY_STATUS,
+  SKIP_REASONS,
+  FLOW_STATUS,
+  FLOW_PRIORITY,
+  DEFAULT_FLOW_CONFIGURATION,
+};

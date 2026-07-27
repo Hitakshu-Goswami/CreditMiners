@@ -1,0 +1,91 @@
+
+const ANSWER_TYPES = Object.freeze({
+  NUMBER: "NUMBER",
+  DECIMAL: "DECIMAL",
+  PERCENTAGE: "PERCENTAGE",
+  CURRENCY: "CURRENCY",
+  TEXT: "TEXT",
+  EMAIL: "EMAIL",
+  PHONE: "PHONE",
+  DATE: "DATE",
+  BOOLEAN: "BOOLEAN",
+  SINGLE_SELECT: "SINGLE_SELECT",
+  MULTI_SELECT: "MULTI_SELECT",
+});
+
+const VALIDATION_STATUS = Object.freeze({
+  VALID: "VALID",
+  INVALID: "INVALID",
+  WARNING: "WARNING",
+});
+
+const VALIDATION_ERROR_CODES = Object.freeze({
+  REQUIRED: "REQUIRED",
+  INVALID_TYPE: "INVALID_TYPE",
+  INVALID_FORMAT: "INVALID_FORMAT",
+  INVALID_VALUE: "INVALID_VALUE",
+  OUT_OF_RANGE: "OUT_OF_RANGE",
+  BELOW_MINIMUM: "BELOW_MINIMUM",
+  ABOVE_MAXIMUM: "ABOVE_MAXIMUM",
+  INVALID_OPTION: "INVALID_OPTION",
+  DUPLICATE_VALUES: "DUPLICATE_VALUES",
+  INVALID_DATE: "INVALID_DATE",
+  INVALID_EMAIL: "INVALID_EMAIL",
+  INVALID_PHONE: "INVALID_PHONE",
+  EMPTY_VALUE: "EMPTY_VALUE",
+});
+
+const SANITIZATION_OPTIONS = Object.freeze({
+  TRIM_TEXT: true,
+  REMOVE_HTML: true,
+  REMOVE_SCRIPT_TAGS: true,
+  REMOVE_EXTRA_SPACES: true,
+  REMOVE_DUPLICATES: true,
+  CONVERT_EMPTY_TO_NULL: true,
+});
+
+const DEFAULT_VALIDATION_RULES = Object.freeze({
+  required: false,
+
+  min: null,
+
+  max: null,
+
+  minLength: null,
+
+  maxLength: null,
+
+  allowDecimals: true,
+
+  allowNegative: false,
+
+  allowFutureDates: true,
+
+  allowPastDates: true,
+});
+
+const NUMBER_LIMITS = Object.freeze({
+  MIN: 0,
+  MAX: Number.MAX_SAFE_INTEGER,
+});
+
+const PERCENTAGE_LIMITS = Object.freeze({
+  MIN: 0,
+  MAX: 100,
+});
+
+const TEXT_LIMITS = Object.freeze({
+  MIN_LENGTH: 1,
+  MAX_LENGTH: 1000,
+});
+
+module.exports = {
+  ANSWER_TYPES,
+  VALIDATION_STATUS,
+  VALIDATION_ERROR_CODES,
+  SANITIZATION_OPTIONS,
+  DEFAULT_VALIDATION_RULES,
+  NUMBER_LIMITS,
+  PERCENTAGE_LIMITS,
+  TEXT_LIMITS,
+};

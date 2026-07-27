@@ -26,8 +26,16 @@ const tagRoutes = require("./routes/tag.routes");
 const financialFeatureRoutes = require("./routes/financialFeature.routes");
 const { swaggerSpec, swaggerUi } = require("./docs/swagger");
 const { apiLimiter } = require("./middleware/rateLimit.middleware");
+const riskAssessmentRoutes = require("./routes/riskAssessment.routes");
+const answerValidationRoutes = require("./routes/answerValidation.routes");
 
 const app = express();
+const questionRoutes = require("./routes/question.routes");
+const adaptiveFlowRoutes = require("./routes/adaptiveFlow.routes");
+const goalExtractionRoutes = require("./routes/goalExtraction.routes");
+const investorPersonaRoutes = require("./routes/investorPersona.routes");
+const confidenceRoutes = require("./routes/confidence.routes");
+const explainabilityRoutes = require("./routes/explainability.routes");
 
 /* ---------------- Security ---------------- */
 
@@ -82,6 +90,7 @@ app.use("/api/loans", loanRoutes);
 app.use("/api", loanMediaRoutes);
 app.use("/api", loanInterestRoutes);
 app.use("/api", aiCreditRoutes);
+app.use("/api", riskAssessmentRoutes);
 app.use("/api", dashboardRoutes);
 app.use("/api/financial/transactions", transactionRoutes);
 app.use("/api/financial/utility-bills", utilityBillRoutes);
@@ -105,8 +114,22 @@ app.use((req, res) => {
   });
 });
 
+app.use("/api", questionRoutes);
+
+app.use("/api", adaptiveFlowRoutes);
+
+app.use("/api", answerValidationRoutes);
+
+app.use("/api", goalExtractionRoutes);
+
 /* ---------------- Global Error Handler ---------------- */
 
 app.use(errorHandler);
+app.use("/api", investorPersonaRoutes);
+
+app.use("/api", confidenceRoutes);
+
+app.use("/api", explainabilityRoutes);
+
 
 module.exports = app;
