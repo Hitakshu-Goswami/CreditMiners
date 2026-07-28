@@ -16,6 +16,8 @@ const loanMediaRoutes = require("./routes/loanMedia.routes");
 const loanInterestRoutes = require("./routes/loanInterest.routes");
 const aiCreditRoutes = require("./routes/aiCredit.routes");
 const dashboardRoutes = require("./routes/dashboard.routes");
+const insightRoutes = require("./routes/insight.routes");
+const reportRoutes = require("./routes/report.routes");
 const transactionRoutes = require("./routes/transaction.routes");
 const utilityBillRoutes = require("./routes/utilityBill.routes");
 const mobileRechargeRoutes = require("./routes/mobileRecharge.routes");
@@ -101,6 +103,8 @@ app.use("/api", loanInterestRoutes);
 app.use("/api", aiCreditRoutes);
 app.use("/api", riskAssessmentRoutes);
 app.use("/api", dashboardRoutes);
+app.use("/api", insightRoutes);
+app.use("/api", reportRoutes);
 app.use("/api/financial/transactions", transactionRoutes);
 app.use("/api/financial/utility-bills", utilityBillRoutes);
 app.use("/api/financial/mobile-recharges", mobileRechargeRoutes);
@@ -109,26 +113,9 @@ app.use("/api/financial/categories", categoryRoutes);
 app.use("/api/financial/merchants", merchantRoutes);
 app.use("/api/financial/tags", tagRoutes);
 app.use("/api/financial/features", financialFeatureRoutes);
-app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
-
-app.get("/api/openapi.json", (req, res) => res.status(200).json(swaggerSpec));
-app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec, { explorer: true }));
-
-/* ---------------- 404 Handler ---------------- */
-
-app.use((req, res) => {
-  res.status(404).json({
-    success: false,
-    message: `Cannot ${req.method} ${req.originalUrl}`,
-  });
-});
-
 app.use("/api", questionRoutes);
-
 app.use("/api", adaptiveFlowRoutes);
-
 app.use("/api", answerValidationRoutes);
-
 app.use("/api", goalExtractionRoutes);
 app.use(
 
@@ -137,6 +124,16 @@ app.use(
     growthProjectionRoutes
 
 );
+app.use("/api", investorPersonaRoutes);
+app.use("/api", confidenceRoutes);
+app.use("/api", explainabilityRoutes);
+app.use("/api", recommendationPreparationRoutes);
+app.use("/api", assessmentHistoryRoutes);
+app.use("/api/v1/ai/risk-profile", aiRiskProfileRoutes);
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+
+app.get("/api/openapi.json", (req, res) => res.status(200).json(swaggerSpec));
+app.use("/api/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec, { explorer: true }));
 app.use(
 
     "/api-docs",
@@ -149,19 +146,17 @@ app.use(
 
 );
 
+/* ---------------- 404 Handler ---------------- */
+
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: `Cannot ${req.method} ${req.originalUrl}`,
+  });
+});
+
 /* ---------------- Global Error Handler ---------------- */
 
 app.use(errorHandler);
-app.use("/api", investorPersonaRoutes);
-
-app.use("/api", confidenceRoutes);
-
-app.use("/api", explainabilityRoutes);
-app.use("/api", recommendationPreparationRoutes);
-app.use("/api", assessmentHistoryRoutes);
-app.use("/api/v1/ai/risk-profile", aiRiskProfileRoutes);
-app.use(
-    require("./middleware/error.middleware")
-);
 
 module.exports = app;
