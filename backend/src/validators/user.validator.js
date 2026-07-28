@@ -7,6 +7,7 @@ const INCOME_FREQUENCIES = ["WEEKLY", "BIWEEKLY", "MONTHLY", "QUARTERLY", "ANNUA
 const SAVINGS_HABITS = ["NONE", "OCCASIONAL", "REGULAR", "AUTOMATED"];
 const GOAL_PRIORITIES = ["LOW", "MEDIUM", "HIGH"];
 const GOAL_STATUSES = ["ACTIVE", "COMPLETED", "PAUSED", "CANCELLED"];
+const ADMIN_ASSIGNABLE_ROLES = ["SUPER_ADMIN", "ADMIN", "AI_ANALYST", "SUPPORT", "AUDITOR", "USER"];
 
 const optionalText = (field, max = 100) => body(field).optional().trim().isLength({ min: 1, max }).withMessage(`${field} must be between 1 and ${max} characters.`);
 const optionalMoney = (field) => body(field).optional().isFloat({ min: 0, max: 1000000000 }).withMessage(`${field} must be a non-negative amount.`);
@@ -87,14 +88,14 @@ const adminListValidator = [
   query("page").optional().isInt({ min: 1 }).toInt().withMessage("page must be a positive integer."),
   query("limit").optional().isInt({ min: 1, max: 100 }).toInt().withMessage("limit must be between 1 and 100."),
   query("status").optional().isIn(["ACTIVE", "SUSPENDED", "BANNED", "DELETED"]).withMessage("Invalid user status."),
-  query("role").optional().isIn(["ADMIN", "USER"]).withMessage("Invalid role."),
+  query("role").optional().isIn(ADMIN_ASSIGNABLE_ROLES).withMessage("Invalid role."),
   query("emailVerified").optional().isBoolean().withMessage("emailVerified must be boolean."),
   query("phoneVerified").optional().isBoolean().withMessage("phoneVerified must be boolean."),
   query("includeDeleted").optional().isBoolean().withMessage("includeDeleted must be boolean."),
   query("search").optional().trim().isLength({ min: 1, max: 120 }).withMessage("search must be between 1 and 120 characters."),
 ];
 
-const roleValidator = [body("role").isIn(["ADMIN", "USER"]).withMessage("Invalid role.")];
+const roleValidator = [body("role").isIn(ADMIN_ASSIGNABLE_ROLES).withMessage("Invalid role.")];
 
 module.exports = {
   updateProfileValidator,
