@@ -23,9 +23,13 @@ module.exports = (
 
     );
 
+    const statusCode =
+        error.statusCode ||
+        500;
+
 
     return res.status(
-        500
+        statusCode
     )
     .json({
 
@@ -33,7 +37,11 @@ module.exports = (
 
         message:
             error.message ||
-            "Internal Server Error"
+            "Internal Server Error",
+
+        status:
+            error.status ||
+            "error"
 
     });
 
