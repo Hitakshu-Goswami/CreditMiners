@@ -87,8 +87,8 @@ This is the internal delivery view of the official backend roadmap in `docs/cred
 
 - **Goal:** operate users, datasets, model health, risk distributions, audits, and system analytics.
 - **Dependencies:** audited domain records and mature authorization.
-- **Deliverables:** role-protected operational APIs and UI.
-- **Status:** Planned.
+- **Deliverables:** role-protected admin dashboard API, user analytics views, synthetic dataset analytics, AI model monitoring, feature statistics, risk distribution analytics, API monitoring, append-only admin audit log viewer, and system analytics.
+- **Status:** Implemented baseline APIs using the existing authentication/authorization model. Future Production still requires durable APM storage, formal permission hierarchy, admin UI, CSV exports, model activation workflows, real evaluation/fairness metrics, and audited override policy.
 
 ### Phase 11 — AI Infrastructure
 

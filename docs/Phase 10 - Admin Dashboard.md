@@ -1,6 +1,11 @@
 # Phase 10 - Admin Dashboard
 
-**Status:** Planned
+**Status:** Implemented baseline
+
+Implementation note:
+
+- Backend APIs now provide role-guarded admin dashboard, user analytics access, synthetic dataset analytics, AI model monitoring, feature statistics, risk distribution, API metrics, append-only admin audit logs, and system analytics.
+- Production APM persistence, permission hierarchy UI, admin CSV exports, model activation workflows, real model evaluation/fairness reports, and formal override policies remain Future Production.
 
 ## Objective
 
