@@ -7,7 +7,7 @@
 | User Financial Identity | Implemented | Personal profile, financial profile, goals, preferences, onboarding, trust profile, email/phone changes. |
 | Admin user management | Implemented | Search/filter/paginate/view users; status, role, soft-delete, analytics operations. |
 | Demo alternative signals / scoring | Implemented | Synthetic CSV data deterministic score/recommendation flow. |
-| Dashboard / insights | In Progress | Demo dashboard exists; persistent user insights are planned. |
+| Dashboard / insights | Implemented baseline | Phase 9 authenticated APIs generate explainability input contracts, financial health and credit dashboards, insight cards, habit trends, improvement timelines, monthly reports, source traces, confidence, data completeness, and educational disclaimers over persisted features/assessments. |
 | Financial Data Engine | Implemented foundation | Transactions, utility bills, mobile recharges, e-commerce orders, merchants, categories, tags, imports, consent, provenance models/APIs exist. |
 | Feature Engineering Engine | Implemented | Versioned financial feature store, compute/list/runs APIs, granular behavior features, synthetic population-benchmark percentiles, validation issues, quality scoring, explainability metadata, documentation endpoint, calculation tests, and prototype async jobs. |
 | Explainable Credit Intelligence Engine | Implemented baseline | Feature readiness validation, feature selection, calibrated credit score, risk dimensions, confidence, additive explanations, narrative, improvement roadmap, history, model registry baseline, and authenticated APIs. |
@@ -22,3 +22,4 @@
 - Feature async jobs are in-process prototype jobs; durable workers and retry persistence are Future Production.
 - Synthetic benchmark thresholds are prototype-only and must be replaced with consented population benchmarks before production credit or investment use.
 - Phase 5 uses deterministic additive attributions; trained ML model comparison and SHAP/LIME integration remain future AI work.
+- Phase 9 monthly report generation is synchronous baseline logic; Future Production should use durable jobs, report delivery preferences, and reviewed explanation-quality metrics.

@@ -80,8 +80,8 @@ This is the internal delivery view of the official backend roadmap in `docs/cred
 - **Goal:** turn scores, features, trends, and recommendations into actionable dashboards.
 - **Modules:** financial health, credit, insights, timelines, habits, reports.
 - **Dependencies:** durable data and assessments from earlier phases.
-- **Deliverables:** user dashboard and assessment history.
-- **Status:** Demo dashboard implemented; persisted analytics/dashboard APIs planned.
+- **Deliverables:** explainability input contract, financial health dashboard, credit explainability dashboard, insight cards, trend analytics, improvement timeline, monthly report storage/generation, safety disclaimer, and source trace metadata.
+- **Status:** Implemented baseline APIs over persisted feature runs, credit assessments, recommendations, goals, and monthly report records. Future Production still requires trained-model SHAP/LIME payloads, durable report jobs, calibrated cohort benchmarks, and compliance review.
 
 ### Phase 10 — Admin Platform
 

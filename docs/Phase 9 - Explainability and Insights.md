@@ -1,6 +1,11 @@
 # Phase 9 - Explainability and Insights
 
-**Status:** Planned
+**Status:** Implemented baseline
+
+Implementation note:
+
+- Backend APIs now provide the explainability input contract, mapped explanations, insight cards, financial health dashboard, credit dashboard, habit trends, improvement timeline, and monthly report generation/storage.
+- SHAP/LIME from a trained production model, durable report jobs, external data connectors, and regulated decisioning remain Future Production.
 
 ## Objective
 
